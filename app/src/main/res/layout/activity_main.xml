@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+    <ImageView
+        android:src="@drawable/back"
+        android:id="@+id/im1"
+        android:scaleType="fitXY"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
 
     <Button
         android:id="@+id/btn_singleplayer"
