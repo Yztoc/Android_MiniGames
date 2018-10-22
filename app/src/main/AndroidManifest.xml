@@ -22,6 +22,10 @@
             android:name=".Quizz"
             android:label="@string/title_activity_quizz"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Ball"
+            android:label="@string/title_activity_ball"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

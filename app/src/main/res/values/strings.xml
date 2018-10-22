@@ -4,4 +4,5 @@
     <string name="multiplayer">Multiplayer</string>
     <string name="credit">Credit</string>
     <string name="title_activity_quizz">Quizz</string>
+    <string name="title_activity_ball">Ball</string>
 </resources>

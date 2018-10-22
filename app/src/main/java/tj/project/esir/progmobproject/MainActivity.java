@@ -24,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
         btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent quizz = new Intent(getApplicationContext(), Quizz.class);
-                startActivity(quizz);
+               // Intent intent = new Intent(getApplicationContext(), Quizz.class);
+                Intent intent = new Intent(getApplicationContext(), Ball.class);
+                startActivity(intent);
                 finish();
             }
         });
