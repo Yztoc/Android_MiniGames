@@ -4,4 +4,7 @@
     <string name="multiplayer">Multiplayer</string>
     <string name="credit">Credit</string>
     <string name="title_activity_quizz">Quizz</string>
+    <string name="great_response_quizz">Bonne réponse !</string>
+    <string name="bad_response_quizz">Mauvaise réponse !</string>
+    <string name="next_question">Question suivante</string>
 </resources>
