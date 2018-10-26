@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorGrey"
     tools:context=".Quizz">
 
 
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/title_activity_quizz"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@android:color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             tools:text="@string/title_activity_quizz" />
@@ -29,9 +30,13 @@
             android:id="@+id/quizz_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:layout_marginTop="50dp"
+            android:layout_marginRight="2dp"
             android:layout_marginBottom="150dp"
+            android:background="@drawable/textview_border"
             android:textAlignment="center"
+            android:textColor="@android:color/white"
             android:textSize="50sp"
             android:textStyle="bold" />
 
@@ -44,21 +49,28 @@
                 android:id="@+id/btn_rep2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/quizz_button_shape"
+                android:text="Button"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_rep3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/quizz_button_shape"
+                android:text="Button"
+                android:textColor="@android:color/white" />
 
             <Button
                 android:id="@+id/btn_rep1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:background="@drawable/quizz_button_shape"
+                android:text="Button"
+                android:textColor="@android:color/white" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
