@@ -21,6 +21,7 @@
         <activity
             android:name=".Quizz"
             android:label="@string/title_activity_quizz"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -7,4 +7,5 @@
     <string name="great_response_quizz">Bonne réponse !</string>
     <string name="bad_response_quizz">Mauvaise réponse !</string>
     <string name="next_question">Question suivante</string>
+    <string name="valid_button_text">Valider</string>
 </resources>
