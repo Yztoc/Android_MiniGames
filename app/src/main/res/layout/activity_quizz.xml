@@ -4,43 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="3dp"
     tools:context=".Quizz">
 
 
     <include layout="@layout/content_quizz" />
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
-        <TextView
-            android:id="@+id/quizz_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title_activity_quizz"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="@string/title_activity_quizz" />
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.51"
+            tools:layout_conversion_absoluteHeight="99dp"
+            tools:layout_conversion_absoluteWidth="384dp">
 
-        <TextView
-            android:id="@+id/quizz_question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="150dp"
-            android:background="@drawable/textview_border"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/quizz_title"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/title_activity_quizz"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="@string/title_activity_quizz" />
+
+            <TextView
+                android:id="@+id/quizz_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textview_border"
+                android:textAlignment="center"
+                android:textSize="50sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:id="@+id/relativeLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            tools:layout_conversion_absoluteHeight="186dp"
+            tools:layout_conversion_absoluteWidth="384dp">
 
             <LinearLayout
                 android:id="@+id/multipleAnswersLayout"
@@ -80,6 +102,8 @@
                 android:id="@+id/calculAnswerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:orientation="vertical">
 
                 <EditText
@@ -94,20 +118,33 @@
                     android:id="@+id/validCalculButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/valid_button_text" />
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/quizz_button_shape"
+                    android:paddingStart="0dp"
+                    android:text="@string/valid_button_text"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/linearLayout3"
+            android:layout_width="335dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            tools:layout_conversion_absoluteHeight="48dp"
+            tools:layout_conversion_absoluteWidth="384dp">
 
             <TextView
                 android:id="@+id/reponseText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
@@ -115,16 +152,16 @@
 
             <Button
                 android:id="@+id/btn_next_question"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="Button"
-                android:visibility="invisible"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/quizz_button_shape"
+                android:textColor="@android:color/white"
+                android:visibility="visible"
                 tools:text="@string/next_question" />
         </LinearLayout>
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

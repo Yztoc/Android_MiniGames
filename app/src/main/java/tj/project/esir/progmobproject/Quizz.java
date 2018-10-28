@@ -65,7 +65,6 @@ public class Quizz extends AppCompatActivity {
         calculAnswerInput = findViewById(R.id.calculAnswerInput);
         btn_valid_calcul = findViewById(R.id.validCalculButton);
 
-
         pickQuestion();
 
 
@@ -87,12 +86,16 @@ public class Quizz extends AppCompatActivity {
 
         btn_nextQuestion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                calculAnswerInput.setText("");
                 pickQuestion();
             }
         });
         btn_valid_calcul.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setReponseTextQuizz(resultatCalcul == Integer.parseInt(calculAnswerInput.getText().toString()));
+                String result = calculAnswerInput.getText().toString();
+                if(result.equals(""))
+                    result = "-1";
+                setReponseTextQuizz(resultatCalcul == Integer.parseInt(result));
                 closeKeyboard();
             }
         });
