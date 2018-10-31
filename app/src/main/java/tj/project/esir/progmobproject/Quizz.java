@@ -35,6 +35,7 @@ public class Quizz extends AppCompatActivity {
     EditText calculAnswerInput;
     Button btn_valid_calcul;
     int resultatCalcul;
+    int reponseValidee;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -98,11 +99,11 @@ public class Quizz extends AppCompatActivity {
                 closeKeyboard();
             }
         });
-
         pickQuestion();
     }
 
     public void pickQuestion() {
+        reponseValidee = -1;
         setReponseTextQuizz("");
         Random rand = new Random();
         int typeQuestion = rand.nextInt(2);
@@ -135,16 +136,17 @@ public class Quizz extends AppCompatActivity {
         }
     }
     public void setReponseTextQuizz(boolean valeurRep){
-        if(valeurRep){
-            btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_true));
-
+        if(reponseValidee == -1) {
+            if (valeurRep) {
+                btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_true));
+                reponseValidee = 1; //true
+            } else {
+                btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_false));
+                reponseValidee = 0; //false
+            }
+            btn_nextQuestion.setText(R.string.next_question);
+            btn_nextQuestion.setVisibility(View.VISIBLE);
         }
-        else {
-            btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_false));
-
-        }
-        btn_nextQuestion.setText(R.string.next_question);
-        btn_nextQuestion.setVisibility(View.VISIBLE);
     }
     public void setReponseTextQuizz(String s) {
         if (s.isEmpty()) {
