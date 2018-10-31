@@ -3,6 +3,7 @@ import org.json.*;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
@@ -65,8 +66,6 @@ public class Quizz extends AppCompatActivity {
         calculAnswerInput = findViewById(R.id.calculAnswerInput);
         btn_valid_calcul = findViewById(R.id.validCalculButton);
 
-        pickQuestion();
-
 
         btn_rep1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -99,6 +98,8 @@ public class Quizz extends AppCompatActivity {
                 closeKeyboard();
             }
         });
+
+        pickQuestion();
     }
 
     public void pickQuestion() {
@@ -127,22 +128,23 @@ public class Quizz extends AppCompatActivity {
         else{
             calculAnswerLayout.setVisibility(View.VISIBLE);
             multipleAnswersLayout.setVisibility(View.INVISIBLE);
-            int variable1 = rand.nextInt(10);
-            int variable2 = rand.nextInt(10);
+            int variable1 = rand.nextInt(9)+1;
+            int variable2 = rand.nextInt(9)+1;
             resultatCalcul = variable1*variable2;
             title_question.setText(variable1+" x "+variable2);
         }
     }
     public void setReponseTextQuizz(boolean valeurRep){
         if(valeurRep){
-            reponseText.setText(R.string.great_response_quizz);
-            btn_nextQuestion.setText(R.string.next_question);
-            btn_nextQuestion.setVisibility(View.VISIBLE);
+            btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_true));
+
         }
         else {
-            reponseText.setText(R.string.bad_response_quizz);
-            btn_nextQuestion.setVisibility(View.INVISIBLE);
+            btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_false));
+
         }
+        btn_nextQuestion.setText(R.string.next_question);
+        btn_nextQuestion.setVisibility(View.VISIBLE);
     }
     public void setReponseTextQuizz(String s) {
         if (s.isEmpty()) {
