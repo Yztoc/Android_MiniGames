@@ -1,4 +1,4 @@
-package tj.project.esir.progmobproject;
+package tj.project.esir.progmobproject.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

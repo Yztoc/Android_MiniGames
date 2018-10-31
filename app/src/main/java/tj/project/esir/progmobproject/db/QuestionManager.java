@@ -1,10 +1,12 @@
-package tj.project.esir.progmobproject;
+package tj.project.esir.progmobproject.db;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
+
+import tj.project.esir.progmobproject.models.Question;
 
 public class QuestionManager {
 

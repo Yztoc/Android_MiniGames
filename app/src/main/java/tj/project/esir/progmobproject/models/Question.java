@@ -1,4 +1,4 @@
-package tj.project.esir.progmobproject;
+package tj.project.esir.progmobproject.models;
 
 import android.util.Pair;
 

@@ -1,12 +1,9 @@
 package tj.project.esir.progmobproject;
-import org.json.*;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -14,18 +11,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.InputStream;
 import java.util.Random;
+
+import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.Question;
 
 public class Quizz extends AppCompatActivity {
 
-    String questions;
     Button btn_rep1;
     Button btn_rep2;
     Button btn_rep3;
     Button btn_nextQuestion;
     TextView title_question;
-    JSONArray jsonArray;
     Boolean rep1;
     Boolean rep2;
     Boolean rep3;
@@ -101,9 +98,11 @@ public class Quizz extends AppCompatActivity {
             calculAnswerLayout.setVisibility(View.INVISIBLE);
             multipleAnswersLayout.setVisibility(View.VISIBLE);
 
+            // recupération d'une question
             m.open();
             Question question = m.getRandomQuestion();
             m.close();
+
             title_question.setText(question.getTitle());
             btn_rep1.setText(question.getResponse1().first);
             btn_rep2.setText(question.getResponse2().first);
