@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import tj.project.esir.progmobproject.ball_games.Ball;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button btnSinglePlayer;
@@ -23,8 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
         btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent quizz = new Intent(getApplicationContext(), Quizz.class);
-                startActivity(quizz);
+               // Intent quizz = new Intent(getApplicationContext(), Quizz.class);
+               // startActivity(quizz);
+                Intent ball = new Intent(getApplicationContext(), Ball.class);
+                startActivity(ball);
                 finish();
             }
         });
