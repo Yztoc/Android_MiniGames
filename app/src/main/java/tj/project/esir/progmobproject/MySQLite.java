@@ -20,7 +20,7 @@ class MySQLite extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 // l'incrément appelle onUpgrade(), décrément => onDowngrade()
     private String DATABASE_PATH; // chemin défini dans le constructeur
-    private static final String DATABASE_NAME = "db.sqlite.";
+    private static final String DATABASE_NAME = "db.sqlite.progmob";
 
 
     public static synchronized MySQLite

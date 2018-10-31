@@ -36,26 +36,14 @@ public class Quizz extends AppCompatActivity {
     Button btn_valid_calcul;
     int resultatCalcul;
     int reponseValidee;
+    QuestionManager m;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz);
 
-        try {
-            // récupération du contenu du fichier questions.json
-            InputStream is = getAssets().open("questions.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            questions = new String(buffer);
-            // création d'un tableau, format JSON
-            jsonArray = new JSONArray(questions);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
         reponseText = findViewById(R.id.reponseText);
         btn_rep1 = findViewById(R.id.btn_rep1);
         btn_rep2 = findViewById(R.id.btn_rep2);
@@ -99,10 +87,12 @@ public class Quizz extends AppCompatActivity {
                 closeKeyboard();
             }
         });
+        m = new QuestionManager(this);
         pickQuestion();
     }
 
     public void pickQuestion() {
+
         reponseValidee = -1;
         setReponseTextQuizz("");
         Random rand = new Random();
@@ -110,21 +100,17 @@ public class Quizz extends AppCompatActivity {
         if (typeQuestion == 0){
             calculAnswerLayout.setVisibility(View.INVISIBLE);
             multipleAnswersLayout.setVisibility(View.VISIBLE);
-            JSONObject choix;
-            int indexQuestion = rand.nextInt(jsonArray.length());
-            try {
-                choix = (JSONObject) jsonArray.get(indexQuestion);
-                JSONArray reponses = choix.getJSONArray("reponses");
-                title_question.setText((String) choix.get("question"));
-                btn_rep1.setText((String) ((JSONObject) reponses.get(0)).get("intitule"));
-                btn_rep2.setText((String) ((JSONObject) reponses.get(1)).get("intitule"));
-                btn_rep3.setText((String) ((JSONObject) reponses.get(2)).get("intitule"));
-                rep1 = (Boolean) ((JSONObject) reponses.get(0)).get("valeur");
-                rep2 = (Boolean) ((JSONObject) reponses.get(1)).get("valeur");
-                rep3 = (Boolean) ((JSONObject) reponses.get(2)).get("valeur");
-            } catch (org.json.JSONException e) {
-                e.printStackTrace();
-            }
+
+            m.open();
+            Question question = m.getRandomQuestion();
+            m.close();
+            title_question.setText(question.getTitle());
+            btn_rep1.setText(question.getResponse1().first);
+            btn_rep2.setText(question.getResponse2().first);
+            btn_rep3.setText(question.getResponse3().first);
+            rep1 = question.getResponse1().second == 0 ?  false : true;
+            rep2 = question.getResponse2().second == 0 ?  false : true;
+            rep3 = question.getResponse3().second == 0 ?  false : true;
         }
         else{
             calculAnswerLayout.setVisibility(View.VISIBLE);

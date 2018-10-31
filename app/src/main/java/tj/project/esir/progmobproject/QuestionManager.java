@@ -11,12 +11,12 @@ public class QuestionManager {
     private static final String TABLE_NAME = "question";
     public static final String ID_QUESTION="id_question";
     public static final String TITLE_QUESTION="title_question";
-    public static final String TEXT_RESPONSE1="text_reponse1";
-    public static final String TEXT_RESPONSE2="text_reponse2";
-    public static final String TEXT_RESPONSE3="text_reponse3";
-    public static final String VALUE_RESPONSE1="value_reponse1";
-    public static final String VALUE_RESPONSE2="value_reponse2";
-    public static final String VALUE_RESPONSE3="value_reponse3";
+    public static final String TEXT_RESPONSE1="text_response1";
+    public static final String TEXT_RESPONSE2="text_response2";
+    public static final String TEXT_RESPONSE3="text_response3";
+    public static final String VALUE_RESPONSE1="value_response1";
+    public static final String VALUE_RESPONSE2="value_response2";
+    public static final String VALUE_RESPONSE3="value_response3";
 
     public static final String CREATE_TABLE_QUESTION = "CREATE TABLE "+TABLE_NAME+
             " (" +
@@ -91,6 +91,30 @@ public class QuestionManager {
         String[] whereArgs = {question.getId()+""};
 
         return db.delete(TABLE_NAME, where, whereArgs);
+    }
+
+
+    public Question getRandomQuestion() {
+        // Retourne l'animal dont l'id est passé en paramètre
+
+        Question question=new Question();
+
+        Cursor c = db.rawQuery(
+                "SELECT * FROM "+TABLE_NAME+" ORDER BY RANDOM() "+
+                        "LIMIT 1", null);
+
+        if (c.moveToFirst()) {
+            question.setId(c.
+                    getInt(c.getColumnIndex(ID_QUESTION)));
+            question.setTitle(c.
+                    getString(c.getColumnIndex(TITLE_QUESTION)));
+            question.setResponse1(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+            question.setResponse2(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
+            question.setResponse3(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
+
+            c.close();
+        }
+        return question;
     }
 
     public Question getQuestion(int id) {
