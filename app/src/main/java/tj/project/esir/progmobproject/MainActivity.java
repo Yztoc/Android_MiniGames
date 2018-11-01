@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import tj.project.esir.progmobproject.ball_games.Ball;
+import tj.project.esir.progmobproject.ball_games.Balls;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                // Intent quizz = new Intent(getApplicationContext(), Quizz.class);
                // startActivity(quizz);
-                Intent ball = new Intent(getApplicationContext(), Ball.class);
+                Intent ball = new Intent(getApplicationContext(), Balls.class);
                 startActivity(ball);
                 finish();
             }
