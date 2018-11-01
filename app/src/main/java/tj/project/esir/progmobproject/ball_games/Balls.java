@@ -28,12 +28,13 @@ public class Balls extends AppCompatActivity {
     GameView gameView;
     Bitmap bitmapBob;
     Bitmap goal;
+    Point size = new Point();
     boolean isMoving = false;
     int nbCol = 0;
     int widthBall = 100;
     int heightBall = 100;
-    int widthGoal= 150;
-    int heightGoal = 150;
+    int widthGoal= 300;
+    int heightGoal = 300;
     float ballX;
     float ballY;
     float goalX;
@@ -47,6 +48,8 @@ public class Balls extends AppCompatActivity {
     double p;
     long fps;
     int col;
+    int score = 0;
+    boolean finish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +57,17 @@ public class Balls extends AppCompatActivity {
         setContentView(R.layout.activity_ball);
 
         Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
+
         display.getSize(size);
         width = size.x;
         height = size.y;
         ballX = size.x/2-widthBall/2;
         ballY = size.y-heightBall;
+
         goalX = width/2-widthGoal/2;
         goalY = 200;
+
+
         hideSystemUI();
 
         // Initialize gameView and set it as the view
@@ -127,9 +133,9 @@ public class Balls extends AppCompatActivity {
             if(isMoving){
                 for(int i=0;i<10;i++){
                     col = collisition(ballX,ballY);
+                    win(ballX,ballY);
                     deplacement();
                 }
-
                 //bitmapBob = rotation(bitmapBob,1);
             }
         }
@@ -146,7 +152,7 @@ public class Balls extends AppCompatActivity {
                 canvas.drawColor(Color.argb(255,  26, 128, 182));
 
                 // Choose the brush color for drawing
-                paint.setColor(Color.argb(255,  249, 129, 0));
+                paint.setColor(Color.argb(255,  249, 0, 0));
 
                 // Make the text a bit bigger
                 paint.setTextSize(45);
@@ -154,6 +160,7 @@ public class Balls extends AppCompatActivity {
                 // Display the current fps on the screen
                 canvas.drawText("FPS:" + fps, 20, 40, paint);
                 canvas.drawText("NB COL :" + nbCol, 200, 40, paint);
+                canvas.drawText("SCORE  :" + score, 440, 40, paint);
 
 
                 canvas.drawBitmap(bitmapBob, ballX, ballY, paint);
@@ -193,8 +200,22 @@ public class Balls extends AppCompatActivity {
         gameView.pause();
     }
 
-    public boolean win(float x,float y){
-        return true;
+    public void reset(){
+        //ballX = width/2-widthBall/2;
+        //ballY = height-heightBall;
+        ballX = 100;
+        ballY = 100;
+    }
+
+    public void win(float x,float y){
+        if(isMoving){
+            if((goalY+10 > y && y < goalY + heightGoal) && (goalX < x && x < goalX + widthGoal/2) ){
+                reset();
+                isMoving = false;
+                score++;
+            }
+        }
+
     }
     /* detecte si la balle touche un mur
     - col = 1 ---> colision droite
@@ -234,28 +255,34 @@ public class Balls extends AppCompatActivity {
                         ballY = height -  (((float) (((ballX) * m) + p)) - height);
                     }else{
                         ballY =  (height - (- (float) (-((ballX) * m) - p)));
-
                     }
-                    System.out.println("BALL Y : " + (height - (- (float) (-((ballX) * m) - p))));
                 }
                 else {
                     ballX = ballX + (((float) distance / 4) / fps);
-                    ballY = (float) (((ballX) * m) + p);
+
+                    if(nbCol == 0){
+                        ballY = (float) (((ballX) * m) + p);
+                    }else{
+                        ballY =  height - ((float) (((ballX) * -m) + p) -  height);
+
+                    }
+
                 }
                 break;
 
             case 1 :
-                System.out.println("Ball X: " + ballX);
                 direction = true; // monte en haut a gauche
                // col = 0;
                 ballX = ballX - 1;
-                ballY = ballY - 1;
+                ballY = ballY + 1;
                 //ballY = height -  (((float) (((ballX) * m) + p)) - height);
                 break;
             case 2 :
-               // ballX = ballX + (((float) distance / 4) / fps);
-               // ballY = (float) (((ballX) * m) + p);
 
+                direction = false; // monte en haut a gauche
+                // col = 0;
+                ballX = ballX + 1;
+                ballY = ballY + 1;
                 break;
         }
 
@@ -330,12 +357,7 @@ public class Balls extends AppCompatActivity {
                         System.out.println("M : " + m);
                         System.out.println("P : " + p);
 
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                isMoving = false;
-                            }
-                        }, 5000);
+
 
                     }else{
                         System.out.println("NOT good");
