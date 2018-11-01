@@ -27,12 +27,17 @@ public class Balls extends AppCompatActivity {
 
     GameView gameView;
     Bitmap bitmapBob;
+    Bitmap goal;
     boolean isMoving = false;
     int nbCol = 0;
     int widthBall = 100;
     int heightBall = 100;
+    int widthGoal= 150;
+    int heightGoal = 150;
     float ballX;
     float ballY;
+    float goalX;
+    float goalY;
     float width;
     float height;
     double distance = 0;
@@ -41,6 +46,7 @@ public class Balls extends AppCompatActivity {
     double m;
     double p;
     long fps;
+    int col;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,8 @@ public class Balls extends AppCompatActivity {
         height = size.y;
         ballX = size.x/2-widthBall/2;
         ballY = size.y-heightBall;
+        goalX = width/2-widthGoal/2;
+        goalY = 200;
         hideSystemUI();
 
         // Initialize gameView and set it as the view
@@ -85,10 +93,14 @@ public class Balls extends AppCompatActivity {
 
             // Load Bob from his .png file
             bitmapBob = BitmapFactory.decodeResource(this.getResources(), R.drawable.ball_blue);
+            goal = BitmapFactory.decodeResource(this.getResources(), R.drawable.trou);
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(
                     bitmapBob, widthBall, heightBall, false);
-            bitmapBob = resizedBitmap;
+            Bitmap resizedGoal = Bitmap.createScaledBitmap(
+                    goal, widthGoal, heightGoal, false);
 
+            bitmapBob = resizedBitmap;
+            goal = resizedGoal;
             // Set our boolean to true - game on!
             playing = true;
 
@@ -114,8 +126,10 @@ public class Balls extends AppCompatActivity {
         public void update() {
             if(isMoving){
                 for(int i=0;i<10;i++){
-                    deplacement(collisition(ballX,ballY));
+                    col = collisition(ballX,ballY);
+                    deplacement();
                 }
+
                 //bitmapBob = rotation(bitmapBob,1);
             }
         }
@@ -139,9 +153,11 @@ public class Balls extends AppCompatActivity {
 
                 // Display the current fps on the screen
                 canvas.drawText("FPS:" + fps, 20, 40, paint);
+                canvas.drawText("NB COL :" + nbCol, 200, 40, paint);
 
 
                 canvas.drawBitmap(bitmapBob, ballX, ballY, paint);
+                canvas.drawBitmap(goal, goalX, goalY, paint);
 
                 // Draw everything to the screen
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -177,6 +193,9 @@ public class Balls extends AppCompatActivity {
         gameView.pause();
     }
 
+    public boolean win(float x,float y){
+        return true;
+    }
     /* detecte si la balle touche un mur
     - col = 1 ---> colision droite
     - col = 2 ---> colision gauche
@@ -186,6 +205,7 @@ public class Balls extends AppCompatActivity {
     - col = 0 ---> aucune droite
     */
     public int collisition(float x, float y){
+
         if(x + widthBall>=width){
             nbCol++;
             return 1;
@@ -195,7 +215,7 @@ public class Balls extends AppCompatActivity {
         }else if(y <= 0) {
             nbCol++;
             return 3;
-        }else if(y-heightBall >= height){
+        }else if(y-heightBall*2 >= height){
             nbCol++;
             return 4;
         }
@@ -204,20 +224,41 @@ public class Balls extends AppCompatActivity {
         }
     }
 
-    public void deplacement(int col){
-        if(col == 0) {
-            if (direction) {
-                ballX = ballX - (((float) distance / 4) / fps);
-                ballY = height -  (((float) (((ballX) * m) + p)) - height);
+    public void deplacement(){
 
-            }
-            else {
-                ballX = ballX + (((float) distance / 4) / fps);
-                ballY = (float) (((ballX) * m) + p);
-            }
-            System.out.println("BALLY: " + ballY);
+        switch (col) {
+            case 0 :
+                if (direction) {
+                    ballX = ballX - (((float) distance / 4) / fps);
+                    if(nbCol == 0){
+                        ballY = height -  (((float) (((ballX) * m) + p)) - height);
+                    }else{
+                        ballY =  (height - (- (float) (-((ballX) * m) - p)));
 
+                    }
+                    System.out.println("BALL Y : " + (height - (- (float) (-((ballX) * m) - p))));
+                }
+                else {
+                    ballX = ballX + (((float) distance / 4) / fps);
+                    ballY = (float) (((ballX) * m) + p);
+                }
+                break;
+
+            case 1 :
+                System.out.println("Ball X: " + ballX);
+                direction = true; // monte en haut a gauche
+               // col = 0;
+                ballX = ballX - 1;
+                ballY = ballY - 1;
+                //ballY = height -  (((float) (((ballX) * m) + p)) - height);
+                break;
+            case 2 :
+               // ballX = ballX + (((float) distance / 4) / fps);
+               // ballY = (float) (((ballX) * m) + p);
+
+                break;
         }
+
     }
 
     public static Bitmap rotation(Bitmap source, float angle)
