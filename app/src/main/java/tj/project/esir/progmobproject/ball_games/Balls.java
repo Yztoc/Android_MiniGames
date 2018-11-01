@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import tj.project.esir.progmobproject.R;
 public class Balls extends AppCompatActivity {
 
     GameView gameView;
-
+    Bitmap bitmapBob;
     boolean isMoving = false;
     int nbCol = 0;
     int widthBall = 100;
@@ -51,7 +52,7 @@ public class Balls extends AppCompatActivity {
         display.getSize(size);
         width = size.x;
         height = size.y;
-        ballX = size.x/2-widthBall;
+        ballX = size.x/2-widthBall/2;
         ballY = size.y-heightBall;
         hideSystemUI();
 
@@ -72,7 +73,7 @@ public class Balls extends AppCompatActivity {
         private long timeThisFrame;
 
         // Declare an object of type Bitmap
-        Bitmap bitmapBob;
+
         float walkSpeedPerSecond = 150;
 
         public GameView(Context context) {
@@ -112,12 +113,10 @@ public class Balls extends AppCompatActivity {
 
         public void update() {
             if(isMoving){
-
                 for(int i=0;i<10;i++){
-
                     deplacement(collisition(ballX,ballY));
-
                 }
+                //bitmapBob = rotation(bitmapBob,1);
             }
         }
 
@@ -188,19 +187,15 @@ public class Balls extends AppCompatActivity {
     */
     public int collisition(float x, float y){
         if(x + widthBall>=width){
-            System.out.println("COLISION DROITE");
             nbCol++;
             return 1;
-        }else if(x-widthBall<= 0){
-            System.out.println("COLISION GAUCHE");
+        }else if(x<= 0){
             nbCol++;
             return 2;
         }else if(y <= 0) {
-            System.out.println("COLISION HAUT");
             nbCol++;
             return 3;
         }else if(y-heightBall >= height){
-            System.out.println("COLISION BAS");
             nbCol++;
             return 4;
         }
@@ -212,17 +207,24 @@ public class Balls extends AppCompatActivity {
     public void deplacement(int col){
         if(col == 0) {
             if (direction) {
-                System.out.println("BALL X AFTER: " + ballX);
                 ballX = ballX - (((float) distance / 4) / fps);
-                System.out.println("BALL X AFTER: " + ballX);
-                m = -m;
-            } else {
-                ballX = ballX + (((float) distance / 4) / fps);
+                ballY = height -  (((float) (((ballX) * m) + p)) - height);
+
             }
-            ballY = (float) (((ballX) * m) + p);
-        }else{
+            else {
+                ballX = ballX + (((float) distance / 4) / fps);
+                ballY = (float) (((ballX) * m) + p);
+            }
+            System.out.println("BALLY: " + ballY);
 
         }
+    }
+
+    public static Bitmap rotation(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
     // class defini dans le package permet de calculer la distance entre le point de depart et le point d arrivé
@@ -249,38 +251,43 @@ public class Balls extends AppCompatActivity {
                     xEnd= (int) event.getX();
                     yEnd = (int) event.getY();
 
+                    // detect si le trace est du haut vers le bas
                     if(yStart < yEnd){
                         isMoving = true;
                         double h = yEnd - yStart;
                         double base = 0;
 
-                        if(xStart < xEnd){
+                        // calcul la base du triangle du trace
+                        if(xStart < xEnd){ // slide d en haut a gauche vers en bas à droite
                             base = xEnd - xStart;
                             direction = true;
                         }else{
-                            base = xStart - xEnd;
+                            base = xStart - xEnd;// slide d en haut a droite vers en bas à gauche
                             direction = false;
                         }
 
-                        // hypothenus du tringle (ditance entre le debut et la fin du slide
+                        // hypothenus du tringle du trace (ditance entre le debut et la fin du slide
                         distance = Math.sqrt(Math.pow(base,2) + Math.pow(h,2));
                         angle = Math.toDegrees(Math.atan(h/base));
+
+
+                        // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
+                        double hauteurFinal =  (width - ballX) * Math.tan((float)angle);
+
+                        // y = mx + p
+                        //calcul coeficient de la droite
+                        m  = (hauteurFinal - ballY) / (width - ballX);
+
+                        //calcul p
+                        p = hauteurFinal - (width*m);
 
                         System.out.println("Hauteur : " + h);
                         System.out.println("Base : " + base);
                         System.out.println("Distance : " + distance);
                         System.out.println("Angle : " + angle);
-
-
-                        // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
-                        double yEnd =  (width - ballX) * Math.tan((float)angle);
-
-                        // y = mx + p
-                        //calcul coeficient de la droite
-                        m  = (yEnd - ballY) / (width - ballX);
-
-                        //calcul p
-                        p = yEnd - (width*m);
+                        System.out.println("hauteurFinal : " + hauteurFinal);
+                        System.out.println("M : " + m);
+                        System.out.println("P : " + p);
 
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
