@@ -43,7 +43,8 @@ public class Balls extends AppCompatActivity {
     float height;
     double distance = 0;
     double angle = 0;
-    boolean direction = false; // false = left rigth = true
+    int direction;
+    int directionTamp;
     double m;
     double p;
     long fps;
@@ -133,7 +134,7 @@ public class Balls extends AppCompatActivity {
             if(isMoving){
                 for(int i=0;i<10;i++){
                     col = collisition(ballX,ballY);
-                    win(ballX,ballY);
+                   // win(ballX,ballY);
                     deplacement();
                 }
                 //bitmapBob = rotation(bitmapBob,1);
@@ -159,6 +160,7 @@ public class Balls extends AppCompatActivity {
 
                 // Display the current fps on the screen
                 canvas.drawText("FPS:" + fps, 20, 40, paint);
+                canvas.drawText("BALL X : " + ballX + " BALL Y : " + ballY, 20, 100, paint);
                 canvas.drawText("NB COL :" + nbCol, 200, 40, paint);
                 canvas.drawText("SCORE  :" + score, 440, 40, paint);
 
@@ -245,43 +247,77 @@ public class Balls extends AppCompatActivity {
         }
     }
 
-    public void deplacement(){
 
+    /*
+     * direction == 1 ---> monté à droite
+     * direction == 2 ---> monté à gauche
+     * direction == 3 ---> descente à gauche
+     * direction == 4 ---> descente à droite
+     *
+     * */
+    public void deplacement(){
         switch (col) {
             case 0 :
-                if (direction) {
-                    ballX = ballX - (((float) distance / 4) / fps);
-                    if(nbCol == 0){
-                        ballY = height -  (((float) (((ballX) * m) + p)) - height);
-                    }else{
-                        ballY =  (height - (- (float) (-((ballX) * m) - p)));
-                    }
-                }
-                else {
+                if (direction == 1) { // MOINTÉ A DROITE &&  REBOND VERS DROITE
+                    directionTamp = 1;
                     ballX = ballX + (((float) distance / 4) / fps);
-
-                    if(nbCol == 0){
+                    if(nbCol == 0){ // Premier vers la droite
                         ballY = (float) (((ballX) * m) + p);
-                    }else{
+                    }else{ // rebond vers la droite
                         ballY =  height - ((float) (((ballX) * -m) + p) -  height);
+                    }
+                }else if(direction == 2){ // MOINTÉ A GAUCHE &&  REBOND VERS GAUCHE
+                    directionTamp = 2;
+                    ballX = ballX - (((float) distance / 4) / fps);
+                    if(nbCol == 0){ // Premier vers la gauche
+                        ballY = height -  (((float) (((ballX) * m) + p)) - height);
+                    }else{ // rebond vers la gauche
+                        ballY = (height + ((float) (((ballX) * -m) - p)));
+                    }
+                }else if(direction == 3) {
+                    // calcul la direction de descente (droite ou gauche);
+                    if(directionTamp == 1){
+                        ballX = ballX + (((float) distance / 4) / fps);
+                    }else if(directionTamp == 2){
+                        ballX = ballX - (((float) distance / 4) / fps);
+                    }
 
+                    if(nbCol == 0){ // Premier vers le haut
+                        ballY = -((float) (((ballX) * -m) - p));
+                    }else{
+                        if(directionTamp == 1){
+                            ballY = - 2*height - ((float) (((ballX) * m) - p));
+                        }else if(directionTamp == 2){
+                            ballY = -(height + ((float) (((ballX) * -m) - p)));
+
+                        }
                     }
 
                 }
                 break;
 
             case 1 :
-                direction = true; // monte en haut a gauche
-               // col = 0;
+                direction = 2; // monte en haut a gauche
                 ballX = ballX - 1;
                 ballY = ballY + 1;
-                //ballY = height -  (((float) (((ballX) * m) + p)) - height);
                 break;
             case 2 :
+                if(directionTamp == 3){
+                    direction = 3; //descente
+                    directionTamp = 1; // vers la droite
+                    ballX = ballX + 1;
+                    ballY = ballY - 1;
+                }else{
+                    direction = 1; // monte en haut a gauche
+                    ballX = ballX + 1;
+                    ballY = ballY + 1;
+                }
 
-                direction = false; // monte en haut a gauche
-                // col = 0;
-                ballX = ballX + 1;
+                break;
+            case 3:
+                direction = 3; // descente vers la gauche
+
+                ballX = ballX - 1;
                 ballY = ballY + 1;
                 break;
         }
@@ -328,10 +364,10 @@ public class Balls extends AppCompatActivity {
                         // calcul la base du triangle du trace
                         if(xStart < xEnd){ // slide d en haut a gauche vers en bas à droite
                             base = xEnd - xStart;
-                            direction = true;
+                            direction = 2;
                         }else{
                             base = xStart - xEnd;// slide d en haut a droite vers en bas à gauche
-                            direction = false;
+                            direction = 1;
                         }
 
                         // hypothenus du tringle du trace (ditance entre le debut et la fin du slide
