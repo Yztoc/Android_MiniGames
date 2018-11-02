@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
-
 import tj.project.esir.progmobproject.models.Question;
 
 public class QuestionManager {
@@ -52,6 +51,7 @@ public class QuestionManager {
     public long addQuestion(Question question) {
         // Ajout d'un enregistrement dans la table
         ContentValues values = new ContentValues();
+        values.put(ID_QUESTION, question.getId());
         values.put(TITLE_QUESTION, question.getTitle());
         values.put(TEXT_RESPONSE1, question.getResponse1().first);
         values.put(TEXT_RESPONSE2, question.getResponse2().first);
@@ -85,12 +85,12 @@ public class QuestionManager {
         return db.update(TABLE_NAME, values, where, whereArgs);
     }
 
-    public int deleteQuestion(Question question) {
+    public int deleteQuestion(int id) {
         // suppression d'un enregistrement
         // valeur de retour : (int) nombre de lignes affectées par la clause WHERE, 0 sinon
 
         String where = ID_QUESTION+" = ?";
-        String[] whereArgs = {question.getId()+""};
+        String[] whereArgs = {id+""};
 
         return db.delete(TABLE_NAME, where, whereArgs);
     }
@@ -140,6 +140,33 @@ public class QuestionManager {
             c.close();
         }
         return question;
+    }
+
+
+    public int getLastInsertedId(){
+        int res =-1;
+        Cursor c = db.rawQuery("SELECT max("+ID_QUESTION+") FROM "+TABLE_NAME,null);
+        if (c.moveToFirst()) {
+            System.out.println("cacabite"+c.getInt(0));
+           res =  c.getInt(0);
+            c.close();
+        }
+        return res;
+    }
+
+    public String getAllQuestionsIds(){
+        String res ="";
+        Cursor c = db.rawQuery(
+                "SELECT "+ID_QUESTION+" FROM "+TABLE_NAME, null);
+        if (c.moveToFirst()) {
+            do {
+                res += c.getInt(c.getColumnIndex(ID_QUESTION))+",";
+            } while (c.moveToNext());
+            c.close();
+        }
+        if(res != "")
+        res = res.substring(0,res.length()-1);
+        return res;
     }
 
     public Cursor getQuestions() {
