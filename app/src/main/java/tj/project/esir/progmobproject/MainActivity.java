@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         questionManager.open();
         String url1 =MajDB.serverURLNewQuestions+questionManager.getLastInsertedId();
-        questionManager.close();
+
         Request request = new Request.Builder().url(url1).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -62,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         q.setResponse1(new Pair(jsonobject.getString(TEXT_RESPONSE1),jsonobject.getBoolean(VALUE_RESPONSE1) == true ? 1 : 0));
                         q.setResponse2(new Pair(jsonobject.getString(TEXT_RESPONSE2),jsonobject.getBoolean(VALUE_RESPONSE2) == true ? 1 : 0));
                         q.setResponse3(new Pair(jsonobject.getString(TEXT_RESPONSE3),jsonobject.getBoolean(VALUE_RESPONSE3) == true ? 1 : 0));
-                        questionManager.open();
                         questionManager.addQuestion(q);
-                        questionManager.close();
                     }
                 }
                 catch (JSONException e){
@@ -73,9 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        questionManager.open();
         String url2 = MajDB.serverURLDeletedQuestion+questionManager.getAllQuestionsIds();
-        questionManager.close();
         request = new Request.Builder().url(url2).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -89,13 +85,12 @@ public class MainActivity extends AppCompatActivity {
                     String myResponse = response.body().string();
                     try {
                         JSONArray arrayOfRes = new JSONArray(myResponse);
-                        questionManager.open();
                         for (int i = 0; i < arrayOfRes.length(); i++) {
                             questionManager.deleteQuestion(arrayOfRes.getInt(i));
                         }
-                        questionManager.close();
                     }
                     catch (JSONException e){
+                        System.out.println(e);
                     }
                 }
             }
@@ -112,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent quizz = new Intent(getApplicationContext(), Quizz.class);
                 startActivity(quizz);
+                questionManager.close();
                 finish();
 
             }
