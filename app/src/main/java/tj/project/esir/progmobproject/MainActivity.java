@@ -35,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         questionManager = new QuestionManager(this);
-
         OkHttpClient client = new OkHttpClient();
         questionManager.open();
-        String url1 =MajDB.serverURLNewQuestions+questionManager.getLastInsertedId();
 
+        // Récupération des nouvelles questions à ajouter à la bdd sqlite et ajout dans celle-ci
+        String url1 =MajDB.serverURLNewQuestions+questionManager.getLastInsertedId();
         Request request = new Request.Builder().url(url1).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -50,27 +50,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful()){
-                String myResponse = response.body().string();
-                System.out.println("reep" +myResponse);
-                try {
-                    JSONArray arrayOfRes = new JSONArray(myResponse);
-                    for (int i = 0; i < arrayOfRes.length(); i++) {
-                        JSONObject jsonobject = arrayOfRes.getJSONObject(i);
-                        Question q = new Question();
-                        q.setId(jsonobject.getInt("_id"));
-                        q.setTitle(jsonobject.getString(TITLE_QUESTION));
-                        q.setResponse1(new Pair(jsonobject.getString(TEXT_RESPONSE1),jsonobject.getBoolean(VALUE_RESPONSE1) == true ? 1 : 0));
-                        q.setResponse2(new Pair(jsonobject.getString(TEXT_RESPONSE2),jsonobject.getBoolean(VALUE_RESPONSE2) == true ? 1 : 0));
-                        q.setResponse3(new Pair(jsonobject.getString(TEXT_RESPONSE3),jsonobject.getBoolean(VALUE_RESPONSE3) == true ? 1 : 0));
-                        questionManager.addQuestion(q);
+                    String myResponse = response.body().string();
+                    try {
+                        JSONArray arrayOfRes = new JSONArray(myResponse);
+                        for (int i = 0; i < arrayOfRes.length(); i++) {
+                            JSONObject jsonobject = arrayOfRes.getJSONObject(i);
+                            Question q = new Question();
+                            q.setId(jsonobject.getInt("_id"));
+                            q.setTitle(jsonobject.getString(TITLE_QUESTION));
+                            q.setResponse1(new Pair(jsonobject.getString(TEXT_RESPONSE1),jsonobject.getBoolean(VALUE_RESPONSE1) == true ? 1 : 0));
+                            q.setResponse2(new Pair(jsonobject.getString(TEXT_RESPONSE2),jsonobject.getBoolean(VALUE_RESPONSE2) == true ? 1 : 0));
+                            q.setResponse3(new Pair(jsonobject.getString(TEXT_RESPONSE3),jsonobject.getBoolean(VALUE_RESPONSE3) == true ? 1 : 0));
+                            questionManager.addQuestion(q);
+                        }
                     }
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+        // récupération des id des questions à supprimer de la bdd sqlite et suppression des questions
         String url2 = MajDB.serverURLDeletedQuestion+questionManager.getAllQuestionsIds();
         request = new Request.Builder().url(url2).build();
         client.newCall(request).enqueue(new Callback() {
@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         setContentView(R.layout.activity_main);
 
