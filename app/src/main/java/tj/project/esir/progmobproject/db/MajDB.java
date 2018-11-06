@@ -2,8 +2,8 @@ package tj.project.esir.progmobproject.db;
 
 public class MajDB {
 
-    public static String serverURLNewQuestions = "164.132.160.101:5000/question/from/";
-    public static String serverURLDeletedQuestion ="164.132.160.101:5000/deleted/question/";
+    public static String serverURLNewQuestions = "http://esir-mobile.codeassist.io/api/question/from/";
+    public static String serverURLDeletedQuestion ="http://esir-mobile.codeassist.io/api/question/deleted/";
 
 
 }
