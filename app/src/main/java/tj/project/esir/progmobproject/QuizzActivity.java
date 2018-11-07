@@ -16,7 +16,7 @@ import java.util.Random;
 import tj.project.esir.progmobproject.db.QuestionManager;
 import tj.project.esir.progmobproject.models.Question;
 
-public class Quizz extends AppCompatActivity {
+public class QuizzActivity extends AppCompatActivity {
 
     Button btn_rep1;
     Button btn_rep2;

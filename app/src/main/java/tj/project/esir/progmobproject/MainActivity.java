@@ -29,15 +29,48 @@ public class MainActivity extends AppCompatActivity {
     private Button btnCredit;
 
     QuestionManager questionManager;
+    OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         questionManager = new QuestionManager(this);
-        OkHttpClient client = new OkHttpClient();
+        client = new OkHttpClient();
         questionManager.open();
 
+        getNewQuestions(); // récupération des nouvelles questions du serveur
+        deleteQuestions(); // suppression des questions supprimées depuis le serveur
+
+        setContentView(R.layout.activity_main);
+
+        btnSinglePlayer = findViewById(R.id.btn_singleplayer);
+        btnMultiplayer = findViewById(R.id.btn_multiplayer);
+        btnCredit = findViewById(R.id.btn_credit);
+
+        btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
+                startActivity(quizz);
+                questionManager.close();
+                finish();
+
+            }
+        });
+        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("button 2");
+            }
+        });
+        btnCredit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("button 3");
+            }
+        });
+    }
+
+
+    public void getNewQuestions(){
         // Récupération des nouvelles questions à ajouter à la bdd sqlite et ajout dans celle-ci
         String url1 =MajDB.serverURLNewQuestions+questionManager.getLastInsertedId();
         Request request = new Request.Builder().url(url1).build();
@@ -70,9 +103,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void deleteQuestions(){
         // récupération des id des questions à supprimer de la bdd sqlite et suppression des questions
         String url2 = MajDB.serverURLDeletedQuestion+questionManager.getAllQuestionsIds();
-        request = new Request.Builder().url(url2).build();
+        Request request = new Request.Builder().url(url2).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -93,32 +129,6 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(e);
                     }
                 }
-            }
-        });
-
-        setContentView(R.layout.activity_main);
-
-        btnSinglePlayer = findViewById(R.id.btn_singleplayer);
-        btnMultiplayer = findViewById(R.id.btn_multiplayer);
-        btnCredit = findViewById(R.id.btn_credit);
-
-        btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent quizz = new Intent(getApplicationContext(), Quizz.class);
-                startActivity(quizz);
-                questionManager.close();
-                finish();
-
-            }
-        });
-        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("button 2");
-            }
-        });
-        btnCredit.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("button 3");
             }
         });
     }

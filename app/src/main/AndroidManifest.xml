@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Quizz"
+            android:name=".QuizzActivity"
             android:label="@string/title_activity_quizz"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
