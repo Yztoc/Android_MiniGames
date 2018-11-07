@@ -31,6 +31,7 @@ public class Balls extends AppCompatActivity {
     Point size = new Point();
     boolean isMoving = false;
     int nbCol = 0;
+    int loose = 0;
     int widthBall = 100;
     int heightBall = 100;
     int widthGoal= 300;
@@ -45,6 +46,7 @@ public class Balls extends AppCompatActivity {
     double angle = 0;
     int direction;
     int directionTamp;
+    boolean descente = false;
     double m;
     double p;
     long fps;
@@ -138,6 +140,8 @@ public class Balls extends AppCompatActivity {
                     deplacement();
                 }
                 //bitmapBob = rotation(bitmapBob,1);
+            }else{
+                reset();
             }
         }
 
@@ -150,7 +154,7 @@ public class Balls extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255,  26, 128, 182));
+                canvas.drawColor(Color.argb(255,  0, 0, 0));
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(255,  249, 0, 0));
@@ -163,6 +167,7 @@ public class Balls extends AppCompatActivity {
                 canvas.drawText("BALL X : " + ballX + " BALL Y : " + ballY, 20, 100, paint);
                 canvas.drawText("NB COL :" + nbCol, 200, 40, paint);
                 canvas.drawText("SCORE  :" + score, 440, 40, paint);
+                canvas.drawText("LOOSE  :" + loose, 680, 40, paint);
 
 
                 canvas.drawBitmap(bitmapBob, ballX, ballY, paint);
@@ -190,10 +195,10 @@ public class Balls extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-
         gameView.resume();
     }
     @Override
@@ -203,10 +208,10 @@ public class Balls extends AppCompatActivity {
     }
 
     public void reset(){
-        //ballX = width/2-widthBall/2;
-        //ballY = height-heightBall;
-        ballX = 100;
-        ballY = 100;
+        ballX = width/2-widthBall/2;
+        ballY = height-heightBall;
+        nbCol = 0;
+        col = 0;
     }
 
     public void win(float x,float y){
@@ -239,7 +244,8 @@ public class Balls extends AppCompatActivity {
             nbCol++;
             return 3;
         }else if(y-heightBall*2 >= height){
-            nbCol++;
+            loose++;
+            isMoving = false;
             return 4;
         }
         else{
@@ -259,69 +265,113 @@ public class Balls extends AppCompatActivity {
         switch (col) {
             case 0 :
                 if (direction == 1) { // MOINTÉ A DROITE &&  REBOND VERS DROITE
+                    descente = false;
                     directionTamp = 1;
                     ballX = ballX + (((float) distance / 4) / fps);
                     if(nbCol == 0){ // Premier vers la droite
+                        System.out.println("Avant rebond "+((ballX) * m+" x + "+p));
                         ballY = (float) (((ballX) * m) + p);
                     }else{ // rebond vers la droite
                         ballY =  height - ((float) (((ballX) * -m) + p) -  height);
                     }
                 }else if(direction == 2){ // MOINTÉ A GAUCHE &&  REBOND VERS GAUCHE
+                    descente = false;
                     directionTamp = 2;
                     ballX = ballX - (((float) distance / 4) / fps);
                     if(nbCol == 0){ // Premier vers la gauche
+
+
                         ballY = height -  (((float) (((ballX) * m) + p)) - height);
+
                     }else{ // rebond vers la gauche
-                        ballY = (height + ((float) (((ballX) * -m) - p)));
+                        System.out.println("bakkY avant "+ballY);
+
+                        ballY = height + ((float) (((ballX) * -m) - p));
+
+
+                       System.out.println("bakkY aores "+ballY);
+                       System.out.println("Apres rebond "+(((ballX) * -m)+" x +" + -p));
+
                     }
                 }else if(direction == 3) {
-                    // calcul la direction de descente (droite ou gauche);
-                    if(directionTamp == 1){
-                        ballX = ballX + (((float) distance / 4) / fps);
-                    }else if(directionTamp == 2){
-                        ballX = ballX - (((float) distance / 4) / fps);
-                    }
 
-                    if(nbCol == 0){ // Premier vers le haut
-                        ballY = -((float) (((ballX) * -m) - p));
-                    }else{
-                        if(directionTamp == 1){
-                            ballY = - 2*height - ((float) (((ballX) * m) - p));
-                        }else if(directionTamp == 2){
-                            ballY = -(height + ((float) (((ballX) * -m) - p)));
+                    // calcul la direction de descente (droite ou gauche);
+                    if(directionTamp == 1){// descente en bas vers la gauche
+                        ballX = ballX + (((float) distance / 4) / fps);
+                        if(descente){
+                            ballY = -height - ((float) (((ballX) * m) - p));
+                        }else{
+                            ballY = ((float)(((ballX) * -m) -p));
 
                         }
+                    }else if(directionTamp == 2){//descente en bas vers la droite
+                        ballX = ballX - (((float) distance / 4) / fps);
+                        ballY = -(height + ((float) (((ballX) * -m) - p)));
                     }
-
+                    descente = true;
                 }
                 break;
 
             case 1 :
-                direction = 2; // monte en haut a gauche
-                ballX = ballX - 1;
-                ballY = ballY + 1;
+                if(descente){
+                    direction = 3; //descente
+                    directionTamp = 2; // vers la gauche
+                    ballX = ballX -1;
+                    ballY = ballY + 1;
+                }else{
+                    direction = 2; // monte en haut a gauche
+                    ballX = ballX - 1;
+                    ballY = ballY - 1;
+                }
+
                 break;
             case 2 :
-                if(directionTamp == 3){
+                if(descente){ // COLISION A GAUCHE DE PUIS UNE DESCNETE A DROITE ---> RESULTAT DESCENTE A DROITE
                     direction = 3; //descente
                     directionTamp = 1; // vers la droite
                     ballX = ballX + 1;
-                    ballY = ballY - 1;
+                    ballY = ballY + 1;
                 }else{
                     direction = 1; // monte en haut a gauche
                     ballX = ballX + 1;
-                    ballY = ballY + 1;
+                    ballY = ballY - 1;
+
                 }
 
                 break;
             case 3:
-                direction = 3; // descente vers la gauche
+                if(col==0){
+                    if(direction == 1){
+                        directionTamp = 1;
+                        direction = 3;
+                        ballX = ballX - 1;
+                        ballY = ballY + 1;
+                    }else{
+                        directionTamp = 2;
+                        direction = 3;
+                        ballX = ballX + 1;
+                        ballY = ballY + 1;
+                    }
+                }else{
+                    direction = 3; // descente
+                    if(directionTamp == 1)ballX = ballX + 10;
+                    else ballX = ballX - 10;
 
-                ballX = ballX - 1;
-                ballY = ballY + 1;
+                    ballY = ballY + 1;
+                }
+                break;
+            case 4:
+                direction = 4; // bas
+
+                ballX = ballX + 1;
+                ballY = ballY - 1;
                 break;
         }
 
+    }
+
+    public void generateMap(){
+        
     }
 
     public static Bitmap rotation(Bitmap source, float angle)
