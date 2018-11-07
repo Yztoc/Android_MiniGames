@@ -20,15 +20,20 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
 
 public class Balls extends AppCompatActivity {
 
     GameView gameView;
-    Bitmap bitmapBob;
+    Bitmap ball;
     Bitmap goal;
+    Bitmap block;
     Point size = new Point();
+    ArrayList<Block> tabBlock = new ArrayList<Block>();
     boolean isMoving = false;
     int nbCol = 0;
     int loose = 0;
@@ -70,7 +75,7 @@ public class Balls extends AppCompatActivity {
         goalX = width/2-widthGoal/2;
         goalY = 200;
 
-
+        generateMap();
         hideSystemUI();
 
         // Initialize gameView and set it as the view
@@ -101,15 +106,20 @@ public class Balls extends AppCompatActivity {
             paint = new Paint();
 
             // Load Bob from his .png file
-            bitmapBob = BitmapFactory.decodeResource(this.getResources(), R.drawable.ball_blue);
+            ball = BitmapFactory.decodeResource(this.getResources(), R.drawable.ball_blue);
             goal = BitmapFactory.decodeResource(this.getResources(), R.drawable.trou);
+            block = BitmapFactory.decodeResource(this.getResources(), R.drawable.block);
+
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(
-                    bitmapBob, widthBall, heightBall, false);
+                    ball, widthBall, heightBall, false);
             Bitmap resizedGoal = Bitmap.createScaledBitmap(
                     goal, widthGoal, heightGoal, false);
+            Bitmap resizedBlock = Bitmap.createScaledBitmap(
+                    block, Block.width, Block.height, false);
 
-            bitmapBob = resizedBitmap;
+            ball = resizedBitmap;
             goal = resizedGoal;
+            block = resizedBlock;
             // Set our boolean to true - game on!
             playing = true;
 
@@ -139,7 +149,7 @@ public class Balls extends AppCompatActivity {
                    // win(ballX,ballY);
                     deplacement();
                 }
-                //bitmapBob = rotation(bitmapBob,1);
+                //ball = rotation(ball,1);
             }else{
                 reset();
             }
@@ -170,10 +180,13 @@ public class Balls extends AppCompatActivity {
                 canvas.drawText("LOOSE  :" + loose, 680, 40, paint);
 
 
-                canvas.drawBitmap(bitmapBob, ballX, ballY, paint);
+                canvas.drawBitmap(ball, ballX, ballY, paint);
                 canvas.drawBitmap(goal, goalX, goalY, paint);
 
-                // Draw everything to the screen
+                for (Block element : tabBlock) {
+                    canvas.drawBitmap(block, element.getX(), element.getY(), paint);
+                }
+
                 ourHolder.unlockCanvasAndPost(canvas);
             }
 
@@ -233,6 +246,25 @@ public class Balls extends AppCompatActivity {
     - col = 0 ---> aucune droite
     */
     public int collisition(float x, float y){
+
+        for (Block element : tabBlock) {
+            if(x + widthBall >= element.getX() && y > (element.getY() - heightBall) && y < (element.getY() + heightBall)){ // si la balle tape le coté gauche d'un block
+                nbCol++;
+                return 1;
+            }else if(x<= element.getX()+element.getWidth() && y > (element.getY() - heightBall) && y < (element.getY() + heightBall) ){ // si la balle tape le coté droit d'un block
+                nbCol++;
+                return 2;
+            }else if(y <= element.getY()+element.getHeight() && x>=(element.getX() - widthBall) && x<=(element.getX() + widthBall)) {
+                nbCol++;
+                return 3;
+            }else if(y-heightBall*2 >= element.getY()-element.getHeight()){
+
+                //return 4;
+            }
+            else{
+                return 0;
+            }
+        }
 
         if(x + widthBall>=width){
             nbCol++;
@@ -371,7 +403,25 @@ public class Balls extends AppCompatActivity {
     }
 
     public void generateMap(){
-        
+        int y = (int) goalY+heightGoal+20;
+        int x = 100;
+        Random rand1 = new Random();
+        int startRange = 0, endRange = (int)width-(Block.width*2);
+        int nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
+        for(int i=1;i<4;i++){
+            for(int j=1;j<nbBlock;j++){
+                x+=Block.width;
+                tabBlock.add(new Block(x,y*i));
+            }
+
+            int offsetValue =  endRange - startRange + 1;
+            int  baseValue = (int)  (offsetValue * rand1.nextDouble());
+            int r =  baseValue + startRange;
+            System.out.println("random : " + r);
+            nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
+            x=r;
+        }
+
     }
 
     public static Bitmap rotation(Bitmap source, float angle)
@@ -446,7 +496,7 @@ public class Balls extends AppCompatActivity {
 
 
                     }else{
-                        System.out.println("NOT good");
+                        System.out.println("Geste dans le mauvais sens");
                     }
 
                     break;

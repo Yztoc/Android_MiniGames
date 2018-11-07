@@ -4,14 +4,12 @@ public class Block {
 
     private int x;
     private int y;
-    private int width = 40;
-    private int height = 40;
+    public static int width = 80;
+    public static int height = 80;
 
-    public Block(int x,int y,int width, int height){
+    public Block(int x,int y){
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
     }
 
     public int getX() {
