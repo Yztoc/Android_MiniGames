@@ -39,8 +39,8 @@ public class Balls extends AppCompatActivity {
     int loose = 0;
     int widthBall = 100;
     int heightBall = 100;
-    int widthGoal= 300;
-    int heightGoal = 300;
+    int widthGoal= 150;
+    int heightGoal = 150;
     float ballX;
     float ballY;
     float goalX;
@@ -58,9 +58,19 @@ public class Balls extends AppCompatActivity {
     int col;
     int score = 0;
     boolean finish = false;
+    int level = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+
+        if(b!=null)
+        {
+            level = (int) b.get("level");
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ball);
 
@@ -246,7 +256,7 @@ public class Balls extends AppCompatActivity {
     - col = 0 ---> aucune droite
     */
     public int collisition(float x, float y){
-
+        /*
         for (Block element : tabBlock) {
             if(x + widthBall >= element.getX() && y > (element.getY() - heightBall) && y < (element.getY() + heightBall)){ // si la balle tape le coté gauche d'un block
                 nbCol++;
@@ -264,7 +274,7 @@ public class Balls extends AppCompatActivity {
             else{
                 return 0;
             }
-        }
+        }*/
 
         if(x + widthBall>=width){
             nbCol++;
@@ -301,8 +311,9 @@ public class Balls extends AppCompatActivity {
                     directionTamp = 1;
                     ballX = ballX + (((float) distance / 4) / fps);
                     if(nbCol == 0){ // Premier vers la droite
-                        System.out.println("Avant rebond "+((ballX) * m+" x + "+p));
                         ballY = (float) (((ballX) * m) + p);
+                        System.out.println("BALL Y Before"   + ballY);
+
                     }else{ // rebond vers la droite
                         ballY =  height - ((float) (((ballX) * -m) + p) -  height);
                     }
@@ -311,34 +322,33 @@ public class Balls extends AppCompatActivity {
                     directionTamp = 2;
                     ballX = ballX - (((float) distance / 4) / fps);
                     if(nbCol == 0){ // Premier vers la gauche
-
-
                         ballY = height -  (((float) (((ballX) * m) + p)) - height);
-
                     }else{ // rebond vers la gauche
-                        System.out.println("bakkY avant "+ballY);
-
-                        ballY = height + ((float) (((ballX) * -m) - p));
-
-
-                       System.out.println("bakkY aores "+ballY);
-                       System.out.println("Apres rebond "+(((ballX) * -m)+" x +" + -p));
+                        /*************A CORRIGER  *************/
+                        ballY = height + ((float) (((ballX) * -m) - (p)));
+                        System.out.println("BALL Y After"   + ballY);
 
                     }
                 }else if(direction == 3) {
-
                     // calcul la direction de descente (droite ou gauche);
                     if(directionTamp == 1){// descente en bas vers la gauche
                         ballX = ballX + (((float) distance / 4) / fps);
                         if(descente){
-                            ballY = -height - ((float) (((ballX) * m) - p));
+                            /*************A CORRIGER  *************/
+                            //System.out.println("DIRECNTION TAMP 1 && DESCENTE ");
+                            System.out.println("DESCENTE VERS LA GAUCHE");
+                            ballY = -(height + ((float) (((ballX) * m) - p)));
                         }else{
-                            ballY = ((float)(((ballX) * -m) -p));
-
+                            ballY = -height - ((float) (((ballX) * m) - p));
                         }
                     }else if(directionTamp == 2){//descente en bas vers la droite
                         ballX = ballX - (((float) distance / 4) / fps);
-                        ballY = -(height + ((float) (((ballX) * -m) - p)));
+                        if(descente){
+                            ballY = -(height + ((float) (((ballX) * -m) - p)));
+                        }else{
+                            ballY = -(height + ((float) (((ballX) * -m) - p)));
+
+                        }
                     }
                     descente = true;
                 }
@@ -352,8 +362,8 @@ public class Balls extends AppCompatActivity {
                     ballY = ballY + 1;
                 }else{
                     direction = 2; // monte en haut a gauche
-                    ballX = ballX - 1;
-                    ballY = ballY - 1;
+                    ballX = ballX - 10;
+                    ballY = ballY - 10;
                 }
 
                 break;
@@ -367,27 +377,28 @@ public class Balls extends AppCompatActivity {
                     direction = 1; // monte en haut a gauche
                     ballX = ballX + 1;
                     ballY = ballY - 1;
-
                 }
 
                 break;
             case 3:
+                System.out.println("DIRECTION : "+ direction);
                 if(col==0){
+                    descente = true;
                     if(direction == 1){
-                        directionTamp = 1;
-                        direction = 3;
-                        ballX = ballX - 1;
+                        direction = 3; //descente
+                        directionTamp = 1; // vers la droite
+                        ballX = ballX + 1;
                         ballY = ballY + 1;
                     }else{
-                        directionTamp = 2;
-                        direction = 3;
-                        ballX = ballX + 1;
+                        direction = 3; //descente
+                        directionTamp = 2; // vers la gauche
+                        ballX = ballX - 1;
                         ballY = ballY + 1;
                     }
                 }else{
                     direction = 3; // descente
                     if(directionTamp == 1)ballX = ballX + 10;
-                    else ballX = ballX - 10;
+                    else if(directionTamp == 2) ballX = ballX - 10;
 
                     ballY = ballY + 1;
                 }
@@ -408,7 +419,7 @@ public class Balls extends AppCompatActivity {
         Random rand1 = new Random();
         int startRange = 0, endRange = (int)width-(Block.width*2);
         int nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
-        for(int i=1;i<4;i++){
+        for(int i=1;i<=level*2;i++){
             for(int j=1;j<nbBlock;j++){
                 x+=Block.width;
                 tabBlock.add(new Block(x,y*i));

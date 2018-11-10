@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import tj.project.esir.progmobproject.ball_games.Balls;
+import tj.project.esir.progmobproject.ball_games.MenuParam;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                // Intent quizz = new Intent(getApplicationContext(), Quizz.class);
                // startActivity(quizz);
+               // Intent ball = new Intent(getApplicationContext(), MenuParam.class);
                 Intent ball = new Intent(getApplicationContext(), Balls.class);
                 startActivity(ball);
                 finish();

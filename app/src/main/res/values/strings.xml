@@ -3,6 +3,9 @@
     <string name="singleplayer">Singleplayer</string>
     <string name="multiplayer">Multiplayer</string>
     <string name="credit">Credit</string>
+    <string name="simple">Simple</string>
+    <string name="moyen">Moyen</string>
+    <string name="difficult">Difficile</string>
     <string name="title_activity_quizz">Quizz</string>
     <string name="title_activity_ball">Ball game</string>
     <string name="great_response_quizz">Bonne réponse !</string>
