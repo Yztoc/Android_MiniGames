@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnMultiplayer;
     private Button btnCredit;
 
-    QuestionManager questionManager;
-    OkHttpClient client;
+    private QuestionManager questionManager;
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         });
         btnCredit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("button 3");
+                Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
+                startActivity(compass);
+                questionManager.close();
+                finish();
             }
         });
     }
