@@ -50,8 +50,6 @@ public class Balls extends AppCompatActivity {
     double distance = 0;
     double angle = 0;
     int direction;
-    int directionTamp;
-    boolean descente = false;
     double m;
     double p;
     long fps;
@@ -60,7 +58,9 @@ public class Balls extends AppCompatActivity {
     boolean finish = false;
     int level = 0;
 
-    float ballYTamp = 0;
+    //test
+    Block b = new Block(200,1000);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +195,9 @@ public class Balls extends AppCompatActivity {
                 canvas.drawBitmap(ball, ballX, ballY, paint);
                 canvas.drawBitmap(goal, goalX, goalY, paint);
 
+                //canvas.drawBitmap(block, b.getX(), b.getY(), paint);
+
+
                 for (Block element : tabBlock) {
                     canvas.drawBitmap(block, element.getX(), element.getY(), paint);
                 }
@@ -257,27 +260,9 @@ public class Balls extends AppCompatActivity {
 
     - col = 0 ---> aucune droite
     */
-    public int collisition(float x, float y){
+    public int collisition(float x, float y) {
 
-        /*for (Block element : tabBlock) {
-            if(x + widthBall >= element.getX() && y > (element.getY() - heightBall) && y < (element.getY() + heightBall)){ // si la balle tape le coté gauche d'un block
-                nbCol++;
-                return 1;
-            }else if(x<= element.getX()+element.getWidth() && y > (element.getY() - heightBall) && y < (element.getY() + heightBall) ){ // si la balle tape le coté droit d'un block
-                nbCol++;
-                return 2;
-            }else if(y <= element.getY()+element.getHeight() && x>=(element.getX() - widthBall) && x<=(element.getX() + widthBall)) {
-                nbCol++;
-                return 3;
-            }else if(y-heightBall*2 >= element.getY()-element.getHeight()){
-
-                //return 4;
-            }
-            else{
-                return 0;
-            }
-        }*/
-
+/*
         if(x + widthBall>=width){
             nbCol++;
             return 1;
@@ -288,14 +273,62 @@ public class Balls extends AppCompatActivity {
             nbCol++;
             return 3;
         }else if(y-heightBall*2 >= height){
-
             loose++;
             isMoving = false;
+            return 5;
+        } else if((x >= b.getX() - widthBall && x<= b.getX()) && (y > (b.getY() - heightBall) && y < (b.getY() + b.getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
+            nbCol++;
+            return 1;
+        }else if((x <= b.getX() + b.getWidth() + widthBall/10 && x>= b.getX()+b.getWidth()) && (y > (b.getY() - heightBall) && y < (b.getY() + b.getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
+            nbCol++;
+            return 2;
+        }else if((y  <= b.getY()+b.getHeight()+heightBall/10) && (y >= b.getY() +b. getHeight()) && (x>=(b.getX() - widthBall) && x<=(b.getX() + b.getWidth() + widthBall))) { // touche le haut block
+            nbCol++;
+            return 3;
+        }else if((y <= b.getY()) && (y >= b.getY() - heightBall) && (x>=(b.getX() - widthBall) && x<=(b.getX() + b.getWidth() + widthBall))){
+            nbCol++;
             return 4;
         }
         else{
             return 0;
         }
+        */
+
+        for (Block element : tabBlock) {
+            System.out.println("ele X : " + element.getX() + " Y : " + element.getY());
+           if(x + widthBall>=width){
+                nbCol++;
+                return 1;
+            }else if(x<= 0){
+                nbCol++;
+                return 2;
+            }else if(y <= 0) {
+                nbCol++;
+                return 3;
+            }else if(y-heightBall*2 >= height){
+                loose++;
+                isMoving = false;
+                return 5;
+            } else if((x >= element.getX() - widthBall && x<= element.getX()) && (y > (element.getY() - heightBall) && y < (element.getY() + element.getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
+                nbCol++;
+                return 1;
+            }else if((x <= element.getX() + element.getWidth() + widthBall/10 && x>= element.getX()+element.getWidth()) && (y > (element.getY() - heightBall) && y < (element.getY() + element.getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
+                nbCol++;
+                return 2;
+            }else if((y  <= element.getY()+element.getHeight()+heightBall/10) && (y >= element.getY() +element. getHeight()) && (x>=(element.getX() - widthBall) && x<=(element.getX() + element.getWidth() + widthBall))) { // touche le haut block
+                nbCol++;
+                return 3;
+            }else if((y <= element.getY()) && (y >= element.getY() - heightBall) && (x>=(element.getX() - widthBall) && x<=(element.getX() + element.getWidth() + widthBall))){
+                nbCol++;
+                return 4;
+            }
+            else{
+                return 0;
+            }
+
+        }
+        return 0;
+
     }
 
     public void deplacement(){

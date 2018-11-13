@@ -4,8 +4,8 @@ public class Block {
 
     private int x;
     private int y;
-    public static int width = 80;
-    public static int height = 80;
+    public static int width = 100;
+    public static int height = 100;
 
     public Block(int x,int y){
         this.x = x;
