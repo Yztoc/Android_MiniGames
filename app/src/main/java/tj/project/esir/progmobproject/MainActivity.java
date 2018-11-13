@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                // Intent quizz = new Intent(getApplicationContext(), Quizz.class);
                // startActivity(quizz);
-               // Intent ball = new Intent(getApplicationContext(), MenuParam.class);
+               //Intent ball = new Intent(getApplicationContext(), MenuParam.class);
                 Intent ball = new Intent(getApplicationContext(), Balls.class);
                 startActivity(ball);
                 finish();

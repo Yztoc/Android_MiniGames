@@ -286,8 +286,9 @@ public class Balls extends AppCompatActivity {
             nbCol++;
             return 3;
         }else if(y-heightBall*2 >= height){
-            loose++;
-            isMoving = false;
+            nbCol++;
+            //loose++;
+            //isMoving = false;
             return 4;
         }
         else{
@@ -304,16 +305,21 @@ public class Balls extends AppCompatActivity {
      *
      * */
     public void deplacement(){
+
+        float equationY = (float) (((ballX) * m) + p);
+        float equationX = ballX + (((float) distance / 4) / fps);
+
         switch (col) {
             case 0 :
+               // ballX = equationX;
+               // ballY = equationY;
+
                 if (direction == 1) { // MOINTÉ A DROITE &&  REBOND VERS DROITE
                     descente = false;
                     directionTamp = 1;
                     ballX = ballX + (((float) distance / 4) / fps);
                     if(nbCol == 0){ // Premier vers la droite
                         ballY = (float) (((ballX) * m) + p);
-                        System.out.println("BALL Y Before"   + ballY);
-
                     }else{ // rebond vers la droite
                         ballY =  height - ((float) (((ballX) * -m) + p) -  height);
                     }
@@ -326,8 +332,6 @@ public class Balls extends AppCompatActivity {
                     }else{ // rebond vers la gauche
                         /*************A CORRIGER  *************/
                         ballY = height + ((float) (((ballX) * -m) - (p)));
-                        System.out.println("BALL Y After"   + ballY);
-
                     }
                 }else if(direction == 3) {
                     // calcul la direction de descente (droite ou gauche);
@@ -335,9 +339,7 @@ public class Balls extends AppCompatActivity {
                         ballX = ballX + (((float) distance / 4) / fps);
                         if(descente){
                             /*************A CORRIGER  *************/
-                            //System.out.println("DIRECNTION TAMP 1 && DESCENTE ");
-                            System.out.println("DESCENTE VERS LA GAUCHE");
-                            ballY = -(height + ((float) (((ballX) * m) - p)));
+                            ballY = -height - ((float) (((ballX) * m) - p));
                         }else{
                             ballY = -height - ((float) (((ballX) * m) - p));
                         }
@@ -347,10 +349,18 @@ public class Balls extends AppCompatActivity {
                             ballY = -(height + ((float) (((ballX) * -m) - p)));
                         }else{
                             ballY = -(height + ((float) (((ballX) * -m) - p)));
-
                         }
                     }
                     descente = true;
+                }else if(direction == 4){ // rebond sol (bas de plateforme
+
+                    if(directionTamp == 1){// rebond vers la droite
+                        ballX = ballX + (((float) distance / 4) / fps);
+
+                        ballY =  height - ((float) (((ballX) * -m) + p) -  height);
+                    }else if(directionTamp == 2){
+                        ballY = height -  (((float) (((ballX) * m) + p)) - height);
+                    }
                 }
                 break;
 
@@ -362,8 +372,10 @@ public class Balls extends AppCompatActivity {
                     ballY = ballY + 1;
                 }else{
                     direction = 2; // monte en haut a gauche
-                    ballX = ballX - 10;
-                    ballY = ballY - 10;
+                    directionTamp = 2; // vers la gauche
+
+                    ballX = ballX - 1;
+                    ballY = ballY - 1;
                 }
 
                 break;
@@ -373,15 +385,17 @@ public class Balls extends AppCompatActivity {
                     directionTamp = 1; // vers la droite
                     ballX = ballX + 1;
                     ballY = ballY + 1;
+
                 }else{
-                    direction = 1; // monte en haut a gauche
+                    direction = 1; // monte en haut a droite
+                    directionTamp = 1; // vers la droite
+
                     ballX = ballX + 1;
                     ballY = ballY - 1;
                 }
 
                 break;
             case 3:
-                System.out.println("DIRECTION : "+ direction);
                 if(col==0){
                     descente = true;
                     if(direction == 1){
@@ -389,6 +403,7 @@ public class Balls extends AppCompatActivity {
                         directionTamp = 1; // vers la droite
                         ballX = ballX + 1;
                         ballY = ballY + 1;
+
                     }else{
                         direction = 3; //descente
                         directionTamp = 2; // vers la gauche
@@ -397,16 +412,27 @@ public class Balls extends AppCompatActivity {
                     }
                 }else{
                     direction = 3; // descente
-                    if(directionTamp == 1)ballX = ballX + 10;
-                    else if(directionTamp == 2) ballX = ballX - 10;
+                    if(directionTamp == 1){
+                        ballX = ballX + 10;
+                        ballY = ballY + 10;
 
-                    ballY = ballY + 1;
+                    }
+                    else if(directionTamp == 2)
+                    {
+                        ballY = ballY + 10;
+                        ballX = ballX - 10;
+                    }
+
                 }
                 break;
             case 4:
                 direction = 4; // bas
-
-                ballX = ballX + 1;
+                if(directionTamp == 1){
+                    ballY = ballY + 10;
+                }
+                else if(directionTamp == 2) {
+                    ballX = ballX - 10;
+                }
                 ballY = ballY - 1;
                 break;
         }
