@@ -60,6 +60,8 @@ public class Balls extends AppCompatActivity {
     boolean finish = false;
     int level = 0;
 
+    float ballYTamp = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -256,8 +258,8 @@ public class Balls extends AppCompatActivity {
     - col = 0 ---> aucune droite
     */
     public int collisition(float x, float y){
-        /*
-        for (Block element : tabBlock) {
+
+        /*for (Block element : tabBlock) {
             if(x + widthBall >= element.getX() && y > (element.getY() - heightBall) && y < (element.getY() + heightBall)){ // si la balle tape le coté gauche d'un block
                 nbCol++;
                 return 1;
@@ -286,9 +288,9 @@ public class Balls extends AppCompatActivity {
             nbCol++;
             return 3;
         }else if(y-heightBall*2 >= height){
-            nbCol++;
-            //loose++;
-            //isMoving = false;
+
+            loose++;
+            isMoving = false;
             return 4;
         }
         else{
@@ -296,148 +298,82 @@ public class Balls extends AppCompatActivity {
         }
     }
 
-
-    /*
-     * direction == 1 ---> monté à droite
-     * direction == 2 ---> monté à gauche
-     * direction == 3 ---> descente à gauche
-     * direction == 4 ---> descente à droite
-     *
-     * */
     public void deplacement(){
 
-        float equationY = (float) (((ballX) * m) + p);
-        float equationX = ballX + (((float) distance / 4) / fps);
+        /*                 cote bas
+                           col = 4
+                        _________________
+                        |                |
+            cote droit  |                |  cote gauche
+            col = 1     |________________|  col =  2
 
-        switch (col) {
-            case 0 :
-               // ballX = equationX;
-               // ballY = equationY;
+                            cote haut
+                            col = 3
+         */
 
-                if (direction == 1) { // MOINTÉ A DROITE &&  REBOND VERS DROITE
-                    descente = false;
-                    directionTamp = 1;
-                    ballX = ballX + (((float) distance / 4) / fps);
-                    if(nbCol == 0){ // Premier vers la droite
-                        ballY = (float) (((ballX) * m) + p);
-                    }else{ // rebond vers la droite
-                        ballY =  height - ((float) (((ballX) * -m) + p) -  height);
-                    }
-                }else if(direction == 2){ // MOINTÉ A GAUCHE &&  REBOND VERS GAUCHE
-                    descente = false;
-                    directionTamp = 2;
-                    ballX = ballX - (((float) distance / 4) / fps);
-                    if(nbCol == 0){ // Premier vers la gauche
-                        ballY = height -  (((float) (((ballX) * m) + p)) - height);
-                    }else{ // rebond vers la gauche
-                        /*************A CORRIGER  *************/
-                        ballY = height + ((float) (((ballX) * -m) - (p)));
-                    }
-                }else if(direction == 3) {
-                    // calcul la direction de descente (droite ou gauche);
-                    if(directionTamp == 1){// descente en bas vers la gauche
-                        ballX = ballX + (((float) distance / 4) / fps);
-                        if(descente){
-                            /*************A CORRIGER  *************/
-                            ballY = -height - ((float) (((ballX) * m) - p));
-                        }else{
-                            ballY = -height - ((float) (((ballX) * m) - p));
-                        }
-                    }else if(directionTamp == 2){//descente en bas vers la droite
-                        ballX = ballX - (((float) distance / 4) / fps);
-                        if(descente){
-                            ballY = -(height + ((float) (((ballX) * -m) - p)));
-                        }else{
-                            ballY = -(height + ((float) (((ballX) * -m) - p)));
-                        }
-                    }
-                    descente = true;
-                }else if(direction == 4){ // rebond sol (bas de plateforme
+        /**  COLLISION COTE DROIT  **/
+        if(col == 1 && direction ==1){// si colision coté droit en monté alors deplacement à gauche en monté
+            direction = 2;
+            //setEquation(180-(float) angle ,(int)-width);
+        }
+        else if(col == 1 && direction == 4){ // si colision coté droit en descente alors deplacement à gauche en descente
+            direction = 3;
+           // setEquation(180+(float) angle ,(int)-width);
 
-                    if(directionTamp == 1){// rebond vers la droite
-                        ballX = ballX + (((float) distance / 4) / fps);
-
-                        ballY =  height - ((float) (((ballX) * -m) + p) -  height);
-                    }else if(directionTamp == 2){
-                        ballY = height -  (((float) (((ballX) * m) + p)) - height);
-                    }
-                }
-                break;
-
-            case 1 :
-                if(descente){
-                    direction = 3; //descente
-                    directionTamp = 2; // vers la gauche
-                    ballX = ballX -1;
-                    ballY = ballY + 1;
-                }else{
-                    direction = 2; // monte en haut a gauche
-                    directionTamp = 2; // vers la gauche
-
-                    ballX = ballX - 1;
-                    ballY = ballY - 1;
-                }
-
-                break;
-            case 2 :
-                if(descente){ // COLISION A GAUCHE DE PUIS UNE DESCNETE A DROITE ---> RESULTAT DESCENTE A DROITE
-                    direction = 3; //descente
-                    directionTamp = 1; // vers la droite
-                    ballX = ballX + 1;
-                    ballY = ballY + 1;
-
-                }else{
-                    direction = 1; // monte en haut a droite
-                    directionTamp = 1; // vers la droite
-
-                    ballX = ballX + 1;
-                    ballY = ballY - 1;
-                }
-
-                break;
-            case 3:
-                if(col==0){
-                    descente = true;
-                    if(direction == 1){
-                        direction = 3; //descente
-                        directionTamp = 1; // vers la droite
-                        ballX = ballX + 1;
-                        ballY = ballY + 1;
-
-                    }else{
-                        direction = 3; //descente
-                        directionTamp = 2; // vers la gauche
-                        ballX = ballX - 1;
-                        ballY = ballY + 1;
-                    }
-                }else{
-                    direction = 3; // descente
-                    if(directionTamp == 1){
-                        ballX = ballX + 10;
-                        ballY = ballY + 10;
-
-                    }
-                    else if(directionTamp == 2)
-                    {
-                        ballY = ballY + 10;
-                        ballX = ballX - 10;
-                    }
-
-                }
-                break;
-            case 4:
-                direction = 4; // bas
-                if(directionTamp == 1){
-                    ballY = ballY + 10;
-                }
-                else if(directionTamp == 2) {
-                    ballX = ballX - 10;
-                }
-                ballY = ballY - 1;
-                break;
         }
 
+        /**  COLLISION COTE GAUCHE  **/
+        if(col == 2 && direction ==2){// si colision coté gauche en monté alors deplacement à droite en monté
+            direction = 1;
+        }
+        else if(col == 2 && direction == 3){// si colision coté gauche en descente alors deplacement à droite en descente
+            direction = 4;
+        }
+
+        /**  COLLISION COTE HAUT   **/
+        if(col == 3 && direction ==1) direction = 4; // si colision coté haut en monté vers la droite  alors deplacement à droite en descente
+        else if(col == 3 && direction == 2)direction = 3; // si colision coté haut en monté vers la gauche alors déplacement à gauche en descente
+
+        /**  COLLISION COTE BAS   **/
+        if(col == 4 && direction == 4)direction = 1; // si colision coté bas en descente vers la droite  alors deplacement à droite en monté
+        else if(col == 4 && direction == 3)direction = 2; // si colision coté bas en descente vers la gauche  alors deplacement à gauche en monté
+
+
+        /**   DEPLACEMENT   **/
+        if(direction == 1){ // monté vers la droite
+            ballX = ballX + (((float) distance / 4) / fps);
+            if(nbCol == 0){
+                ballY = (float) (((ballX) * m) + p);
+            }else{
+                ballY = ballY - (((float) distance / 4) / fps);
+            }
+        }else if(direction == 2){ // monté vers la gauche
+            ballX = ballX - (((float) distance / 4) / fps);
+            if(nbCol == 0){
+                ballY = height -  (((float) (((ballX) * m) + p)) - height);
+            }else{
+                ballY = ballY - (((float) distance / 4) / fps);
+            }
+        }else if(direction == 3){ // descente vers la gauche
+            ballX = ballX - (((float) distance / 4) / fps);
+            if(nbCol == 0){
+                ballY = (float) (((ballX) * m) + p);
+            }else{
+                ballY = ballY + (((float) distance / 4) / fps);
+            }
+        }else if(direction == 4){ // descente vers la droite
+            ballX = ballX + (((float) distance / 4) / fps);
+            if(nbCol == 0){
+                ballY = (float) (((ballX) * -m) - p);
+            }else{
+                ballY = ballY + (((float) distance / 4) / fps);
+            }
+        }
+
+
+
     }
+
 
     public void generateMap(){
         int y = (int) goalY+heightGoal+20;
