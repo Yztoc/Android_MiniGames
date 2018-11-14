@@ -32,6 +32,7 @@ public class Balls extends AppCompatActivity {
     Bitmap ball;
     Bitmap goal;
     Bitmap block;
+    Bitmap bgrd;
     Point size = new Point();
     ArrayList<Block> tabBlock = new ArrayList<Block>();
     boolean isMoving = false;
@@ -92,6 +93,9 @@ public class Balls extends AppCompatActivity {
 
         // Initialize gameView and set it as the view
         gameView = new GameView(this);
+
+
+
         setContentView(gameView);
         gameView.setOnTouchListener(handleTouch);
     }
@@ -128,6 +132,10 @@ public class Balls extends AppCompatActivity {
                     goal, widthGoal, heightGoal, false);
             Bitmap resizedBlock = Bitmap.createScaledBitmap(
                     block, Block.width, Block.height, false);
+
+            Bitmap background = BitmapFactory.decodeResource(this.getResources(), R.drawable.back_ball_2);
+             bgrd = Bitmap.createScaledBitmap(
+                        background, (int)width, (int)height, false);
 
             ball = resizedBitmap;
             goal = resizedGoal;
@@ -176,7 +184,8 @@ public class Balls extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
 
                 // Draw the background color
-                canvas.drawColor(Color.argb(255,  0, 0, 0));
+               canvas.drawColor(Color.argb(255,  0, 0, 0));
+
 
                 // Choose the brush color for drawing
                 paint.setColor(Color.argb(255,  249, 0, 0));
@@ -192,10 +201,11 @@ public class Balls extends AppCompatActivity {
                 canvas.drawText("LOOSE  :" + loose, 680, 40, paint);
 
 
+                canvas.drawBitmap(bgrd, 0, 0, paint);
+
                 canvas.drawBitmap(ball, ballX, ballY, paint);
                 canvas.drawBitmap(goal, goalX, goalY, paint);
 
-                //canvas.drawBitmap(block, b.getX(), b.getY(), paint);
 
 
                 for (Block element : tabBlock) {
@@ -262,72 +272,46 @@ public class Balls extends AppCompatActivity {
     */
     public int collisition(float x, float y) {
 
-/*
-        if(x + widthBall>=width){
-            nbCol++;
-            return 1;
-        }else if(x<= 0){
-            nbCol++;
-            return 2;
-        }else if(y <= 0) {
-            nbCol++;
-            return 3;
-        }else if(y-heightBall*2 >= height){
-            loose++;
-            isMoving = false;
-            return 5;
-        } else if((x >= b.getX() - widthBall && x<= b.getX()) && (y > (b.getY() - heightBall) && y < (b.getY() + b.getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
-            nbCol++;
-            return 1;
-        }else if((x <= b.getX() + b.getWidth() + widthBall/10 && x>= b.getX()+b.getWidth()) && (y > (b.getY() - heightBall) && y < (b.getY() + b.getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
-            nbCol++;
-            return 2;
-        }else if((y  <= b.getY()+b.getHeight()+heightBall/10) && (y >= b.getY() +b. getHeight()) && (x>=(b.getX() - widthBall) && x<=(b.getX() + b.getWidth() + widthBall))) { // touche le haut block
-            nbCol++;
-            return 3;
-        }else if((y <= b.getY()) && (y >= b.getY() - heightBall) && (x>=(b.getX() - widthBall) && x<=(b.getX() + b.getWidth() + widthBall))){
-            nbCol++;
-            return 4;
-        }
-        else{
-            return 0;
-        }
-        */
 
-        for (Block element : tabBlock) {
-            System.out.println("ele X : " + element.getX() + " Y : " + element.getY());
+        int res = 0;
+        for (int i=0;i<tabBlock.size();i++) {
+
+            if(res !=0){
+                return res;
+            }
+
            if(x + widthBall>=width){
                 nbCol++;
-                return 1;
+                res = 1;
             }else if(x<= 0){
                 nbCol++;
-                return 2;
+                res = 2;
             }else if(y <= 0) {
                 nbCol++;
-                return 3;
+               res = 3;
             }else if(y-heightBall*2 >= height){
                 loose++;
                 isMoving = false;
-                return 5;
-            } else if((x >= element.getX() - widthBall && x<= element.getX()) && (y > (element.getY() - heightBall) && y < (element.getY() + element.getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
+               res = 5;
+            } else if((x >= tabBlock.get(i).getX() - widthBall && x<= tabBlock.get(i).getX()) && (y > (tabBlock.get(i).getY() - heightBall) && y < (tabBlock.get(i).getY() + tabBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
                 nbCol++;
-                return 1;
-            }else if((x <= element.getX() + element.getWidth() + widthBall/10 && x>= element.getX()+element.getWidth()) && (y > (element.getY() - heightBall) && y < (element.getY() + element.getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
+               res = 1;
+            }else if((x <= tabBlock.get(i).getX() + tabBlock.get(i).getWidth() + widthBall/10 && x>= tabBlock.get(i).getX()+tabBlock.get(i).getWidth()) && (y > (tabBlock.get(i).getY() - heightBall) && y < (tabBlock.get(i).getY() + tabBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                 nbCol++;
-                return 2;
-            }else if((y  <= element.getY()+element.getHeight()+heightBall/10) && (y >= element.getY() +element. getHeight()) && (x>=(element.getX() - widthBall) && x<=(element.getX() + element.getWidth() + widthBall))) { // touche le haut block
+               res = 2;
+            }else if((y  <= tabBlock.get(i).getY()+tabBlock.get(i).getHeight()+heightBall/10) && (y >= tabBlock.get(i).getY() +tabBlock.get(i). getHeight()) && (x>=(tabBlock.get(i).getX() - widthBall) && x<=(tabBlock.get(i).getX() + tabBlock.get(i).getWidth() + widthBall))) { // touche le haut block
                 nbCol++;
-                return 3;
-            }else if((y <= element.getY()) && (y >= element.getY() - heightBall) && (x>=(element.getX() - widthBall) && x<=(element.getX() + element.getWidth() + widthBall))){
+               res = 3;
+            }else if((y <= tabBlock.get(i).getY()) && (y >= tabBlock.get(i).getY() - heightBall) && (x>=(tabBlock.get(i).getX() - widthBall) && x<=(tabBlock.get(i).getX() + tabBlock.get(i).getWidth() + widthBall))){
                 nbCol++;
-                return 4;
+               res = 4;
             }
             else{
-                return 0;
+               res = 0;
             }
 
         }
-        return 0;
+        return  res;
 
     }
 
@@ -345,23 +329,13 @@ public class Balls extends AppCompatActivity {
          */
 
         /**  COLLISION COTE DROIT  **/
-        if(col == 1 && direction ==1){// si colision coté droit en monté alors deplacement à gauche en monté
-            direction = 2;
-            //setEquation(180-(float) angle ,(int)-width);
-        }
-        else if(col == 1 && direction == 4){ // si colision coté droit en descente alors deplacement à gauche en descente
-            direction = 3;
-           // setEquation(180+(float) angle ,(int)-width);
+        if(col == 1 && direction ==1) direction = 2;// si colision coté droit en monté alors deplacement à gauche en monté
+        else if(col == 1 && direction == 4)direction = 3; // si colision coté droit en descente alors deplacement à gauche en descente
 
-        }
 
         /**  COLLISION COTE GAUCHE  **/
-        if(col == 2 && direction ==2){// si colision coté gauche en monté alors deplacement à droite en monté
-            direction = 1;
-        }
-        else if(col == 2 && direction == 3){// si colision coté gauche en descente alors deplacement à droite en descente
-            direction = 4;
-        }
+        if(col == 2 && direction ==2)direction = 1;// si colision coté gauche en monté alors deplacement à droite en monté
+        else if(col == 2 && direction == 3)direction = 4;// si colision coté gauche en descente alors deplacement à droite en descente
 
         /**  COLLISION COTE HAUT   **/
         if(col == 3 && direction ==1) direction = 4; // si colision coté haut en monté vers la droite  alors deplacement à droite en descente
@@ -417,7 +391,7 @@ public class Balls extends AppCompatActivity {
         for(int i=1;i<=level*2;i++){
             for(int j=1;j<nbBlock;j++){
                 x+=Block.width;
-                tabBlock.add(new Block(x,y*i));
+                tabBlock.add(new Block(x,y*i*3/2));
             }
 
             int offsetValue =  endRange - startRange + 1;
