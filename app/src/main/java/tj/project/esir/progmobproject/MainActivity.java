@@ -6,6 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Random;
+
+import tj.project.esir.progmobproject.ball_games.Balls;
+import tj.project.esir.progmobproject.ball_games.Block;
+import tj.project.esir.progmobproject.ball_games.MenuParam;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button btnSinglePlayer;
@@ -23,9 +29,23 @@ public class MainActivity extends AppCompatActivity {
 
         btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent quizz = new Intent(getApplicationContext(), Quizz.class);
-                startActivity(quizz);
-                finish();
+                Random rand1 = new Random();
+                int startRange = 0, endRange = 1;
+                int offsetValue =  endRange - startRange + 1;
+                int  baseValue = (int)  (offsetValue * rand1.nextDouble());
+                int r =  baseValue + startRange;
+                System.out.println("Randrom : " + r);
+
+               if(r == 0){
+                   Intent quizz = new Intent(getApplicationContext(), Quizz.class);
+                   startActivity(quizz);
+               }else{
+                   Intent ball = new Intent(getApplicationContext(), MenuParam.class);
+                   startActivity(ball);
+
+               }
+
+               finish();
             }
         });
         btnMultiplayer.setOnClickListener(new View.OnClickListener() {
