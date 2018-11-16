@@ -10,18 +10,9 @@ import android.widget.Button;
 import java.io.IOException;
 import java.util.Random;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import tj.project.esir.progmobproject.db.MajDB;
-import tj.project.esir.progmobproject.db.QuestionManager;
-import tj.project.esir.progmobproject.models.Question;
-
-import org.json.*;
-
-import static tj.project.esir.progmobproject.db.QuestionManager.*;
+import tj.project.esir.progmobproject.ball_games.Balls;
+import tj.project.esir.progmobproject.ball_games.Block;
+import tj.project.esir.progmobproject.ball_games.MenuParam;
 
 public class MainActivity extends AppCompatActivity {
 
