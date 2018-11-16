@@ -7,12 +7,32 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Random;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import tj.project.esir.progmobproject.ball_games.Balls;
 import tj.project.esir.progmobproject.ball_games.Block;
 import tj.project.esir.progmobproject.ball_games.MenuParam;
+import tj.project.esir.progmobproject.db.MajDB;
+import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.Question;
+
+import static tj.project.esir.progmobproject.db.QuestionManager.TEXT_RESPONSE1;
+import static tj.project.esir.progmobproject.db.QuestionManager.TEXT_RESPONSE2;
+import static tj.project.esir.progmobproject.db.QuestionManager.TEXT_RESPONSE3;
+import static tj.project.esir.progmobproject.db.QuestionManager.TITLE_QUESTION;
+import static tj.project.esir.progmobproject.db.QuestionManager.VALUE_RESPONSE1;
+import static tj.project.esir.progmobproject.db.QuestionManager.VALUE_RESPONSE2;
+import static tj.project.esir.progmobproject.db.QuestionManager.VALUE_RESPONSE3;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
                     startActivity(quizz);
                 }
-                if(r == 1){
+                else if(r == 1){
                     Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
                     startActivity(compass);
                 }
