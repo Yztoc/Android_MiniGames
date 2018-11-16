@@ -36,16 +36,16 @@ public class MainActivity extends AppCompatActivity {
                 int r =  baseValue + startRange;
                 System.out.println("Randrom : " + r);
 
-               if(r == 0){
-                   Intent quizz = new Intent(getApplicationContext(), Quizz.class);
-                   startActivity(quizz);
-               }else{
-                   Intent ball = new Intent(getApplicationContext(), MenuParam.class);
-                   startActivity(ball);
+                if(r == 0){
+                    Intent quizz = new Intent(getApplicationContext(), Quizz.class);
+                    startActivity(quizz);
+                }else{
+                    Intent ball = new Intent(getApplicationContext(), MenuParam.class);
+                    startActivity(ball);
 
-               }
+                }
 
-               finish();
+                finish();
             }
         });
         btnMultiplayer.setOnClickListener(new View.OnClickListener() {
