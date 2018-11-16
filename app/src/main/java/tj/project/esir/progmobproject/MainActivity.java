@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -50,11 +51,28 @@ public class MainActivity extends AppCompatActivity {
 
         btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
-                startActivity(quizz);
+                Random rand1 = new Random();
+                int startRange = 0, endRange = 2;
+                int offsetValue =  endRange - startRange + 1;
+                int  baseValue = (int)  (offsetValue * rand1.nextDouble());
+                int r =  baseValue + startRange;
+                System.out.println("Randrom : " + r);
+
+                if(r == 0){
+                    Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
+                    startActivity(quizz);
+                }
+                if(r == 1){
+                    Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
+                    startActivity(compass);
+                }
+                else{
+                    Intent ball = new Intent(getApplicationContext(), MenuParam.class);
+                    startActivity(ball);
+
+                }
                 questionManager.close();
                 finish();
-
             }
         });
         btnMultiplayer.setOnClickListener(new View.OnClickListener() {
@@ -64,10 +82,7 @@ public class MainActivity extends AppCompatActivity {
         });
         btnCredit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                startActivity(compass);
-                questionManager.close();
-                finish();
+                System.out.println("button 3");
             }
         });
     }
