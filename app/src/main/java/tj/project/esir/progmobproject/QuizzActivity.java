@@ -18,22 +18,22 @@ import tj.project.esir.progmobproject.models.Question;
 
 public class QuizzActivity extends AppCompatActivity {
 
-    Button btn_rep1;
-    Button btn_rep2;
-    Button btn_rep3;
-    Button btn_nextQuestion;
-    TextView title_question;
-    Boolean rep1;
-    Boolean rep2;
-    Boolean rep3;
-    TextView reponseText;
-    LinearLayout multipleAnswersLayout;
-    LinearLayout calculAnswerLayout;
-    EditText calculAnswerInput;
-    Button btn_valid_calcul;
-    int resultatCalcul;
-    int reponseValidee;
-    QuestionManager m;
+    private Button btn_rep1;
+    private Button btn_rep2;
+    private Button btn_rep3;
+    private Button btn_nextQuestion;
+    private TextView title_question;
+    private Boolean rep1;
+    private Boolean rep2;
+    private Boolean rep3;
+    private TextView reponseText;
+    private LinearLayout multipleAnswersLayout;
+    private LinearLayout calculAnswerLayout;
+    private EditText calculAnswerInput;
+    private Button btn_valid_calcul;
+    private int resultatCalcul;
+    private int reponseValidee;
+    private QuestionManager m;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
