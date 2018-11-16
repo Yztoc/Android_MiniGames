@@ -1,11 +1,9 @@
 package tj.project.esir.progmobproject;
-import org.json.*;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -13,18 +11,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.InputStream;
 import java.util.Random;
 
-public class Quizz extends AppCompatActivity {
+import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.Question;
 
-    String questions;
+public class QuizzActivity extends AppCompatActivity {
+
     Button btn_rep1;
     Button btn_rep2;
     Button btn_rep3;
     Button btn_nextQuestion;
     TextView title_question;
-    JSONArray jsonArray;
     Boolean rep1;
     Boolean rep2;
     Boolean rep3;
@@ -34,26 +32,15 @@ public class Quizz extends AppCompatActivity {
     EditText calculAnswerInput;
     Button btn_valid_calcul;
     int resultatCalcul;
+    int reponseValidee;
+    QuestionManager m;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz);
 
-        try {
-            // récupération du contenu du fichier questions.json
-            InputStream is = getAssets().open("questions.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            questions = new String(buffer);
-            // création d'un tableau, format JSON
-            jsonArray = new JSONArray(questions);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
         reponseText = findViewById(R.id.reponseText);
         btn_rep1 = findViewById(R.id.btn_rep1);
         btn_rep2 = findViewById(R.id.btn_rep2);
@@ -64,8 +51,6 @@ public class Quizz extends AppCompatActivity {
         calculAnswerLayout = findViewById(R.id.calculAnswerLayout);
         calculAnswerInput = findViewById(R.id.calculAnswerInput);
         btn_valid_calcul = findViewById(R.id.validCalculButton);
-
-        pickQuestion();
 
 
         btn_rep1.setOnClickListener(new View.OnClickListener() {
@@ -99,49 +84,53 @@ public class Quizz extends AppCompatActivity {
                 closeKeyboard();
             }
         });
+        m = new QuestionManager(this);
+        pickQuestion();
     }
 
     public void pickQuestion() {
+
+        reponseValidee = -1;
         setReponseTextQuizz("");
         Random rand = new Random();
         int typeQuestion = rand.nextInt(2);
         if (typeQuestion == 0){
             calculAnswerLayout.setVisibility(View.INVISIBLE);
             multipleAnswersLayout.setVisibility(View.VISIBLE);
-            JSONObject choix;
-            int indexQuestion = rand.nextInt(jsonArray.length());
-            try {
-                choix = (JSONObject) jsonArray.get(indexQuestion);
-                JSONArray reponses = choix.getJSONArray("reponses");
-                title_question.setText((String) choix.get("question"));
-                btn_rep1.setText((String) ((JSONObject) reponses.get(0)).get("intitule"));
-                btn_rep2.setText((String) ((JSONObject) reponses.get(1)).get("intitule"));
-                btn_rep3.setText((String) ((JSONObject) reponses.get(2)).get("intitule"));
-                rep1 = (Boolean) ((JSONObject) reponses.get(0)).get("valeur");
-                rep2 = (Boolean) ((JSONObject) reponses.get(1)).get("valeur");
-                rep3 = (Boolean) ((JSONObject) reponses.get(2)).get("valeur");
-            } catch (org.json.JSONException e) {
-                e.printStackTrace();
-            }
+
+            // recupération d'une question
+            m.open();
+            Question question = m.getRandomQuestion();
+            m.close();
+
+            title_question.setText(question.getTitle());
+            btn_rep1.setText(question.getResponse1().first);
+            btn_rep2.setText(question.getResponse2().first);
+            btn_rep3.setText(question.getResponse3().first);
+            rep1 = question.getResponse1().second == 0 ?  false : true;
+            rep2 = question.getResponse2().second == 0 ?  false : true;
+            rep3 = question.getResponse3().second == 0 ?  false : true;
         }
         else{
             calculAnswerLayout.setVisibility(View.VISIBLE);
             multipleAnswersLayout.setVisibility(View.INVISIBLE);
-            int variable1 = rand.nextInt(10);
-            int variable2 = rand.nextInt(10);
+            int variable1 = rand.nextInt(9)+1;
+            int variable2 = rand.nextInt(9)+1;
             resultatCalcul = variable1*variable2;
             title_question.setText(variable1+" x "+variable2);
         }
     }
     public void setReponseTextQuizz(boolean valeurRep){
-        if(valeurRep){
-            reponseText.setText(R.string.great_response_quizz);
+        if(reponseValidee == -1) {
+            if (valeurRep) {
+                btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_true));
+                reponseValidee = 1; //true
+            } else {
+                btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_false));
+                reponseValidee = 0; //false
+            }
             btn_nextQuestion.setText(R.string.next_question);
             btn_nextQuestion.setVisibility(View.VISIBLE);
-        }
-        else {
-            reponseText.setText(R.string.bad_response_quizz);
-            btn_nextQuestion.setVisibility(View.INVISIBLE);
         }
     }
     public void setReponseTextQuizz(String s) {
