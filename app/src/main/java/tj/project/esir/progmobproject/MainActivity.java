@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 int r =  baseValue + startRange;
                 System.out.println("Randrom : " + r);
 
+                
                 if(r == 0){
                     Intent quizz = new Intent(getApplicationContext(), Quizz.class);
                     startActivity(quizz);
