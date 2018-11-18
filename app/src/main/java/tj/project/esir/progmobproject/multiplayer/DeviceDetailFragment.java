@@ -1,7 +1,5 @@
 package tj.project.esir.progmobproject.multiplayer;
 
-
-
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import tj.project.esir.progmobproject.multiplayer.DeviceListFragment.DeviceActionListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -74,7 +70,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 //                            }
 //                        }
                 );
-                ((DeviceActionListener) getActivity()).connect(config);
+                ((DeviceListFragment.DeviceActionListener) getActivity()).connect(config);
 
             }
         });
@@ -84,7 +80,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
                     @Override
                     public void onClick(View v) {
-                        ((DeviceActionListener) getActivity()).disconnect();
+                        ((DeviceListFragment.DeviceActionListener) getActivity()).disconnect();
                     }
                 });
 
@@ -113,6 +109,13 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
         statusText.setText("Sending: " + uri);
         Log.d(MultiplayerActivity.TAG, "Intent----------- " + uri);
+        Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
+        serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
+        serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
+        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
+                info.groupOwnerAddress.getHostAddress());
+        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
+        getActivity().startService(serviceIntent);
     }
 
     @Override
@@ -258,13 +261,17 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     public static boolean copyFile(InputStream inputStream, OutputStream out) {
         byte buf[] = new byte[1024];
         int len;
+        long startTime=System.currentTimeMillis();
+
         try {
             while ((len = inputStream.read(buf)) != -1) {
                 out.write(buf, 0, len);
-
             }
             out.close();
             inputStream.close();
+            long endTime=System.currentTimeMillis()-startTime;
+            Log.v("","Time taken to transfer all bytes is : "+endTime);
+
         } catch (IOException e) {
             Log.d(MultiplayerActivity.TAG, e.toString());
             return false;

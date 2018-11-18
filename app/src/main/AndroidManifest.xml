@@ -49,7 +49,8 @@
             android:label="@string/title_activity_ball"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".multiplayer.MultiplayerActivity"></activity>
+        <activity android:name=".multiplayer.MultiplayerActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
     </application>
 
 </manifest>
