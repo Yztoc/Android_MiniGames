@@ -67,9 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 int offsetValue =  endRange - startRange + 1;
                 int  baseValue = (int)  (offsetValue * rand1.nextDouble());
                 int r =  baseValue + startRange;
-                System.out.println("Randrom : " + r);
 
-                if(r == 0){
+                Intent ball = new Intent(getApplicationContext(), MenuParam.class);
+                startActivity(ball);
+
+               /* if(r == 0){
                     Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
                     startActivity(quizz);
                 }
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent ball = new Intent(getApplicationContext(), MenuParam.class);
                     startActivity(ball);
 
-                }
+                }*/
                 questionManager.close();
                 finish();
             }
