@@ -2,18 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tj.project.esir.progmobproject">
 
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:required="true" />
-    <uses-permission
-        android:name="android.permission.ACCESS_WIFI_STATE"
-        android:required="true" />
-    <uses-permission
-        android:name="android.permission.CHANGE_WIFI_STATE"
-        android:required="true" />
-    <uses-permission
-        android:name="android.permission.INTERNET"
-        android:required="true" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-feature android:name="android.hardware.wifi.direct" android:required="true"/>
+    <uses-feature android:name="android.hardware.wifi" />
 
     <application
         android:allowBackup="true"
@@ -36,21 +33,23 @@
             android:label="@string/title_activity_quizz"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CompassActivity"
+        <activity
+            android:name=".CompassActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ball_games.Balls"
             android:label="@string/title_activity_ball"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ball_games.MenuParam"
             android:label="@string/title_activity_ball"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".multiplayer.MultiplayerActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

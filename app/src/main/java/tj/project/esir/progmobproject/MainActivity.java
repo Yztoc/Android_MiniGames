@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
         });
         btnMultiplayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent multi = new Intent(getApplicationContext(), MultiplayerActivity.class);
-                startActivity(multi);
+                Intent multiplayer = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                startActivity(multiplayer);
             }
         });
         btnCredit.setOnClickListener(new View.OnClickListener() {
