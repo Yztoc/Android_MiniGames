@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Parcelable;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
             }
             else {
                 mActivity.connectionStatus.setText("Device Disconnected");
+                mActivity.message_send_layout.setVisibility(View.INVISIBLE);
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

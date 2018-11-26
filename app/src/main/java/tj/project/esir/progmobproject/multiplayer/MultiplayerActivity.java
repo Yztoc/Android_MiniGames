@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,13 +40,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
 
 import static android.os.Looper.getMainLooper;
 
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
 
-    Button btnOnOff;
+    LinearLayout message_send_layout;
     Button btnDiscover;
     Button btnSend;
     ListView listView;
@@ -76,16 +78,18 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
 
-        btnOnOff = findViewById(R.id.onOff);
         btnDiscover = findViewById(R.id.discover);
         btnSend = findViewById(R.id.sendButton);
         listView = findViewById(R.id.peerListView);
         read_msg_box = findViewById(R.id.readMsg);
         connectionStatus = findViewById(R.id.connectionStatus);
         writeMsg = findViewById(R.id.writeMsg);
+        message_send_layout = findViewById(R.id.message_send_layout);
+        message_send_layout.setVisibility(View.INVISIBLE);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         exqListener();
+        wifiManager.setWifiEnabled(true);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this,getMainLooper(),null);
@@ -116,6 +120,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                     "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.",
                     Toast.LENGTH_LONG).show();
         }
+        message_send_layout.setVisibility(View.INVISIBLE);
     }
 
 
@@ -183,7 +188,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
             final InetAddress groupOwnerAdress = info.groupOwnerAddress;
-
+            message_send_layout.setVisibility(View.VISIBLE);
             if(info.groupFormed && info.isGroupOwner){
                 connectionStatus.setText("Host");
                 serverClass = new ServerClass();
@@ -210,19 +215,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     }
 
     private void exqListener() {
-        btnOnOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(wifiManager.isWifiEnabled()){
-                    wifiManager.setWifiEnabled(false);
-                    btnOnOff.setText("ON");
-                }
-                else {
-                    wifiManager.setWifiEnabled(true);
-                    btnOnOff.setText("OFF");
-                }
-            }
-        });
         btnDiscover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -365,6 +357,14 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        wifiManager.setWifiEnabled(true);
+        Intent home = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(home);
+        finish();
     }
 }
 
