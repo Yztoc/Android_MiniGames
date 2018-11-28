@@ -70,20 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent ball = new Intent(getApplicationContext(), MenuParam.class);
                 startActivity(ball);
-
-               /* if(r == 0){
-                    Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
-                    startActivity(quizz);
-                }
-                else if(r == 1){
-                    Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                    startActivity(compass);
-                }
-                else{
-                    Intent ball = new Intent(getApplicationContext(), MenuParam.class);
-                    startActivity(ball);
-
-                }*/
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 questionManager.close();
                 finish();
             }

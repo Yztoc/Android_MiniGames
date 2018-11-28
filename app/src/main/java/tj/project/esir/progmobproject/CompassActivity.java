@@ -1,18 +1,28 @@
 package tj.project.esir.progmobproject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Random;
+
+import tj.project.esir.progmobproject.ball_games.Balls;
+import tj.project.esir.progmobproject.ball_games.MenuParam;
+
 
 
 public class CompassActivity extends AppCompatActivity {
@@ -36,11 +46,20 @@ public class CompassActivity extends AppCompatActivity {
 
     private ImageView image;
 
+    CountDownTimer cTimer = null;
+    float time = 0;
+
+
     private MediaPlayer mediaPlayerUnlock;
     private MediaPlayer mediaPlayerClick;
     private int clickDegree;
 
     static final float ALPHA = 0.25f;
+
+
+    private int score = 0;
+    private int scoreBall = 0;
+
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
 
@@ -89,7 +108,12 @@ public class CompassActivity extends AppCompatActivity {
 
                 // Start the animation
                  image.startAnimation(ra);
-                 if(mAzimuth == randomDegree) mediaPlayerUnlock.start();
+                 if(mAzimuth == randomDegree){
+                     // FAIRE SCORE //
+                     dialogFinish();
+                     mediaPlayerUnlock.start();
+
+                 }
                  else if(Math.abs(clickDegree-mAzimuth)>5){
                      if(volumeOn)
                         calculVolume(mAzimuth, randomDegree);
@@ -113,6 +137,14 @@ public class CompassActivity extends AppCompatActivity {
         mediaPlayerUnlock = MediaPlayer.create(this,R.raw.unlock_locker);
         mediaPlayerClick = MediaPlayer.create(this,R.raw.click_locker);
         clickDegree = 0;
+
+        // recoit le score de l'activity précédente
+        Intent iin= getIntent();
+        Bundle c = iin.getExtras();
+
+        if(c!=null){
+            scoreBall = (int) c.get("scoreBall");
+        }
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -178,6 +210,55 @@ public class CompassActivity extends AppCompatActivity {
         Intent home = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(home);
         finish();
+    }
+
+
+    void startTimer(int minTime) {
+        cTimer = new CountDownTimer(minTime, 100) {
+            public void onTick(long millisUntilFinished) {
+                time = millisUntilFinished/1000;
+            }
+            public void onFinish() {
+            }
+        };
+        cTimer.start();
+    }
+
+    void dialogFinish(){
+        Runnable second_Task = new Runnable() {
+            public void run() {
+                CompassActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(CompassActivity.this);
+                        alert.setTitle("Terminé ! ");
+                        alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
+                                + "<br><b><h3>Score Final : " + 10 + "</h3></b>"));
+
+                        alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
+                                quizz.putExtra("scoreBall", scoreBall);
+                                quizz.putExtra("scoreCompass", score);
+                                startActivity(quizz);
+                            }
+                        });
+
+                        alert.setNegativeButton("Rejouer", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.show();
+                    }
+                });
+
+            }
+        };
+
+        second_Task.run();
     }
 
     public void calculVolume(int currentDegree, int unlockDegree){

@@ -1,9 +1,12 @@
 package tj.project.esir.progmobproject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -35,11 +38,27 @@ public class QuizzActivity extends AppCompatActivity {
     private int reponseValidee;
     private QuestionManager m;
 
+    private int nbQuestion = 10;
+    private int score = 0;
+    private int scoreBall = 0;
+    private int scoreCompass = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quizz);
+
+        // recoit le score de l'activity précédente
+        Intent iin= getIntent();
+        Bundle q = iin.getExtras();
+
+        if(q!=null){
+            scoreBall = (int) q.get("scoreBall");
+            scoreCompass = (int) q.get("scoreCompass");
+        }
+
 
         reponseText = findViewById(R.id.reponseText);
         btn_rep1 = findViewById(R.id.btn_rep1);
@@ -90,41 +109,48 @@ public class QuizzActivity extends AppCompatActivity {
 
     public void pickQuestion() {
 
-        reponseValidee = -1;
-        setReponseTextQuizz("");
-        Random rand = new Random();
-        int typeQuestion = rand.nextInt(2);
-        if (typeQuestion == 0){
-            calculAnswerLayout.setVisibility(View.INVISIBLE);
-            multipleAnswersLayout.setVisibility(View.VISIBLE);
+        nbQuestion--;
+        if(nbQuestion ==0){
+            dialogFinish();
+        }else{
+            reponseValidee = -1;
+            setReponseTextQuizz("");
+            Random rand = new Random();
+            int typeQuestion = rand.nextInt(2);
+            if (typeQuestion == 0){
+                calculAnswerLayout.setVisibility(View.INVISIBLE);
+                multipleAnswersLayout.setVisibility(View.VISIBLE);
 
-            // recupération d'une question
-            m.open();
-            Question question = m.getRandomQuestion();
-            m.close();
+                // recupération d'une question
+                m.open();
+                Question question = m.getRandomQuestion();
+                m.close();
 
-            title_question.setText(question.getTitle());
-            btn_rep1.setText(question.getResponse1().first);
-            btn_rep2.setText(question.getResponse2().first);
-            btn_rep3.setText(question.getResponse3().first);
-            rep1 = question.getResponse1().second == 0 ?  false : true;
-            rep2 = question.getResponse2().second == 0 ?  false : true;
-            rep3 = question.getResponse3().second == 0 ?  false : true;
+                title_question.setText(question.getTitle());
+                btn_rep1.setText(question.getResponse1().first);
+                btn_rep2.setText(question.getResponse2().first);
+                btn_rep3.setText(question.getResponse3().first);
+                rep1 = question.getResponse1().second == 0 ?  false : true;
+                rep2 = question.getResponse2().second == 0 ?  false : true;
+                rep3 = question.getResponse3().second == 0 ?  false : true;
+            }
+            else{
+                calculAnswerLayout.setVisibility(View.VISIBLE);
+                multipleAnswersLayout.setVisibility(View.INVISIBLE);
+                int variable1 = rand.nextInt(9)+1;
+                int variable2 = rand.nextInt(9)+1;
+                resultatCalcul = variable1*variable2;
+                title_question.setText(variable1+" x "+variable2);
+            }
         }
-        else{
-            calculAnswerLayout.setVisibility(View.VISIBLE);
-            multipleAnswersLayout.setVisibility(View.INVISIBLE);
-            int variable1 = rand.nextInt(9)+1;
-            int variable2 = rand.nextInt(9)+1;
-            resultatCalcul = variable1*variable2;
-            title_question.setText(variable1+" x "+variable2);
-        }
+
     }
     public void setReponseTextQuizz(boolean valeurRep){
         if(reponseValidee == -1) {
             if (valeurRep) {
                 btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_true));
                 reponseValidee = 1; //true
+                score++;
             } else {
                 btn_nextQuestion.setBackground(getDrawable(R.drawable.quizz_button_shape_false));
                 reponseValidee = 0; //false
@@ -138,6 +164,44 @@ public class QuizzActivity extends AppCompatActivity {
             reponseText.setText("");
             btn_nextQuestion.setVisibility(View.INVISIBLE);
         }
+    }
+
+    void dialogFinish(){
+        Runnable second_Task = new Runnable() {
+            public void run() {
+                QuizzActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(QuizzActivity.this);
+                        alert.setTitle("Terminé ! ");
+                        alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
+                                + "<br><b><h3>Score Final : " + 10 + "</h3></b>"));
+
+                        alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Intent finish = new Intent(getApplicationContext(), Finish.class);
+                                finish.putExtra("scoreBall", scoreBall);
+                                finish.putExtra("scoreCompass", scoreCompass);
+                                finish.putExtra("scoreQuizz",score);
+                                startActivity(finish);
+                            }
+                        });
+
+                        alert.setNegativeButton("Rejouer", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.show();
+                    }
+                });
+
+            }
+        };
+
+        second_Task.run();
     }
 
     @Override

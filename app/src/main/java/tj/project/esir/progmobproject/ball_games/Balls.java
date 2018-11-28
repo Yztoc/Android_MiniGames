@@ -75,6 +75,9 @@ public class Balls extends AppCompatActivity {
     int vie = 3;
     float time = 0;
 
+
+    volatile boolean playing;
+
      Context context;
 
     @Override
@@ -131,7 +134,6 @@ public class Balls extends AppCompatActivity {
 
         Thread gameThread = null;
         SurfaceHolder ourHolder;
-        volatile boolean playing;
         Canvas canvas;
         Paint paint;
         private long timeThisFrame;
@@ -198,10 +200,8 @@ public class Balls extends AppCompatActivity {
                     deplacement();
 
                 }
-ggggg            }else{
+            }else{
                 reset(false);
-
-
             }
         }
 
@@ -276,6 +276,7 @@ ggggg            }else{
         if(((float) distance * velocity/ 4) / fps < 0.2)reset(true);
         if(vie <= 0 || time <= 1){
             isMoving = false;
+            playing  = false;
             dialogFinish();
         }
     }
@@ -299,39 +300,33 @@ ggggg            }else{
                         }
                         final AlertDialog.Builder alert = new AlertDialog.Builder(Balls.this);
                         alert.setTitle("Terminé ! ");
+                        final int scoreFinal = vie * score * level;
                         alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
                                 + "<br>Nombre de vie restante : " + vie
                                 + "<br>Score obtenu : " + score
                                 + "<br>Temps écoulé : " + timeS
-                                + "<br><b><h3>Score Final : " + vie * score * level + "</h3></b>"));
+                                + "<br><b><h3>Score Final : " + scoreFinal + "</h3></b>"));
 
                         alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Random rand1 = new Random();
-                                int startRange = 0, endRange = 1;
-                                int offsetValue =  endRange - startRange + 1;
-                                int  baseValue = (int)  (offsetValue * rand1.nextDouble());
-                                int r =  baseValue + startRange;
 
-                                Intent ball = new Intent(getApplicationContext(), MenuParam.class);
-                                startActivity(ball);
+                                Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
+                                compass.putExtra("scoreBall", scoreFinal);
+                                startActivity(compass);
 
-                                if(r == 0){
-                                    Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
-                                    startActivity(quizz);
-                                }
-                                else if(r == 1){
-                                    Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                                    startActivity(compass);
-                                }
                             }
                         });
 
                         alert.setNegativeButton("Rejouer", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                init();
+                                /*init();
                                 reset(false);
-                                dialog.dismiss();
+                                dialog.dismiss();*/
+
+                                Intent ball = new Intent(getApplicationContext(), Balls.class);
+                                ball.putExtra("level", level);
+                                startActivity(ball);
+
                             }
                         });
 
@@ -377,7 +372,6 @@ ggggg            }else{
         vie = 3;
         cTimer.start();
 
-
     }
 
     public void reset(boolean loose){
@@ -401,11 +395,6 @@ ggggg            }else{
                 score++;
                 tabBlock.clear();
                 generateMap();
-
-                //stop thread
-                //onPause();
-/*
-                */
 
             }
         }
