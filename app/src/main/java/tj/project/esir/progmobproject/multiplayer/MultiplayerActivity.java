@@ -15,11 +15,9 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Handler;
 import android.os.Message;
-import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.net.wifi.p2p.WifiP2pManager.*;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +28,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,13 +41,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
-
-import static android.os.Looper.getMainLooper;
+import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.Question;
 
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
+
+    QuestionManager questionManager;
+
+    JSONObject Questions;
 
     LinearLayout message_send_layout;
     Button btnDiscover;
@@ -77,6 +84,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
+
+        questionManager = new QuestionManager(getApplicationContext());
 
         btnDiscover = findViewById(R.id.discover);
         btnSend = findViewById(R.id.sendButton);
@@ -188,11 +197,11 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
             final InetAddress groupOwnerAdress = info.groupOwnerAddress;
-            message_send_layout.setVisibility(View.VISIBLE);
             if(info.groupFormed && info.isGroupOwner){
                 connectionStatus.setText("Host");
                 serverClass = new ServerClass();
                 serverClass.start();
+                message_send_layout.setVisibility(View.VISIBLE);
             }
             else if (info.groupFormed){
                 connectionStatus.setText("Client");
@@ -269,8 +278,18 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = writeMsg.getText().toString();
-                sendReceive.write(msg.getBytes());
+                JSONArray questionIds = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
+                JSONArray calculs = get5mentalCalculs();
+                JSONObject msg = new JSONObject();
+                try {
+                    msg.put("questionsIds",questionIds);
+                    msg.put("calculs",calculs);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Questions = msg;
+                // String msg = writeMsg.getText().toString();
+                sendReceive.write(msg.toString().getBytes());
             }
         });
     }
@@ -365,6 +384,27 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         Intent home = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(home);
         finish();
+    }
+
+    public JSONArray get5mentalCalculs(){
+        Random rand = new Random();
+        JSONArray res = new JSONArray();
+        int variable1 = 0;
+        int variable2 = 0;
+        for(int i =0; i < 5;i++) {
+            variable1 = rand.nextInt(9) + 1;
+            variable2 = rand.nextInt(9) + 1;
+            JSONObject calcul = new JSONObject();
+
+            try {
+                calcul.put("variable2",variable2);
+                calcul.put("variable1",variable1);
+                res.put(calcul);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return res;
     }
 }
 

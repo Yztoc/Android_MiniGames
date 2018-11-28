@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,14 +125,14 @@ public class QuestionManager {
         return question;
     }
 
-    public List<Integer> get10randomId(){
-        List<Integer> res = new ArrayList<>();
+    public JSONArray get5randomId(){
+        JSONArray res = new JSONArray();
         Cursor c = db.rawQuery(
                 "SELECT * FROM "+TABLE_NAME+" ORDER BY RANDOM() "+
-                        "LIMIT 10", null);
+                        "LIMIT 5", null);
         if (c.moveToFirst()) {
             do {
-                res.add(c.getInt(c.getColumnIndex(ID_QUESTION)));
+                res.put(c.getColumnIndex(ID_QUESTION));
             } while (c.moveToNext());
             c.close();
         }
