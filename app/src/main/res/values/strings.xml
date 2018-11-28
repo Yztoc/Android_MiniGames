@@ -12,5 +12,5 @@
     <string name="bad_response_quizz">Mauvaise réponse !</string>
     <string name="next_question">Question suivante</string>
     <string name="valid_button_text">Valider</string>
-
+    <string name="back_menu">Retour au menu</string>
 </resources>
