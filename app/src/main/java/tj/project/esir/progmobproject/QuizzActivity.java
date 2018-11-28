@@ -184,6 +184,7 @@ public class QuizzActivity extends AppCompatActivity {
                                 finish.putExtra("scoreCompass", scoreCompass);
                                 finish.putExtra("scoreQuizz",score);
                                 startActivity(finish);
+                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }
                         });
 

@@ -42,6 +42,7 @@ public class CompassActivity extends AppCompatActivity {
 
     private float currentDegree = 0f;
     private TextView text;
+    private TextView timeText;
     private int randomDegree;
 
     private ImageView image;
@@ -59,6 +60,8 @@ public class CompassActivity extends AppCompatActivity {
 
     private int score = 0;
     private int scoreBall = 0;
+
+    private int timeParam = 20000; //seconde niveau de difficulté à modifé lors de l envoie du client
 
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
@@ -121,7 +124,7 @@ public class CompassActivity extends AppCompatActivity {
                      clickDegree = mAzimuth;
                  }
                 currentDegree = -mAzimuth;
-                text.setText(mAzimuth+"");
+                text.setText("Degres : " + mAzimuth+"");
             }
         }
     };
@@ -133,10 +136,12 @@ public class CompassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compass);
         image = findViewById(R.id.middle_lock);
         text = findViewById(R.id.text);
+        timeText = findViewById(R.id.time);
         randomDegree = (int)(Math.random()*360);
         mediaPlayerUnlock = MediaPlayer.create(this,R.raw.unlock_locker);
         mediaPlayerClick = MediaPlayer.create(this,R.raw.click_locker);
         clickDegree = 0;
+        startTimer(timeParam);
 
         // recoit le score de l'activity précédente
         Intent iin= getIntent();
@@ -217,6 +222,7 @@ public class CompassActivity extends AppCompatActivity {
         cTimer = new CountDownTimer(minTime, 100) {
             public void onTick(long millisUntilFinished) {
                 time = millisUntilFinished/1000;
+                timeText.setText("Time : " + time);
             }
             public void onFinish() {
             }
@@ -241,6 +247,7 @@ public class CompassActivity extends AppCompatActivity {
                                 quizz.putExtra("scoreBall", scoreBall);
                                 quizz.putExtra("scoreCompass", score);
                                 startActivity(quizz);
+                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }
                         });
 

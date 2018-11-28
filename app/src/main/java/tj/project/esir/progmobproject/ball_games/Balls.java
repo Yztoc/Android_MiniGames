@@ -313,6 +313,8 @@ public class Balls extends AppCompatActivity {
                                 Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
                                 compass.putExtra("scoreBall", scoreFinal);
                                 startActivity(compass);
+                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
 
                             }
                         });

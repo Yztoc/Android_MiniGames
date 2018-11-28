@@ -17,6 +17,8 @@ public class Finish extends AppCompatActivity {
     private int scoreQuizz = 0;
     private int scoreTotal = 0;
 
+    private Button back;
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,19 @@ public class Finish extends AppCompatActivity {
         textViewScoreCompass.setText("Score jeux coffre fort : " + scoreCompass);
         textViewScoreQuizz.setText("Score quizz : " + scoreQuizz);
         textViewScoreFinal.setText("SCORE FINAL : " + scoreQuizz);
+
+        back = findViewById(R.id.btn_backmenu);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent menu = new Intent(getApplicationContext(), MainActivity.class);
+                // start the new activity
+                startActivity(menu);
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                finish();
+            }
+        });
+
 
     }
 
