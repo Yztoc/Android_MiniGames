@@ -15,8 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayout2"

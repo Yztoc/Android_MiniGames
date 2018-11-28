@@ -62,26 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Random rand1 = new Random();
-                int startRange = 0, endRange = 2;
-                int offsetValue =  endRange - startRange + 1;
-                int  baseValue = (int)  (offsetValue * rand1.nextDouble());
-                int r =  baseValue + startRange;
-                System.out.println("Randrom : " + r);
 
-                if(r == 0){
-                    Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
-                    startActivity(quizz);
-                }
-                else if(r == 1){
-                    Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                    startActivity(compass);
-                }
-                else{
-                    Intent ball = new Intent(getApplicationContext(), MenuParam.class);
-                    startActivity(ball);
-
-                }
+                Intent ball = new Intent(getApplicationContext(), MenuParam.class);
+                startActivity(ball);
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 questionManager.close();
                 finish();
             }
@@ -91,9 +75,13 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("button 2");
             }
         });
+
         btnCredit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("button 3");
+                Intent credit = new Intent(getApplicationContext(), CreditActivity.class);
+                startActivity(credit);
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                finish();
             }
         });
     }
