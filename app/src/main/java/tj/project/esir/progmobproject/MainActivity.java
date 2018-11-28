@@ -19,12 +19,11 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import tj.project.esir.progmobproject.ball_games.Balls;
-import tj.project.esir.progmobproject.ball_games.Block;
 import tj.project.esir.progmobproject.ball_games.MenuParam;
 import tj.project.esir.progmobproject.db.MajDB;
 import tj.project.esir.progmobproject.db.QuestionManager;
 import tj.project.esir.progmobproject.models.Question;
+import tj.project.esir.progmobproject.multiplayer.MultiplayerActivity;
 
 import static tj.project.esir.progmobproject.db.QuestionManager.TEXT_RESPONSE1;
 import static tj.project.esir.progmobproject.db.QuestionManager.TEXT_RESPONSE2;
@@ -72,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         });
         btnMultiplayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("button 2");
+                Intent multiplayer = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                startActivity(multiplayer);
             }
         });
 

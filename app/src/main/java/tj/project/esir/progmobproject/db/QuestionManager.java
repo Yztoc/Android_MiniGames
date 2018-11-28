@@ -5,6 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Pair;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import tj.project.esir.progmobproject.models.Question;
 
 public class QuestionManager {
@@ -117,6 +123,20 @@ public class QuestionManager {
             c.close();
         }
         return question;
+    }
+
+    public JSONArray get5randomId(){
+        JSONArray res = new JSONArray();
+        Cursor c = db.rawQuery(
+                "SELECT * FROM "+TABLE_NAME+" ORDER BY RANDOM() "+
+                        "LIMIT 5", null);
+        if (c.moveToFirst()) {
+            do {
+                res.put(c.getColumnIndex(ID_QUESTION));
+            } while (c.moveToNext());
+            c.close();
+        }
+        return res;
     }
 
     public Question getQuestion(int id) {

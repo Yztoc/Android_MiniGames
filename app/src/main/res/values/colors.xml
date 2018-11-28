@@ -7,5 +7,7 @@
     <color name="colorGrey">#ababab</color>
     <color name="colorRed">#c61616</color>
     <color name="colorGreen">#14ac32</color>
+    <color name="status_bar_color">#FF000000</color>
+    <color name="layout_border_color">#FF111111</color>
 
 </resources>
