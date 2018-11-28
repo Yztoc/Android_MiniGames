@@ -175,7 +175,7 @@ public class QuizzActivity extends AppCompatActivity {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(QuizzActivity.this);
                         alert.setTitle("Terminé ! ");
                         alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
-                                + "<br><b><h3>Score Final : " + 10 + "</h3></b>"));
+                                + "<br><b><h3>Score Final : " + score + "</h3></b>"));
 
                         alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {

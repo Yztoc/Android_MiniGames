@@ -15,7 +15,7 @@ public class CreditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
 
-        btnBack = findViewById(R.id.btn_difficult);
+        btnBack = findViewById(R.id.btn_backmenu_credit);
         btnBack.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent menu = new Intent(getApplicationContext(), MainActivity.class);

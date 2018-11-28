@@ -112,7 +112,7 @@ public class CompassActivity extends AppCompatActivity {
                 // Start the animation
                  image.startAnimation(ra);
                  if(mAzimuth == randomDegree){
-                     // FAIRE SCORE //
+                     score = (int) time;
                      dialogFinish();
                      mediaPlayerUnlock.start();
 
@@ -221,13 +221,26 @@ public class CompassActivity extends AppCompatActivity {
     void startTimer(int minTime) {
         cTimer = new CountDownTimer(minTime, 100) {
             public void onTick(long millisUntilFinished) {
+
                 time = millisUntilFinished/1000;
                 timeText.setText("Time : " + time);
+
+                if((int)time <= 0){
+                    cancelTimer();
+                    System.out.println("TEST : " + time);
+                    score = (int) time;
+                    dialogFinish();
+                }
             }
             public void onFinish() {
             }
         };
         cTimer.start();
+    }
+
+    void cancelTimer() {
+        if(cTimer!=null)
+            cTimer.cancel();
     }
 
     void dialogFinish(){
@@ -239,7 +252,7 @@ public class CompassActivity extends AppCompatActivity {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(CompassActivity.this);
                         alert.setTitle("Terminé ! ");
                         alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
-                                + "<br><b><h3>Score Final : " + 10 + "</h3></b>"));
+                                + "<br><b><h3>Score Final : " + score + "</h3></b>"));
 
                         alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {

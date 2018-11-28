@@ -282,6 +282,7 @@ public class Balls extends AppCompatActivity {
     }
 
     void dialogFinish(){
+        cancelTimer();
         Runnable second_Task = new Runnable() {
             public void run() {
                 Balls.this.runOnUiThread(new Runnable() {
