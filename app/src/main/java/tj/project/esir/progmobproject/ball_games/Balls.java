@@ -301,14 +301,14 @@ public class Balls extends AppCompatActivity {
                                 timeS = "5 secondes";
                                 break;
                         }
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(Balls.this);
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(Balls.this,R.style.ThemeDialogCustom);
                         alert.setTitle("Terminé ! ");
                         final int scoreFinal = vie * score * level;
-                        alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
+                        alert.setMessage(Html.fromHtml("<div style=\"color:white\" Vous avez fini avec les stats suivant : "
                                 + "<br>Nombre de vie restante : " + vie
                                 + "<br>Score obtenu : " + score
                                 + "<br>Temps écoulé : " + timeS
-                                + "<br><b><h3>Score Final : " + scoreFinal + "</h3></b>"));
+                                + "<br><b><h3>Score Final : " + scoreFinal + "</h3></b></div>"));
 
                         alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -624,6 +624,8 @@ public class Balls extends AppCompatActivity {
 
                         // hypothenus du tringle du trace (ditance entre le debut et la fin du slide
                         distance = Math.sqrt(Math.pow(base,2) + Math.pow(h,2));
+                        // max value 1000 
+                        if(distance >1000) distance = 1000;
                         angle = Math.toDegrees(Math.atan(h/base));
 
 
