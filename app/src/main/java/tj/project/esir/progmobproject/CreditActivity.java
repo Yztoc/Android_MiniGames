@@ -5,15 +5,37 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import tj.project.esir.progmobproject.db.ScoreManager;
+import tj.project.esir.progmobproject.models.Score;
 
 
 public class CreditActivity extends AppCompatActivity {
 
     private Button btnBack;
+    private ScoreManager scoreManger;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
+
+        scoreManger = new ScoreManager(this);
+        scoreManger.open();
+
+        ArrayList<Score> tabScore = scoreManger.getAllScore();
+
+        TextView textViewScoreBall = (TextView)findViewById(R.id.scoreBall);
+        TextView textViewScoreCompass = (TextView)findViewById(R.id.scoreCompass);
+        TextView textViewScoreQuizz = (TextView)findViewById(R.id.scoreQuizz);
+        TextView textViewScoreFinal = (TextView)findViewById(R.id.scoreFinal);
+        textViewScoreBall.setText("Score " + tabScore.get(0).getName_game() +  " : " + tabScore.get(0).getScore());
+        textViewScoreCompass.setText("Score " + tabScore.get(1).getName_game() +  " : " + tabScore.get(1).getScore());
+        textViewScoreQuizz.setText("Score " + tabScore.get(2).getName_game() +  " : " + tabScore.get(2).getScore());
+        textViewScoreFinal.setText("Score "+ tabScore.get(3).getName_game() +  " : " + tabScore.get(3).getScore());
+
 
         btnBack = findViewById(R.id.btn_backmenu_credit);
         btnBack.setOnClickListener(new View.OnClickListener() {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.Random;
 
 import tj.project.esir.progmobproject.db.QuestionManager;
 import tj.project.esir.progmobproject.models.Question;
+import tj.project.esir.progmobproject.models.Score;
 
 public class QuizzActivity extends AppCompatActivity {
 
@@ -40,8 +42,8 @@ public class QuizzActivity extends AppCompatActivity {
 
     private int nbQuestion = 10;
     private int score = 0;
-    private int scoreBall = 0;
-    private int scoreCompass = 0;
+    private Score scoreBall;
+    private Score scoreCompass;
 
 
     @Override
@@ -55,8 +57,8 @@ public class QuizzActivity extends AppCompatActivity {
         Bundle q = iin.getExtras();
 
         if(q!=null){
-            scoreBall = (int) q.get("scoreBall");
-            scoreCompass = (int) q.get("scoreCompass");
+            scoreBall = (Score) q.get("scoreBall");
+            scoreCompass = (Score) q.get("scoreCompass");
         }
 
 
@@ -180,9 +182,9 @@ public class QuizzActivity extends AppCompatActivity {
                         alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Intent finish = new Intent(getApplicationContext(), Finish.class);
-                                finish.putExtra("scoreBall", scoreBall);
+                                finish.putExtra("scoreBall",scoreBall);
                                 finish.putExtra("scoreCompass", scoreCompass);
-                                finish.putExtra("scoreQuizz",score);
+                                finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
                                 startActivity(finish);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }

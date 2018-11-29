@@ -22,10 +22,10 @@ public class ScoreManager {
     public static final String SCORE="score";
 
 
-    public static final String CREATE_TABLE_QUESTION = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE_SCORE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+ID_SCORE+" INTEGER primary key,"+
-            " "+NAME_GAME+" TEXT" +
+            " "+NAME_GAME+" TEXT," +
             " "+SCORE+" INTEGER" +
             ");";
 

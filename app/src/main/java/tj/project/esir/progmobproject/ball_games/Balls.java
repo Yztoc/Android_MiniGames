@@ -17,6 +17,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -36,6 +37,7 @@ import tj.project.esir.progmobproject.CompassActivity;
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.QuizzActivity;
 import tj.project.esir.progmobproject.R;
+import tj.project.esir.progmobproject.models.Score;
 
 public class Balls extends AppCompatActivity {
 
@@ -312,7 +314,7 @@ public class Balls extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                                 Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                                compass.putExtra("scoreBall", scoreFinal);
+                                compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
                                 startActivity(compass);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
 
@@ -347,6 +349,9 @@ public class Balls extends AppCompatActivity {
         cTimer = new CountDownTimer(minTime, 100) {
             public void onTick(long millisUntilFinished) {
                 time = millisUntilFinished/1000;
+                if(time <= 1){
+                    cancelTimer();
+                }
             }
             public void onFinish() {
             }

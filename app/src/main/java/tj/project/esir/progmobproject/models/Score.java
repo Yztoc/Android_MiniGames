@@ -1,6 +1,8 @@
 package tj.project.esir.progmobproject.models;
 
-public class Score {
+import java.io.Serializable;
+
+public class Score implements Serializable {
 
     private int id;
     private String name_game;

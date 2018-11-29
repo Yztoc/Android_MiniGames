@@ -17,7 +17,7 @@ class MySQLite extends SQLiteOpenHelper {
     private final Context mycontext;
     private static MySQLite sInstance;
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 // l'incrément appelle onUpgrade(), décrément => onDowngrade()
     private String DATABASE_PATH; // chemin défini dans le constructeur
     private static final String DATABASE_NAME = "db.sqlite.progmob";
@@ -105,8 +105,8 @@ class MySQLite extends SQLiteOpenHelper {
     } // copydatabase()
 
     @Override
-    public void onCreate(SQLiteDatabase db
-    ) {}
+    public void onCreate(SQLiteDatabase db) {
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

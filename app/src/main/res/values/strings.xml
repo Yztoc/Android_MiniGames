@@ -2,7 +2,7 @@
     <string name="app_name">ProgMobProject</string>
     <string name="singleplayer">Singleplayer</string>
     <string name="multiplayer">Multiplayer</string>
-    <string name="credit">Credit</string>
+    <string name="credit">Paramètres</string>
     <string name="simple">Simple</string>
     <string name="moyen">Moyen</string>
     <string name="difficult">Difficile</string>

@@ -42,17 +42,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:layout_marginTop="40dp"
             tools:layout_editor_absoluteX="7dp"
             tools:layout_editor_absoluteY="237dp">
 
             <TextView
-                android:id="@+id/scoreCompass"
+                android:id="@+id/Score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Projet ESIR 2018-2019"
+                android:text="Meilleure Score "
                 android:textAlignment="center"
                 android:textColor="@android:color/background_light"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 tools:layout_editor_absoluteX="156dp"
                 tools:layout_editor_absoluteY="352dp" />
 
@@ -60,21 +61,32 @@
                 android:id="@+id/scoreBall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Developpeur "
+                android:text="Score jeux balls : "
                 android:textAlignment="center"
                 android:textColor="@android:color/background_light"
-                android:textSize="24sp"
+                android:textSize="14sp"
                 tools:layout_editor_absoluteX="156dp"
                 tools:layout_editor_absoluteY="299dp" />
+
+            <TextView
+                android:id="@+id/scoreCompass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Score jeux compass : "
+                android:textAlignment="center"
+                android:textColor="@android:color/background_light"
+                android:textSize="14sp"
+                tools:layout_editor_absoluteX="156dp"
+                tools:layout_editor_absoluteY="352dp" />
 
             <TextView
                 android:id="@+id/scoreQuizz"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Guépéroux Juilen "
+                android:text="Score jeux quizz :  "
                 android:textAlignment="center"
                 android:textColor="@android:color/background_light"
-                android:textSize="24sp"
+                android:textSize="14sp"
                 tools:layout_editor_absoluteX="156dp"
                 tools:layout_editor_absoluteY="411dp" />
 
@@ -82,12 +94,75 @@
                 android:id="@+id/scoreFinal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Stéphant Thomas"
+                android:text="Score Final :"
                 android:textAlignment="center"
                 android:textColor="@android:color/background_light"
-                android:textSize="24sp"
+                android:textSize="14sp"
                 tools:layout_editor_absoluteX="156dp"
                 tools:layout_editor_absoluteY="461dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/credit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Credit"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="22sp"
+                    tools:layout_editor_absoluteX="156dp"
+                    tools:layout_editor_absoluteY="352dp" />
+
+                <TextView
+                    android:id="@+id/projet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Projet ESIR 2018-2019"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="14sp"
+                    tools:layout_editor_absoluteX="156dp"
+                    tools:layout_editor_absoluteY="352dp" />
+
+                <TextView
+                    android:id="@+id/dev"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Développeurs"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="14sp"
+                    tools:layout_editor_absoluteX="156dp"
+                    tools:layout_editor_absoluteY="299dp" />
+
+                <TextView
+                    android:id="@+id/name1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guépéroux Juilen "
+                    android:textAlignment="center"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="14sp"
+                    tools:layout_editor_absoluteX="156dp"
+                    tools:layout_editor_absoluteY="411dp" />
+
+                <TextView
+                    android:id="@+id/name2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stéphant Thomas"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="14sp"
+                    tools:layout_editor_absoluteX="156dp"
+                    tools:layout_editor_absoluteY="461dp" />
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

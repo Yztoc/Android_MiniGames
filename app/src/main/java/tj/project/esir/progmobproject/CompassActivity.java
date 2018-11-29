@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,7 +23,7 @@ import java.util.Random;
 
 import tj.project.esir.progmobproject.ball_games.Balls;
 import tj.project.esir.progmobproject.ball_games.MenuParam;
-
+import tj.project.esir.progmobproject.models.Score;
 
 
 public class CompassActivity extends AppCompatActivity {
@@ -59,7 +60,7 @@ public class CompassActivity extends AppCompatActivity {
 
 
     private int score = 0;
-    private int scoreBall = 0;
+    private Score scoreBall;
 
     private int timeParam = 20000; //seconde niveau de difficulté à modifé lors de l envoie du client
 
@@ -148,7 +149,7 @@ public class CompassActivity extends AppCompatActivity {
         Bundle c = iin.getExtras();
 
         if(c!=null){
-            scoreBall = (int) c.get("scoreBall");
+            scoreBall = (Score) c.get("scoreBall");
         }
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -248,7 +249,7 @@ public class CompassActivity extends AppCompatActivity {
             public void run() {
                 CompassActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-
+                        cancelTimer();
                         final AlertDialog.Builder alert = new AlertDialog.Builder(CompassActivity.this);
                         alert.setTitle("Terminé ! ");
                         alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
@@ -257,8 +258,8 @@ public class CompassActivity extends AppCompatActivity {
                         alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
-                                quizz.putExtra("scoreBall", scoreBall);
-                                quizz.putExtra("scoreCompass", score);
+                                quizz.putExtra("scoreBall",  scoreBall);
+                                quizz.putExtra("scoreCompass", new Score(2,"Compass Game",score));
                                 startActivity(quizz);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }
