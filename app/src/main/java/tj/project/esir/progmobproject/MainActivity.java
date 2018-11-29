@@ -1,8 +1,8 @@
 package tj.project.esir.progmobproject;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -72,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         btnMultiplayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent multiplayer = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                questionManager.close();
                 startActivity(multiplayer);
             }
         });
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         btnCredit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent credit = new Intent(getApplicationContext(), CreditActivity.class);
+                questionManager.close();
                 startActivity(credit);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 finish();

@@ -132,7 +132,7 @@ public class QuestionManager {
                         "LIMIT 5", null);
         if (c.moveToFirst()) {
             do {
-                res.put(c.getColumnIndex(ID_QUESTION));
+                res.put(c.getInt(c.getColumnIndex(ID_QUESTION)));
             } while (c.moveToNext());
             c.close();
         }
@@ -167,7 +167,6 @@ public class QuestionManager {
         int res =-1;
         Cursor c = db.rawQuery("SELECT max("+ID_QUESTION+") FROM "+TABLE_NAME,null);
         if (c.moveToFirst()) {
-            System.out.println("cacabite"+c.getInt(0));
            res =  c.getInt(0);
             c.close();
         }

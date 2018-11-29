@@ -46,7 +46,6 @@ import java.util.Random;
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
 import tj.project.esir.progmobproject.db.QuestionManager;
-import tj.project.esir.progmobproject.models.Question;
 
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
 
@@ -102,6 +101,17 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this,getMainLooper(),null);
+        mManager.removeGroup(mChannel, new ActionListener() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                System.out.println(reason);
+            }
+        });
 
         mReceiver = new MultiplayerBroadcastReceiver(mManager,mChannel,this);
         mIntentFilter = new IntentFilter();
@@ -159,6 +169,11 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 case MESSAGE_READ:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff,0,msg.arg1);
+                    try {
+                        JSONObject receivedMsg = new JSONObject(tempMsg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     read_msg_box.setText(tempMsg);
                     break;
             }
@@ -192,18 +207,21 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 return;
             }
         }
-    };WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener(){
+    };
+    WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener(){
 
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
             final InetAddress groupOwnerAdress = info.groupOwnerAddress;
             if(info.groupFormed && info.isGroupOwner){
+                System.out.println("hooost");
                 connectionStatus.setText("Host");
                 serverClass = new ServerClass();
                 serverClass.start();
                 message_send_layout.setVisibility(View.VISIBLE);
             }
             else if (info.groupFormed){
+                System.out.println("cliiient");
                 connectionStatus.setText("Client");
                 clientClass = new ClientClass(groupOwnerAdress);
                 clientClass.start();
@@ -278,6 +296,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                questionManager.open();
                 JSONArray questionIds = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
                 JSONArray calculs = get5mentalCalculs();
                 JSONObject msg = new JSONObject();
@@ -287,8 +306,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                questionManager.close();
                 Questions = msg;
                 // String msg = writeMsg.getText().toString();
+                if(sendReceive != null)
                 sendReceive.write(msg.toString().getBytes());
             }
         });
@@ -304,6 +325,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             try {
                 serverSocket = new ServerSocket(8888);
                 socket = serverSocket.accept();
+                System.out.println("new sr");
                 sendReceive = new SendReceive(socket);
                 sendReceive.start();
 
@@ -380,7 +402,19 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
     @Override
     public void onBackPressed() {
-        wifiManager.setWifiEnabled(true);
+        mManager.removeGroup(mChannel, new ActionListener() {
+
+            @Override
+            public void onFailure(int reasonCode) {
+                System.out.println(reasonCode);                    }
+
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
         Intent home = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(home);
         finish();
