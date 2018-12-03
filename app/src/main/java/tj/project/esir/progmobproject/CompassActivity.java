@@ -249,11 +249,11 @@ public class CompassActivity extends AppCompatActivity {
             public void run() {
                 CompassActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        cancelTimer();
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(CompassActivity.this);
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(CompassActivity.this,R.style.ThemeDialogCustom);
                         alert.setTitle("Terminé ! ");
-                        alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
-                                + "<br><b><h3>Score Final : " + score + "</h3></b>"));
+                        alert.setMessage("Vous avez fini avec les stats suivant : "
+                                + "\nTemps : " + time
+                                + "\nScore Final : " + score);
 
                         alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -264,14 +264,6 @@ public class CompassActivity extends AppCompatActivity {
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }
                         });
-
-                        alert.setNegativeButton("Rejouer", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-
-                                dialog.dismiss();
-                            }
-                        });
-
                         alert.show();
                     }
                 });

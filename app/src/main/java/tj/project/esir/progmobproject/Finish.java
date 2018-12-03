@@ -54,7 +54,7 @@ public class Finish extends AppCompatActivity {
         textViewScoreBall.setText("Score jeux balle : " + scoreBall.getScore());
         textViewScoreCompass.setText("Score jeux coffre fort : " + scoreCompass.getScore());
         textViewScoreQuizz.setText("Score quizz : " + scoreQuizz.getScore());
-        textViewScoreFinal.setText("SCORE FINAL : " + scoreTotal.getScore());
+        textViewScoreFinal.setText("Score Final : " + scoreTotal.getScore());
 
         back = findViewById(R.id.btn_backmenu);
 
@@ -77,6 +77,7 @@ public class Finish extends AppCompatActivity {
             scoreManger.addScore(new Score(1,"Ball games",scoreBall.getScore()));
             scoreManger.addScore(new Score(2,"Compass Game",scoreCompass.getScore()));
             scoreManger.addScore(new Score(3,"Quizz Game",scoreQuizz.getScore()));
+            scoreManger.addScore(new Score(4,"Final",scoreTotal.getScore()));
         }else{
             for (Score elem : tabScore) {
                 switch (elem.getId()){
@@ -88,6 +89,9 @@ public class Finish extends AppCompatActivity {
                         break;
                     case 3 :
                         if(elem.getScore() < scoreQuizz.getScore()) scoreManger.updateScore(scoreQuizz);
+                        break;
+                    case 4 :
+                        if(elem.getScore() < scoreTotal.getScore()) scoreManger.updateScore(scoreTotal);
                         break;
                 }
             }

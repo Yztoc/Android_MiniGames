@@ -174,10 +174,10 @@ public class QuizzActivity extends AppCompatActivity {
                 QuizzActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
 
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(QuizzActivity.this);
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(QuizzActivity.this,R.style.ThemeDialogCustom);
                         alert.setTitle("Terminé ! ");
-                        alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
-                                + "<br><b><h3>Score Final : " + score + "</h3></b>"));
+                        alert.setMessage("Vous avez fini avec les stats suivant : "
+                                + "\nScore Final : " + score);
 
                         alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -187,13 +187,6 @@ public class QuizzActivity extends AppCompatActivity {
                                 finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
                                 startActivity(finish);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
-                            }
-                        });
-
-                        alert.setNegativeButton("Rejouer", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-
-                                dialog.dismiss();
                             }
                         });
 
