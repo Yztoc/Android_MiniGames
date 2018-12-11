@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
@@ -49,22 +50,13 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
             else {
                 mActivity.connectionStatus.setText("Device Disconnected");
                 mActivity.message_send_layout.setVisibility(View.INVISIBLE);
-                mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(mActivity.getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(int reason) {
-                        System.out.println(reason);
-                    }
-                });
-
+                mActivity.disconnectFromPeer();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
         }
     }
+
+
 }

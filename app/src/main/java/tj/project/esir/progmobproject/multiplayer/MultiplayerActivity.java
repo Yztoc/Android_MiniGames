@@ -50,6 +50,7 @@ import tj.project.esir.progmobproject.db.QuestionManager;
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
 
     QuestionManager questionManager;
+    String connectionType;
 
     JSONObject Questions;
 
@@ -85,6 +86,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         setContentView(R.layout.activity_multiplayer);
 
         questionManager = new QuestionManager(getApplicationContext());
+        connectionType ="none";
 
         btnDiscover = findViewById(R.id.discover);
         btnSend = findViewById(R.id.sendButton);
@@ -101,17 +103,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this,getMainLooper(),null);
-        mManager.removeGroup(mChannel, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                System.out.println(reason);
-            }
-        });
 
         mReceiver = new MultiplayerBroadcastReceiver(mManager,mChannel,this);
         mIntentFilter = new IntentFilter();
@@ -214,17 +205,17 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
             final InetAddress groupOwnerAdress = info.groupOwnerAddress;
             if(info.groupFormed && info.isGroupOwner){
-                System.out.println("hooost");
                 connectionStatus.setText("Host");
                 serverClass = new ServerClass();
                 serverClass.start();
+                connectionType = "server";
                 message_send_layout.setVisibility(View.VISIBLE);
             }
             else if (info.groupFormed){
-                System.out.println("cliiient");
                 connectionStatus.setText("Client");
                 clientClass = new ClientClass(groupOwnerAdress);
                 clientClass.start();
+                connectionType = "client";
             }
         }
     };
@@ -232,6 +223,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     @Override
     protected void onResume() {
         super.onResume();
+        mReceiver = new MultiplayerBroadcastReceiver(mManager,mChannel,this);
         registerReceiver(mReceiver,mIntentFilter);
     }
 
@@ -239,24 +231,37 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
+        mManager.removeGroup(mChannel, new ActionListener() {
+            @Override
+            public void onSuccess() {
+                disconnectFromPeer();
+            }
+            @Override
+            public void onFailure(int reason) {
+            }
+        });
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        unregisterReceiver(mReceiver);
+        mManager.removeGroup(mChannel, new ActionListener() {
+            @Override
+            public void onSuccess() {
+                disconnectFromPeer();
+            }
+            @Override
+            public void onFailure(int reason) {
+            }
+        });
     }
 
     private void exqListener() {
         btnDiscover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mManager.removeGroup(mChannel, new ActionListener() {
 
-                    @Override
-                    public void onFailure(int reasonCode) {
-                        System.out.println(reasonCode);                    }
-
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
-                    }
-
-                });
                 mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener(){
 
                     @Override
@@ -325,7 +330,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             try {
                 serverSocket = new ServerSocket(8888);
                 socket = serverSocket.accept();
-                System.out.println("new sr");
                 sendReceive = new SendReceive(socket);
                 sendReceive.start();
 
@@ -403,19 +407,15 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     @Override
     public void onBackPressed() {
         mManager.removeGroup(mChannel, new ActionListener() {
-
-            @Override
-            public void onFailure(int reasonCode) {
-                System.out.println(reasonCode);                    }
-
-            @Override
-            public void onSuccess() {
-                Toast.makeText(getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
-        Intent home = new Intent(getApplicationContext(),MainActivity.class);
+                    @Override
+                    public void onSuccess() {
+                        disconnectFromPeer();
+                    }
+                    @Override
+                    public void onFailure(int reason) {
+                    }
+                });
+        Intent home = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(home);
         finish();
     }
@@ -423,8 +423,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     public JSONArray get5mentalCalculs(){
         Random rand = new Random();
         JSONArray res = new JSONArray();
-        int variable1 = 0;
-        int variable2 = 0;
+        int variable1;
+        int variable2;
         for(int i =0; i < 5;i++) {
             variable1 = rand.nextInt(9) + 1;
             variable2 = rand.nextInt(9) + 1;
@@ -439,6 +439,44 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             }
         }
         return res;
+    }
+
+    public void disconnectFromPeer(){
+        mManager.removeGroup(mChannel, new ActionListener() {
+            @Override
+            public void onSuccess() {
+                if(connectionType.equals("server")){
+                    try {
+                        if(!serverClass.serverSocket.isClosed())
+                            serverClass.serverSocket.close();
+                        if(!serverClass.socket.isClosed())
+                            serverClass.socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (connectionType.equals("client")){
+                    if(!clientClass.socket.isClosed()) {
+                        try {
+                            clientClass.socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if(!connectionType.equals("none") && !sendReceive.socket.isClosed()) {
+                    try {
+                        sendReceive.socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                connectionType ="none";
+            }
+            @Override
+            public void onFailure(int reason) {
+            }
+        });
     }
 }
 
