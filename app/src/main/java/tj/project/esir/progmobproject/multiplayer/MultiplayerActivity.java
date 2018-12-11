@@ -231,30 +231,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
-        mManager.removeGroup(mChannel, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                disconnectFromPeer();
-            }
-            @Override
-            public void onFailure(int reason) {
-            }
-        });
-    }
-
-    @Override
-    protected void onStop(){
-        super.onStop();
-        unregisterReceiver(mReceiver);
-        mManager.removeGroup(mChannel, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                disconnectFromPeer();
-            }
-            @Override
-            public void onFailure(int reason) {
-            }
-        });
     }
 
     private void exqListener() {
@@ -339,8 +315,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         }
     }
 
-    private class SendReceive extends Thread {
-        private Socket socket;
+    public class SendReceive extends Thread {
+        public Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
 
@@ -409,7 +385,33 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         mManager.removeGroup(mChannel, new ActionListener() {
                     @Override
                     public void onSuccess() {
-                        disconnectFromPeer();
+                        if(connectionType.equals("server")){
+                            try {
+                                if(!serverClass.serverSocket.isClosed())
+                                serverClass.serverSocket.close();
+                                if(!serverClass.socket.isClosed())
+                                serverClass.socket.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (connectionType.equals("client")){
+                            if(!clientClass.socket.isClosed()) {
+                                try {
+                                    clientClass.socket.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        if(!connectionType.equals("none") && !sendReceive.socket.isClosed()) {
+                            try {
+                                sendReceive.socket.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        connectionType ="none";
                     }
                     @Override
                     public void onFailure(int reason) {
@@ -439,44 +441,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             }
         }
         return res;
-    }
-
-    public void disconnectFromPeer(){
-        mManager.removeGroup(mChannel, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                if(connectionType.equals("server")){
-                    try {
-                        if(!serverClass.serverSocket.isClosed())
-                            serverClass.serverSocket.close();
-                        if(!serverClass.socket.isClosed())
-                            serverClass.socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else if (connectionType.equals("client")){
-                    if(!clientClass.socket.isClosed()) {
-                        try {
-                            clientClass.socket.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if(!connectionType.equals("none") && !sendReceive.socket.isClosed()) {
-                    try {
-                        sendReceive.socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                connectionType ="none";
-            }
-            @Override
-            public void onFailure(int reason) {
-            }
-        });
     }
 }
 

@@ -50,7 +50,34 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
             else {
                 mActivity.connectionStatus.setText("Device Disconnected");
                 mActivity.message_send_layout.setVisibility(View.INVISIBLE);
-                mActivity.disconnectFromPeer();
+                if(mActivity.connectionType.equals("server")){
+                    try {
+                        if(!mActivity.serverClass.serverSocket.isClosed())
+                            mActivity.serverClass.serverSocket.close();
+                        if(!mActivity.serverClass.socket.isClosed())
+                            mActivity.serverClass.socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (mActivity.connectionType.equals("client")){
+                    System.out.println("client");
+                    if(!mActivity.clientClass.socket.isClosed()) {
+                        try {
+                            mActivity.clientClass.socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if(!mActivity.connectionType.equals("none") && !mActivity.sendReceive.socket.isClosed()) {
+                    try {
+                        mActivity.sendReceive.socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mActivity.connectionType ="none";
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
