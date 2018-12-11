@@ -115,6 +115,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         // Indicates this device's details have changed.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        disconnectFromPeer();
     }
 
 
@@ -231,6 +233,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
+        disconnectFromPeer();
     }
 
     private void exqListener() {
@@ -315,8 +318,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         }
     }
 
-    public class SendReceive extends Thread {
-        public Socket socket;
+    private class SendReceive extends Thread {
+        private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
 
@@ -385,33 +388,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         mManager.removeGroup(mChannel, new ActionListener() {
                     @Override
                     public void onSuccess() {
-                        if(connectionType.equals("server")){
-                            try {
-                                if(!serverClass.serverSocket.isClosed())
-                                serverClass.serverSocket.close();
-                                if(!serverClass.socket.isClosed())
-                                serverClass.socket.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        else if (connectionType.equals("client")){
-                            if(!clientClass.socket.isClosed()) {
-                                try {
-                                    clientClass.socket.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                        if(!connectionType.equals("none") && !sendReceive.socket.isClosed()) {
-                            try {
-                                sendReceive.socket.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        connectionType ="none";
+                        disconnectFromPeer();
                     }
                     @Override
                     public void onFailure(int reason) {
@@ -441,6 +418,36 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             }
         }
         return res;
+    }
+
+    public void disconnectFromPeer(){
+        if(connectionType.equals("server")){
+            try {
+                if(!serverClass.serverSocket.isClosed())
+                    serverClass.serverSocket.close();
+                if(!serverClass.socket.isClosed())
+                    serverClass.socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (connectionType.equals("client")){
+            if(!clientClass.socket.isClosed()) {
+                try {
+                    clientClass.socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(!connectionType.equals("none") && !sendReceive.socket.isClosed()) {
+            try {
+                sendReceive.socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        connectionType ="none";
     }
 }
 
