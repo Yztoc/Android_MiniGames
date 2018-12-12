@@ -17,6 +17,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -325,11 +326,10 @@ public class Balls extends AppCompatActivity {
 
     public void checkLife(){
         if(((float) distance * velocity/ 4) / fps < 0.2)reset(true);
-        if(vie == 0 || time <= 1){
+        if(vie == 0){
             isMoving = false;
             playing  = false;
-            if(!((Activity) context).isFinishing())
-            {
+            if(!((Activity) context).isFinishing()){
                 dialogFinish();
             }
 
@@ -337,7 +337,6 @@ public class Balls extends AppCompatActivity {
     }
 
     void dialogFinish(){
-        cancelTimer();
         Runnable second_Task = new Runnable() {
             public void run() {
                 Balls.this.runOnUiThread(new Runnable() {
@@ -391,6 +390,9 @@ public class Balls extends AppCompatActivity {
                 time = millisUntilFinished/1000;
                 if(time <= 1){
                     cancelTimer();
+                    if(!((Activity) context).isFinishing()) {
+                        dialogFinish();
+                    }
                 }
             }
             public void onFinish() {
@@ -409,10 +411,10 @@ public class Balls extends AppCompatActivity {
         if(loose){
             if(vie>0){
                 vie--;
-                System.out.println("VIE : "+ vie);
             }
         }
-
+        p = 0;
+        m = 0;
         nbCol = 0;
         col = 0;
         velocity = 1;
@@ -428,7 +430,6 @@ public class Balls extends AppCompatActivity {
                 score++;
                 tabBlock.clear();
                 generateMap();
-
             }
         }
 
@@ -471,7 +472,7 @@ public class Balls extends AppCompatActivity {
                 }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                     nbCol++;
                     res = 2;
-                }else if((y  <= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()+heightBall/10) && (y >= tabTampBlock.get(i).getY() +tabTampBlock.get(i). getHeight()) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall/10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
                     nbCol++;
                     res = 3;
                 }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
@@ -503,42 +504,42 @@ public class Balls extends AppCompatActivity {
 
         /**  COLLISION COTE DROIT  **/
         if(col == 1 && direction ==1){// si colision coté droit en monté alors deplacement à gauche en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 2;
         }
         else if(col == 1 && direction == 4){// si colision coté droit en descente alors deplacement à gauche en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 3;
         }
 
 
         /**  COLLISION COTE GAUCHE  **/
         if(col == 2 && direction ==2){// si colision coté gauche en monté alors deplacement à droite en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 1;
         }
         else if(col == 2 && direction == 3){// si colision coté gauche en descente alors deplacement à droite en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 4;
         }
 
         /**  COLLISION COTE HAUT   **/
         if(col == 3 && direction ==1){// si colision coté haut en monté vers la droite  alors deplacement à droite en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 4;
         }
         else if(col == 3 && direction == 2){// si colision coté haut en monté vers la gauche alors déplacement à gauche en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 3;
         }
 
         /**  COLLISION COTE BAS   **/
         if(col == 4 && direction == 4){// si colision coté bas en descente vers la droite  alors deplacement à droite en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 1;
         }
         else if(col == 4 && direction == 3){// si colision coté bas en descente vers la gauche  alors deplacement à gauche en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 2;
         }
 
@@ -575,16 +576,12 @@ public class Balls extends AppCompatActivity {
             }
         }
 
-
-
     }
 
 
     public void generateMap(){
         int y = (int) goalY+heightGoal+20;
         int x = 100;
-
-
         Random rand1 = new Random();
         int startRange = 0, endRange = (int)width-(Block.width*2);
         int nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
