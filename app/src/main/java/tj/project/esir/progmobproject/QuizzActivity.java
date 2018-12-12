@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 import tj.project.esir.progmobproject.models.Score;
 import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
@@ -48,7 +49,7 @@ public class QuizzActivity extends AppCompatActivity {
     private Score scoreBall;
     private Score scoreCompass;
     private MultiplayParameters multi = null;
-    private List<Pair<Integer,Integer>> listCalcul = null;
+    private List<CustomPair<Integer,Integer>> listCalcul = null;
     private List<Question> listQuestion = null;
     private int i = 0;
 
@@ -136,17 +137,17 @@ public class QuizzActivity extends AppCompatActivity {
                 multipleAnswersLayout.setVisibility(View.VISIBLE);
                 Question question = listQuestion.get(i);
                 title_question.setText(question.getTitle());
-                btn_rep1.setText(question.getResponse1().first);
-                btn_rep2.setText(question.getResponse2().first);
-                btn_rep3.setText(question.getResponse3().first);
-                rep1 = question.getResponse1().second == 0 ?  false : true;
-                rep2 = question.getResponse2().second == 0 ?  false : true;
-                rep3 = question.getResponse3().second == 0 ?  false : true;
+                btn_rep1.setText(question.getResponse1().getFirst());
+                btn_rep2.setText(question.getResponse2().getFirst());
+                btn_rep3.setText(question.getResponse3().getFirst());
+                rep1 = question.getResponse1().getSecond() == 0 ?  false : true;
+                rep2 = question.getResponse2().getSecond() == 0 ?  false : true;
+                rep3 = question.getResponse3().getSecond() == 0 ?  false : true;
             }else{
                 calculAnswerLayout.setVisibility(View.VISIBLE);
                 multipleAnswersLayout.setVisibility(View.INVISIBLE);
-                int variable1 = listCalcul.get(i).first;
-                int variable2 = listCalcul.get(i).first;
+                int variable1 = listCalcul.get(i).getFirst();
+                int variable2 = listCalcul.get(i).getSecond();
                 resultatCalcul = variable1*variable2;
                 title_question.setText(variable1+" x "+variable2);
                 i++;

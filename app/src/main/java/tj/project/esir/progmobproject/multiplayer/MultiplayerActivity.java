@@ -185,7 +185,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                     read_msg_box.setText(multiplayer.toString());
                     Intent balls = new Intent(getApplicationContext(), Balls.class);
                     balls.putExtra("multiplayer",  multiplayer);
-                    balls.putExtra("level", 1);
                     startActivity(balls);
                     overridePendingTransition(R.anim.slide,R.anim.slide_out);
 
@@ -323,7 +322,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 }
                 Intent balls = new Intent(getApplicationContext(), Balls.class);
                 balls.putExtra("multiplayer",  multiplayParameters);
-                balls.putExtra("level", 1);
                 startActivity(balls);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
 
