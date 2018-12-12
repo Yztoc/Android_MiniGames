@@ -1,6 +1,7 @@
 package tj.project.esir.progmobproject.multiplayer;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import tj.project.esir.progmobproject.models.CustomPair;
@@ -42,7 +43,19 @@ public class MultiplayParameters implements Serializable {
         this.listCalculs = listCalculs;
     }
 
-    public MultiplayParameters(){};
+    public void addQuestion(Question question){
+        this.listQuestion.add(question);
+    }
+
+    public void addCalcul(CustomPair<Integer,Integer> calcul){
+        this.listCalculs.add(calcul);
+    }
+
+    public MultiplayParameters(){
+        this.level = 1;
+        this.listCalculs = new ArrayList<CustomPair<Integer, Integer>>();
+        this.listQuestion = new ArrayList<>();
+    };
 
 
     @Override

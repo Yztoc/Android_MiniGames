@@ -26,4 +26,12 @@ public class CustomPair<F,S> implements Serializable {
     public void setSecond(S second) {
         this.second = second;
     }
+
+    @Override
+    public String toString() {
+        return "CustomPair{" +
+                "first=" + first +
+                ", second=" + second +
+                '}';
+    }
 }
