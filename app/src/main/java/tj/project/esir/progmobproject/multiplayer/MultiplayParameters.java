@@ -1,20 +1,18 @@
 package tj.project.esir.progmobproject.multiplayer;
 
-import android.util.Pair;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
+import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 
 public class MultiplayParameters implements Serializable {
 
     private int level;
     private List<Question> listQuestion;
-    private List<Pair<Integer,Integer>> listCalculs;
+    private List<CustomPair<Integer,Integer>> listCalculs;
 
-    public MultiplayParameters(int level, List<Question> listQuestion, List<Pair<Integer,Integer>> listCalculs){
+    public MultiplayParameters(int level, List<Question> listQuestion, List<CustomPair<Integer,Integer>> listCalculs){
         this.level = level;
         this.listCalculs = listCalculs;
         this.listQuestion = listQuestion;
@@ -36,13 +34,15 @@ public class MultiplayParameters implements Serializable {
         this.listQuestion = listQuestion;
     }
 
-    public List<Pair<Integer, Integer>> getListCalculs() {
+    public List<CustomPair<Integer, Integer>> getListCalculs() {
         return listCalculs;
     }
 
-    public void setListCalculs(List<Pair<Integer, Integer>> listCalculs) {
+    public void setListCalculs(List<CustomPair<Integer, Integer>> listCalculs) {
         this.listCalculs = listCalculs;
     }
+
+    public MultiplayParameters(){};
 
 
 

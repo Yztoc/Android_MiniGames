@@ -129,12 +129,12 @@ public class QuizzActivity extends AppCompatActivity {
                 m.close();
 
                 title_question.setText(question.getTitle());
-                btn_rep1.setText(question.getResponse1().first);
-                btn_rep2.setText(question.getResponse2().first);
-                btn_rep3.setText(question.getResponse3().first);
-                rep1 = question.getResponse1().second == 0 ?  false : true;
-                rep2 = question.getResponse2().second == 0 ?  false : true;
-                rep3 = question.getResponse3().second == 0 ?  false : true;
+                btn_rep1.setText(question.getResponse1().getFirst());
+                btn_rep2.setText(question.getResponse2().getFirst());
+                btn_rep3.setText(question.getResponse3().getFirst());
+                rep1 = question.getResponse1().getSecond() == 0 ?  false : true;
+                rep2 = question.getResponse2().getSecond() == 0 ?  false : true;
+                rep3 = question.getResponse3().getSecond() == 0 ?  false : true;
             }
             else{
                 calculAnswerLayout.setVisibility(View.VISIBLE);
