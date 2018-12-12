@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +84,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     ServerClass serverClass;
     ClientClass clientClass;
     SendReceive sendReceive;
+    private int level = 1;
     private boolean retryChannel = false;
 
     @Override
@@ -204,6 +206,24 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
 
 
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.easy:
+                if (checked) level = 1;
+                break;
+            case R.id.moyen:
+                if (checked) level = 2;
+                    break;
+            case R.id.hard:
+                if (checked)level = 3;
+                    break;
+        }
+    }
+
     WifiP2pManager.PeerListListener peerListListener = new  WifiP2pManager.PeerListListener(){
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
@@ -311,11 +331,11 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 questionManager.open();
                 List<Question> lQuestion = questionManager.get5randomQuestions(); // recupération de 10 id de questions avant de les envoyer à l'autre device
                 List<CustomPair<Integer,Integer>> lCalculs = get5mentalCalculs();
-                MultiplayParameters multiplayParameters = new MultiplayParameters(3,lQuestion,lCalculs);
+                MultiplayParameters multiplayParameters = new MultiplayParameters(level,lQuestion,lCalculs);
                 questionManager.close();
                 if(sendReceive != null) {
                     JSONArray msg = new JSONArray();
-                    msg.put(3);
+                    msg.put(level);
                     JSONArray questionsIDs = new JSONArray();
                     for(Question q : lQuestion){
                         questionsIDs.put(q.getId());

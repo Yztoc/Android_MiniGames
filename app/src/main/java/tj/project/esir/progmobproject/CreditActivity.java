@@ -26,6 +26,7 @@ public class CreditActivity extends AppCompatActivity {
         scoreManger.open();
 
         ArrayList<Score> tabScore = scoreManger.getAllScore();
+        scoreManger.close();
 
         TextView textViewScoreBall = (TextView)findViewById(R.id.scoreBall);
         TextView textViewScoreCompass = (TextView)findViewById(R.id.scoreCompass);
@@ -44,10 +45,17 @@ public class CreditActivity extends AppCompatActivity {
                 // start the new activity
                 startActivity(menu);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
                 finish();
             }
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(home);
+        finish();
     }
 
 
