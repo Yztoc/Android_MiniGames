@@ -24,10 +24,8 @@ public class MenuSinglePlayer extends AppCompatActivity {
 
         btnTuto.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent ball = new Intent(getApplicationContext(), Balls.class);
-                ball.putExtra(KEY_VALUE_LEVEL, 1);
-                // start the new activity
-                startActivity(ball);
+                Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
+                startActivity(tuto);
                 overridePendingTransition(R.anim.slide, R.anim.slide_out);
                 finish();
             }

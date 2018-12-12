@@ -98,7 +98,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/easy"
+                    android:id="@+id/game1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:buttonTint="#ff00caff"
@@ -107,7 +107,7 @@
                     android:textColor="@android:color/white" />
 
                 <RadioButton
-                    android:id="@+id/moyen"
+                    android:id="@+id/game2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:buttonTint="#ff00caff"
@@ -116,7 +116,7 @@
                     android:textColor="@android:color/white" />
 
                 <RadioButton
-                    android:id="@+id/hard"
+                    android:id="@+id/game3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:buttonTint="#ff00caff"
@@ -126,7 +126,7 @@
             </RadioGroup>
 
             <Button
-                android:id="@+id/sendButton"
+                android:id="@+id/launch_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

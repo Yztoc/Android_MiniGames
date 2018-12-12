@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         btnSinglePlayer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent ball = new Intent(getApplicationContext(), MenuParam.class);
-                startActivity(ball);
+                Intent singlePlayer = new Intent(getApplicationContext(), MenuSinglePlayer.class);
+                startActivity(singlePlayer);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 questionManager.close();
                 finish();
