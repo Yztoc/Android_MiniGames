@@ -17,6 +17,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -29,6 +31,7 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,6 +39,7 @@ import tj.project.esir.progmobproject.CompassActivity;
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.QuizzActivity;
 import tj.project.esir.progmobproject.R;
+import tj.project.esir.progmobproject.models.Score;
 
 public class Balls extends AppCompatActivity {
 
@@ -45,7 +49,7 @@ public class Balls extends AppCompatActivity {
     Bitmap block;
     Bitmap bgrd;
     Point size = new Point();
-    ArrayList<Block> tabBlock = new ArrayList<Block>();
+    ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
     CountDownTimer cTimer = null;
 
 
@@ -74,11 +78,14 @@ public class Balls extends AppCompatActivity {
     int level = 0;
     int vie = 3;
     float time = 0;
-
+    int deplacementBlock1 = 0;
+    int deplacementBlock2 = 0;
+    boolean deplacementSens1 = false;
+    boolean deplacementSens2 = false;
 
     volatile boolean playing;
 
-     Context context;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +102,10 @@ public class Balls extends AppCompatActivity {
                     startTimer(20000);
                     break;
                 case 2 :
-                    startTimer(10000);
+                    startTimer(15000);
                     break;
                 case 3 :
-                    startTimer(5000);
+                    startTimer(15000);
                     break;
             }
         }
@@ -235,8 +242,53 @@ public class Balls extends AppCompatActivity {
                 canvas.drawText("SCORE  :" + score, width/2-100, 40, paint);
                 canvas.drawText("TIME  :" + time, width-240, 40, paint);
 
-                for (Block element : tabBlock) {
-                    canvas.drawBitmap(block, element.getX(), element.getY(), paint);
+
+
+                if(deplacementSens1 == false){
+                    deplacementBlock1 = 2;
+                }else{
+                    deplacementBlock1 = -2;
+                }
+                if(deplacementSens2 == false){
+                    deplacementBlock2 = -2;
+                }else{
+                    deplacementBlock2 = 2;
+                }
+
+
+                for (int i=0;i<tabBlock.size();i++) {
+                    for (int j=0;j<tabBlock.get(i).size();j++){
+                        if(level == 3){
+                            if(i == 0){
+                                // dernier block cote droit
+                                if((tabBlock.get(i).get(tabBlock.get(i).size()-1).getX()) + Block.width >= width){
+                                    deplacementSens1 = true;
+                                }// premier block cote gauche
+                                else if(tabBlock.get(i).get(0).getX() <= 0){
+                                    deplacementSens1 = false;
+                                }
+                                tabBlock.get(i).get(j).setX(tabBlock.get(i).get(j).getX()+deplacementBlock1);
+                                canvas.drawBitmap(block, tabBlock.get(i).get(j).getX(), tabBlock.get(i).get(j).getY(), paint);
+                            }
+                            if(i == 2){
+                                // dernier block cote droit
+                                if((tabBlock.get(i).get(tabBlock.get(i).size()-1).getX()) + Block.width >= width){
+                                    deplacementSens2 = false;
+                                }// premier block cote gauche
+                                else if(tabBlock.get(i).get(0).getX() <= 0){
+                                    deplacementSens2 = true;
+                                }
+                                tabBlock.get(i).get(j).setX(tabBlock.get(i).get(j).getX()+deplacementBlock2);
+                                canvas.drawBitmap(block, tabBlock.get(i).get(j).getX(), tabBlock.get(i).get(j).getY(), paint);
+                            }
+                            else {
+                                canvas.drawBitmap(block, tabBlock.get(i).get(j).getX(), tabBlock.get(i).get(j).getY(), paint);
+                            }
+                        }else{
+                            canvas.drawBitmap(block, tabBlock.get(i).get(j).getX(), tabBlock.get(i).get(j).getY(), paint);
+                        }
+                    }
+
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -274,15 +326,17 @@ public class Balls extends AppCompatActivity {
 
     public void checkLife(){
         if(((float) distance * velocity/ 4) / fps < 0.2)reset(true);
-        if(vie <= 0 || time <= 1){
+        if(vie == 0){
             isMoving = false;
             playing  = false;
-            dialogFinish();
+            if(!((Activity) context).isFinishing()){
+                dialogFinish();
+            }
+
         }
     }
 
     void dialogFinish(){
-        cancelTimer();
         Runnable second_Task = new Runnable() {
             public void run() {
                 Balls.this.runOnUiThread(new Runnable() {
@@ -293,45 +347,32 @@ public class Balls extends AppCompatActivity {
                                 timeS = "20 secondes";
                                 break;
                             case 2:
-                                timeS = "10 secondes";
+                                timeS = "15 secondes";
                                 break;
                             case 3:
-                                timeS = "5 secondes";
+                                timeS = "8 secondes";
                                 break;
                         }
-                        final AlertDialog.Builder alert = new AlertDialog.Builder(Balls.this);
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(Balls.this,R.style.ThemeDialogCustom);
                         alert.setTitle("Terminé ! ");
                         final int scoreFinal = vie * score * level;
-                        alert.setMessage(Html.fromHtml("Vous avez fini avec les stats suivant : "
-                                + "<br>Nombre de vie restante : " + vie
-                                + "<br>Score obtenu : " + score
-                                + "<br>Temps écoulé : " + timeS
-                                + "<br><b><h3>Score Final : " + scoreFinal + "</h3></b>"));
+                        alert.setMessage(" Vous avez fini avec les stats suivant : "
+                                + "\nNombre de vie restante : " + vie
+                                + "\nScore obtenu : " + score
+                                + "\nTemps écoulé : " + timeS
+                                + "\n\nScore Final : " + scoreFinal);
 
                         alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                                 Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                                compass.putExtra("scoreBall", scoreFinal);
+                                compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
                                 startActivity(compass);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
 
-
                             }
                         });
 
-                        alert.setNegativeButton("Rejouer", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                /*init();
-                                reset(false);
-                                dialog.dismiss();*/
-
-                                Intent ball = new Intent(getApplicationContext(), Balls.class);
-                                ball.putExtra("level", level);
-                                startActivity(ball);
-
-                            }
-                        });
 
                         alert.show();
                     }
@@ -347,6 +388,12 @@ public class Balls extends AppCompatActivity {
         cTimer = new CountDownTimer(minTime, 100) {
             public void onTick(long millisUntilFinished) {
                 time = millisUntilFinished/1000;
+                if(time <= 1){
+                    cancelTimer();
+                    if(!((Activity) context).isFinishing()) {
+                        dialogFinish();
+                    }
+                }
             }
             public void onFinish() {
             }
@@ -359,38 +406,23 @@ public class Balls extends AppCompatActivity {
             cTimer.cancel();
     }
 
-    public void init(){
-        switch (level) {
-            case 1:
-                startTimer(20000);
-                break;
-            case 2:
-                startTimer(10000);
-                break;
-            case 3:
-                startTimer(5000);
-                break;
-        }
-        time = 30;
-        vie = 3;
-        cTimer.start();
-
-    }
 
     public void reset(boolean loose){
-
         if(loose){
-            vie--;
+            if(vie>0){
+                vie--;
+            }
         }
+        p = 0;
+        m = 0;
+        nbCol = 0;
+        col = 0;
         velocity = 1;
         ballX = width/2-widthBall/2;
         ballY = height-heightBall;
-        nbCol = 0;
-        col = 0;
     }
 
     public void win(float x,float y){
-
         if(isMoving){
             if((goalY+10 > y && y < goalY + heightGoal) && (goalX < x && x < goalX + widthGoal/2) ) {
                 reset(false);
@@ -398,7 +430,6 @@ public class Balls extends AppCompatActivity {
                 score++;
                 tabBlock.clear();
                 generateMap();
-
             }
         }
 
@@ -412,47 +443,48 @@ public class Balls extends AppCompatActivity {
     - col = 0 ---> aucune droite
     */
     public int collisition(float x, float y) {
-
-
         int res = 0;
-        for (int i=0;i<tabBlock.size();i++) {
+        for(ArrayList elem : tabBlock){
+            ArrayList<Block> tabTampBlock = elem;
+            for (int i=0;i<tabTampBlock.size();i++) {
 
-            if(res !=0){
-                return res;
-            }
+                if(res !=0){
+                    return res;
+                }
 
-           if(x + widthBall>=width){
-                nbCol++;
-                res = 1;
-            }else if(x<= 0){
-                nbCol++;
-                res = 2;
-            }else if(y <= 0) {
-                nbCol++;
-               res = 3;
-            }else if(y-heightBall*2 >= height){
-                loose++;
-                vie--;
-                isMoving = false;
-               res = 5;
-            } else if((x >= tabBlock.get(i).getX() - widthBall && x<= tabBlock.get(i).getX()) && (y > (tabBlock.get(i).getY() - heightBall) && y < (tabBlock.get(i).getY() + tabBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
-                nbCol++;
-               res = 1;
-            }else if((x <= tabBlock.get(i).getX() + tabBlock.get(i).getWidth() + widthBall/10 && x>= tabBlock.get(i).getX()+tabBlock.get(i).getWidth()) && (y > (tabBlock.get(i).getY() - heightBall) && y < (tabBlock.get(i).getY() + tabBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
-                nbCol++;
-               res = 2;
-            }else if((y  <= tabBlock.get(i).getY()+tabBlock.get(i).getHeight()+heightBall/10) && (y >= tabBlock.get(i).getY() +tabBlock.get(i). getHeight()) && (x>=(tabBlock.get(i).getX() - widthBall) && x<=(tabBlock.get(i).getX() + tabBlock.get(i).getWidth() + widthBall))) { // touche le haut block
-                nbCol++;
-               res = 3;
-            }else if((y <= tabBlock.get(i).getY()) && (y >= tabBlock.get(i).getY() - heightBall) && (x>=(tabBlock.get(i).getX() - widthBall) && x<=(tabBlock.get(i).getX() + tabBlock.get(i).getWidth() + widthBall))){
-                nbCol++;
-               res = 4;
+                if(x + widthBall>=width){
+                    nbCol++;
+                    res = 1;
+                }else if(x<= 0){
+                    nbCol++;
+                    res = 2;
+                }else if(y <= 0) {
+                    nbCol++;
+                    res = 3;
+                }else if(y-heightBall*2 >= height){
+                    loose++;
+                    vie--;
+                    isMoving = false;
+                    res = 5;
+                } else if((x >= tabTampBlock.get(i).getX() - widthBall && x<= tabTampBlock.get(i).getX()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
+                    nbCol++;
+                    res = 1;
+                }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
+                    nbCol++;
+                    res = 2;
+                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall/10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                    nbCol++;
+                    res = 3;
+                }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
+                    nbCol++;
+                    res = 4;
+                }
+                else{
+                    res = 0;
+                }
             }
-            else{
-               res = 0;
-            }
-
         }
+
         return  res;
 
     }
@@ -472,42 +504,42 @@ public class Balls extends AppCompatActivity {
 
         /**  COLLISION COTE DROIT  **/
         if(col == 1 && direction ==1){// si colision coté droit en monté alors deplacement à gauche en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 2;
         }
         else if(col == 1 && direction == 4){// si colision coté droit en descente alors deplacement à gauche en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 3;
         }
 
 
         /**  COLLISION COTE GAUCHE  **/
         if(col == 2 && direction ==2){// si colision coté gauche en monté alors deplacement à droite en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 1;
         }
         else if(col == 2 && direction == 3){// si colision coté gauche en descente alors deplacement à droite en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 4;
         }
 
         /**  COLLISION COTE HAUT   **/
         if(col == 3 && direction ==1){// si colision coté haut en monté vers la droite  alors deplacement à droite en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 4;
         }
         else if(col == 3 && direction == 2){// si colision coté haut en monté vers la gauche alors déplacement à gauche en descente
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 3;
         }
 
         /**  COLLISION COTE BAS   **/
         if(col == 4 && direction == 4){// si colision coté bas en descente vers la droite  alors deplacement à droite en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 1;
         }
         else if(col == 4 && direction == 3){// si colision coté bas en descente vers la gauche  alors deplacement à gauche en monté
-            velocity = 3*velocity / 4;
+            velocity = 5*velocity / 6;
             direction = 2;
         }
 
@@ -544,8 +576,6 @@ public class Balls extends AppCompatActivity {
             }
         }
 
-
-
     }
 
 
@@ -555,16 +585,16 @@ public class Balls extends AppCompatActivity {
         Random rand1 = new Random();
         int startRange = 0, endRange = (int)width-(Block.width*2);
         int nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
-        for(int i=1;i<=level*2;i++){
+        for(int i=1;i<=level+1;i++){
+            ArrayList<Block> tabTamp = new ArrayList<Block>();
             for(int j=1;j<nbBlock;j++){
                 x+=Block.width;
-                tabBlock.add(new Block(x,y*i*3/2));
+                tabTamp.add(new Block(x,y*i));
             }
-
+            tabBlock.add(tabTamp);
             int offsetValue =  endRange - startRange + 1;
             int  baseValue = (int)  (offsetValue * rand1.nextDouble());
             int r =  baseValue + startRange;
-            System.out.println("random : " + r);
             nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
             x=r;
         }
@@ -590,67 +620,72 @@ public class Balls extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    xStart = (int) event.getX();
-                    yStart = (int) event.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    Log.i("TAG", "moving: (" + xStart + ", " + yStart + ")");
-                    break;
-                case MotionEvent.ACTION_UP:
-                    xEnd= (int) event.getX();
-                    yEnd = (int) event.getY();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        xStart = (int) event.getX();
+                        yStart = (int) event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.i("TAG", "moving: (" + xStart + ", " + yStart + ")");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        xEnd= (int) event.getX();
+                        yEnd = (int) event.getY();
 
-                    // detect si le trace est du haut vers le bas
-                    if(yStart < yEnd){
-                        isMoving = true;
-                        double h = yEnd - yStart;
-                        double base = 0;
+                        // detect si le trace est du haut vers le bas
+                        if(yStart < yEnd){
+                            isMoving = true;
+                            double h = yEnd - yStart;
+                            double base = 0;
 
-                        // calcul la base du triangle du trace
-                        if(xStart < xEnd){ // slide d en haut a gauche vers en bas à droite
-                            base = xEnd - xStart;
-                            direction = 2;
+                            // calcul la base du triangle du trace
+                            if(xStart < xEnd){ // slide d en haut a gauche vers en bas à droite
+                                base = xEnd - xStart;
+                                direction = 2;
+                            }else{
+                                base = xStart - xEnd;// slide d en haut a droite vers en bas à gauche
+                                direction = 1;
+                            }
+
+                            // hypothenus du tringle du trace (ditance entre le debut et la fin du slide
+                            distance = Math.sqrt(Math.pow(base,2) + Math.pow(h,2));
+                            // max value 1000
+                            if(distance >1000) distance = 1000;
+                            angle = Math.toDegrees(Math.atan(h/base));
+
+
+                            // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
+                            double hauteurFinal =  (width - ballX) * Math.tan((float)angle);
+
+                            // y = mx + p
+                            //calcul coeficient de la droite
+                            m  = (hauteurFinal - ballY) / (width - ballX);
+
+                            //calcul p
+                            p = hauteurFinal - (width*m);
+
+                            System.out.println("Hauteur : " + h);
+                            System.out.println("Base : " + base);
+                            System.out.println("Distance : " + distance);
+                            System.out.println("Angle : " + angle);
+                            System.out.println("hauteurFinal : " + hauteurFinal);
+                            System.out.println("M : " + m);
+                            System.out.println("P : " + p);
+
+
+
                         }else{
-                            base = xStart - xEnd;// slide d en haut a droite vers en bas à gauche
-                            direction = 1;
+                            System.out.println("Geste dans le mauvais sens");
                         }
 
-                        // hypothenus du tringle du trace (ditance entre le debut et la fin du slide
-                        distance = Math.sqrt(Math.pow(base,2) + Math.pow(h,2));
-                        angle = Math.toDegrees(Math.atan(h/base));
+                        break;
+                }
 
 
-                        // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
-                        double hauteurFinal =  (width - ballX) * Math.tan((float)angle);
-
-                        // y = mx + p
-                        //calcul coeficient de la droite
-                        m  = (hauteurFinal - ballY) / (width - ballX);
-
-                        //calcul p
-                        p = hauteurFinal - (width*m);
-
-                        System.out.println("Hauteur : " + h);
-                        System.out.println("Base : " + base);
-                        System.out.println("Distance : " + distance);
-                        System.out.println("Angle : " + angle);
-                        System.out.println("hauteurFinal : " + hauteurFinal);
-                        System.out.println("M : " + m);
-                        System.out.println("P : " + p);
-
-
-
-                    }else{
-                        System.out.println("Geste dans le mauvais sens");
-                    }
-
-                    break;
-            }
 
             return true;
         }
+
     };
     
     public void onBackPressed() {

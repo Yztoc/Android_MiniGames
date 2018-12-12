@@ -12,6 +12,16 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="380dp"
+        android:layout_height="33dp"
+        android:text="Choissisez votre niveau de difficulté pour le Game Ball"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="204dp" />
+
     <Button
         android:id="@+id/btn_simple"
         android:layout_width="wrap_content"
@@ -22,10 +32,10 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.536"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.448" />
+        app:layout_constraintVertical_bias="0.441" />
 
     <Button
         android:id="@+id/btn_moyen"
@@ -36,10 +46,10 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.546"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_simple"
-        app:layout_constraintVertical_bias="0.255" />
+        app:layout_constraintVertical_bias="0.282" />
 
     <Button
         android:id="@+id/btn_difficult"
@@ -50,10 +60,10 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.537"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_moyen"
-        app:layout_constraintVertical_bias="0.504" />
+        app:layout_constraintVertical_bias="0.554" />
 
     <ImageView
         android:id="@+id/img_logo"
@@ -65,4 +75,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/logo" />
+
 </android.support.constraint.ConstraintLayout>

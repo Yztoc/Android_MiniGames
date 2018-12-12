@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
 
 public class MenuParam extends AppCompatActivity {
@@ -55,7 +56,11 @@ public class MenuParam extends AppCompatActivity {
             }
         });
     }
-
+    public void onBackPressed() {
+        Intent home = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(home);
+        finish();
+    }
 
 
 }
