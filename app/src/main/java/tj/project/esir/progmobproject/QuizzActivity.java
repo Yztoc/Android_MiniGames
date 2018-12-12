@@ -121,7 +121,7 @@ public class QuizzActivity extends AppCompatActivity {
             scoreBall = (Score) q.get("scoreBall");
             scoreCompass = (Score) q.get("scoreCompass");
         }
-        
+
     }
 
     public void pickQuestionMultiplayer(){
