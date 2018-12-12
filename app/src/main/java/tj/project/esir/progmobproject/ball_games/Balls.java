@@ -40,6 +40,7 @@ import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.QuizzActivity;
 import tj.project.esir.progmobproject.R;
 import tj.project.esir.progmobproject.models.Score;
+import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
 
 public class Balls extends AppCompatActivity {
 
@@ -49,6 +50,7 @@ public class Balls extends AppCompatActivity {
     Bitmap block;
     Bitmap bgrd;
     Point size = new Point();
+    MultiplayParameters multi = null;
     ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
     CountDownTimer cTimer = null;
 
@@ -83,6 +85,7 @@ public class Balls extends AppCompatActivity {
     boolean deplacementSens1 = false;
     boolean deplacementSens2 = false;
 
+
     volatile boolean playing;
 
     Context context;
@@ -96,7 +99,12 @@ public class Balls extends AppCompatActivity {
 
         if(b!=null)
         {
-            level = (int) b.get("level");
+            if(b.get("multiplayer") != null){
+                multi = (MultiplayParameters) b.get("multiplayer");
+                level = multi.getLevel();
+            }else{
+                level = (int) b.get("level");
+            }
             switch (level){
                 case 1 :
                     startTimer(20000);
@@ -367,6 +375,7 @@ public class Balls extends AppCompatActivity {
 
                                 Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
                                 compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
+                                if(multi != null) compass.putExtra("multiplayer", multi);
                                 startActivity(compass);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
 
