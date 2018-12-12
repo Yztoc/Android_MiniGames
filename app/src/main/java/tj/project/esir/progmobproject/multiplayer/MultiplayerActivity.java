@@ -28,9 +28,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,14 +46,15 @@ import java.util.Random;
 
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
+import tj.project.esir.progmobproject.ball_games.Balls;
 import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.CustomPair;
+import tj.project.esir.progmobproject.models.Question;
 
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
 
     QuestionManager questionManager;
     String connectionType;
-
-    JSONObject Questions;
 
     LinearLayout message_send_layout;
     Button btnDiscover;
@@ -158,16 +160,35 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            MultiplayParameters multiplayer = new MultiplayParameters();
             switch (msg.what){
                 case MESSAGE_READ:
                     byte[] readBuff = (byte[]) msg.obj;
+                    ObjectInputStream in = null;
+                    try {
+                        in = new ObjectInputStream(new ByteArrayInputStream(readBuff));
+                        multiplayer = (MultiplayParameters) in.readObject();
+                        in.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+/*
                     String tempMsg = new String(readBuff,0,msg.arg1);
                     try {
                         JSONObject receivedMsg = new JSONObject(tempMsg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    read_msg_box.setText(tempMsg);
+                    */
+                    read_msg_box.setText(multiplayer.toString());
+                    Intent balls = new Intent(getApplicationContext(), Balls.class);
+                    balls.putExtra("multiplayer",  multiplayer);
+                    balls.putExtra("level", 1);
+                    startActivity(balls);
+                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
                     break;
             }
             return true;
@@ -281,20 +302,31 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             @Override
             public void onClick(View v) {
                 questionManager.open();
-                JSONArray questionIds = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
-                JSONArray calculs = get5mentalCalculs();
-                JSONObject msg = new JSONObject();
-                try {
-                    msg.put("questionsIds",questionIds);
-                    msg.put("calculs",calculs);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                List<Question> lQuestion = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
+                List<CustomPair<Integer,Integer>> lCalculs = get5mentalCalculs();
+                MultiplayParameters multiplayParameters = new MultiplayParameters(1,lQuestion,lCalculs);
                 questionManager.close();
-                Questions = msg;
                 // String msg = writeMsg.getText().toString();
-                if(sendReceive != null)
-                sendReceive.write(msg.toString().getBytes());
+                if(sendReceive != null) {
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = null;
+                    try {
+                        oos = new ObjectOutputStream(bos);
+                        oos.writeObject(multiplayParameters);
+                        oos.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    byte[] data = bos.toByteArray();
+                    sendReceive.write(data);
+                }
+                Intent balls = new Intent(getApplicationContext(), Balls.class);
+                balls.putExtra("multiplayer",  multiplayParameters);
+                balls.putExtra("level", 1);
+                startActivity(balls);
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
             }
         });
     }
@@ -399,23 +431,15 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         finish();
     }
 
-    public JSONArray get5mentalCalculs(){
+    public List<CustomPair<Integer,Integer>> get5mentalCalculs(){
         Random rand = new Random();
-        JSONArray res = new JSONArray();
+        List<CustomPair<Integer,Integer>> res = new ArrayList<CustomPair<Integer, Integer>>();
         int variable1;
         int variable2;
         for(int i =0; i < 5;i++) {
             variable1 = rand.nextInt(9) + 1;
             variable2 = rand.nextInt(9) + 1;
-            JSONObject calcul = new JSONObject();
-
-            try {
-                calcul.put("variable2",variable2);
-                calcul.put("variable1",variable1);
-                res.put(calcul);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            res.add(new CustomPair<Integer, Integer>(variable1,variable2));
         }
         return res;
     }

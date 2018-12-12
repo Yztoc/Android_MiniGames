@@ -4,13 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Pair;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 
 public class QuestionManager {
@@ -59,12 +57,12 @@ public class QuestionManager {
         ContentValues values = new ContentValues();
         values.put(ID_QUESTION, question.getId());
         values.put(TITLE_QUESTION, question.getTitle());
-        values.put(TEXT_RESPONSE1, question.getResponse1().first);
-        values.put(TEXT_RESPONSE2, question.getResponse2().first);
-        values.put(TEXT_RESPONSE3, question.getResponse3().first);
-        values.put(VALUE_RESPONSE1, question.getResponse1().second);
-        values.put(VALUE_RESPONSE2, question.getResponse2().second);
-        values.put(VALUE_RESPONSE3, question.getResponse3().second);
+        values.put(TEXT_RESPONSE1, question.getResponse1().getSecond());
+        values.put(TEXT_RESPONSE2, question.getResponse2().getSecond());
+        values.put(TEXT_RESPONSE3, question.getResponse3().getSecond());
+        values.put(VALUE_RESPONSE1, question.getResponse1().getSecond());
+        values.put(VALUE_RESPONSE2, question.getResponse2().getSecond());
+        values.put(VALUE_RESPONSE3, question.getResponse3().getSecond());
 
         // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
         return db.insert(
@@ -78,12 +76,12 @@ public class QuestionManager {
 
         ContentValues values = new ContentValues();
         values.put(TITLE_QUESTION, question.getTitle());
-        values.put(TEXT_RESPONSE1, question.getResponse1().first);
-        values.put(TEXT_RESPONSE2, question.getResponse2().first);
-        values.put(TEXT_RESPONSE3, question.getResponse3().first);
-        values.put(VALUE_RESPONSE1, question.getResponse1().second);
-        values.put(VALUE_RESPONSE2, question.getResponse2().second);
-        values.put(VALUE_RESPONSE3, question.getResponse3().second);
+        values.put(TEXT_RESPONSE1, question.getResponse1().getFirst());
+        values.put(TEXT_RESPONSE2, question.getResponse2().getFirst());
+        values.put(TEXT_RESPONSE3, question.getResponse3().getFirst());
+        values.put(VALUE_RESPONSE1, question.getResponse1().getSecond());
+        values.put(VALUE_RESPONSE2, question.getResponse2().getSecond());
+        values.put(VALUE_RESPONSE3, question.getResponse3().getSecond());
 
         String where = ID_QUESTION+" = ?";
         String[] whereArgs = {question.getId()+""};
@@ -116,23 +114,31 @@ public class QuestionManager {
                     getInt(c.getColumnIndex(ID_QUESTION)));
             question.setTitle(c.
                     getString(c.getColumnIndex(TITLE_QUESTION)));
-            question.setResponse1(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
-            question.setResponse2(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
-            question.setResponse3(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
+            question.setResponse1(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+            question.setResponse2(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
+            question.setResponse3(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
 
             c.close();
         }
         return question;
     }
 
-    public JSONArray get5randomId(){
-        JSONArray res = new JSONArray();
+    public List<Question> get5randomId(){
+        List<Question> res = new ArrayList<>();
         Cursor c = db.rawQuery(
                 "SELECT * FROM "+TABLE_NAME+" ORDER BY RANDOM() "+
                         "LIMIT 5", null);
         if (c.moveToFirst()) {
             do {
-                res.put(c.getInt(c.getColumnIndex(ID_QUESTION)));
+                Question question = new Question();
+                question.setId(c.
+                        getInt(c.getColumnIndex(ID_QUESTION)));
+                question.setTitle(c.
+                        getString(c.getColumnIndex(TITLE_QUESTION)));
+                question.setResponse1(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+                question.setResponse2(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
+                question.setResponse3(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
+                res.add(question);
             } while (c.moveToNext());
             c.close();
         }
@@ -153,9 +159,9 @@ public class QuestionManager {
                     getInt(c.getColumnIndex(ID_QUESTION)));
             question.setTitle(c.
                     getString(c.getColumnIndex(TITLE_QUESTION)));
-            question.setResponse1(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
-            question.setResponse2(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
-            question.setResponse3(new Pair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
+            question.setResponse1(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+            question.setResponse2(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
+            question.setResponse3(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
 
             c.close();
         }

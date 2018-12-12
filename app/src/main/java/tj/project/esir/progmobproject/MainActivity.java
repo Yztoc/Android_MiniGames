@@ -21,6 +21,7 @@ import okhttp3.Response;
 import tj.project.esir.progmobproject.ball_games.MenuParam;
 import tj.project.esir.progmobproject.db.MajDB;
 import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 import tj.project.esir.progmobproject.multiplayer.MultiplayerActivity;
 
@@ -109,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
                             Question q = new Question();
                             q.setId(jsonobject.getInt("_id"));
                             q.setTitle(jsonobject.getString(TITLE_QUESTION));
-                            q.setResponse1(new Pair(jsonobject.getString(TEXT_RESPONSE1),jsonobject.getBoolean(VALUE_RESPONSE1) == true ? 1 : 0));
-                            q.setResponse2(new Pair(jsonobject.getString(TEXT_RESPONSE2),jsonobject.getBoolean(VALUE_RESPONSE2) == true ? 1 : 0));
-                            q.setResponse3(new Pair(jsonobject.getString(TEXT_RESPONSE3),jsonobject.getBoolean(VALUE_RESPONSE3) == true ? 1 : 0));
+                            q.setResponse1(new CustomPair<String,Integer>(jsonobject.getString(TEXT_RESPONSE1),jsonobject.getBoolean(VALUE_RESPONSE1) == true ? 1 : 0));
+                            q.setResponse2(new CustomPair<String,Integer>(jsonobject.getString(TEXT_RESPONSE2),jsonobject.getBoolean(VALUE_RESPONSE2) == true ? 1 : 0));
+                            q.setResponse3(new CustomPair<String,Integer>(jsonobject.getString(TEXT_RESPONSE3),jsonobject.getBoolean(VALUE_RESPONSE3) == true ? 1 : 0));
                             questionManager.addQuestion(q);
                         }
                     }
