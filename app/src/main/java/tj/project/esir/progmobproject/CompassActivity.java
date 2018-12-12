@@ -24,11 +24,13 @@ import java.util.Random;
 import tj.project.esir.progmobproject.ball_games.Balls;
 import tj.project.esir.progmobproject.ball_games.MenuParam;
 import tj.project.esir.progmobproject.models.Score;
+import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
 
 
 public class CompassActivity extends AppCompatActivity {
 
     private int mAzimuth = 0; // degree
+    private MultiplayParameters multi = null;
 
     private SensorManager mSensorManager;
     private boolean volumeOn;
@@ -142,13 +144,28 @@ public class CompassActivity extends AppCompatActivity {
         mediaPlayerUnlock = MediaPlayer.create(this,R.raw.unlock_locker);
         mediaPlayerClick = MediaPlayer.create(this,R.raw.click_locker);
         clickDegree = 0;
-        startTimer(timeParam);
+
 
         // recoit le score de l'activity précédente
         Intent iin= getIntent();
         Bundle c = iin.getExtras();
 
         if(c!=null){
+            if(c.get("multiplayer") != null) {
+                multi = (MultiplayParameters) c.get("multiplayer");
+                switch (multi.getLevel()){
+                    case 1 :
+                        timeParam = 20000;
+                        break;
+                    case 2 :
+                        timeParam = 15000;
+                        break;
+                    case 3 :
+                        timeParam = 10000;
+                        break;
+                }
+            }
+            startTimer(timeParam);
             scoreBall = (Score) c.get("scoreBall");
         }
 
@@ -260,6 +277,7 @@ public class CompassActivity extends AppCompatActivity {
                                 Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
                                 quizz.putExtra("scoreBall",  scoreBall);
                                 quizz.putExtra("scoreCompass", new Score(2,"Compass Game",score));
+                                if(multi != null) quizz.putExtra("multiplayer", multi);
                                 startActivity(quizz);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }
