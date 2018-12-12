@@ -46,11 +46,11 @@ import java.util.Random;
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
 import tj.project.esir.progmobproject.db.QuestionManager;
-import tj.project.esir.progmobproject.models.Question;
 
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
 
     QuestionManager questionManager;
+    String connectionType;
 
     JSONObject Questions;
 
@@ -86,6 +86,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         setContentView(R.layout.activity_multiplayer);
 
         questionManager = new QuestionManager(getApplicationContext());
+        connectionType ="none";
 
         btnDiscover = findViewById(R.id.discover);
         btnSend = findViewById(R.id.sendButton);
@@ -114,6 +115,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         // Indicates this device's details have changed.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        disconnectFromPeer();
     }
 
 
@@ -159,6 +162,11 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 case MESSAGE_READ:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff,0,msg.arg1);
+                    try {
+                        JSONObject receivedMsg = new JSONObject(tempMsg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     read_msg_box.setText(tempMsg);
                     break;
             }
@@ -192,7 +200,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 return;
             }
         }
-    };WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener(){
+    };
+    WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener(){
 
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
@@ -201,12 +210,14 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 connectionStatus.setText("Host");
                 serverClass = new ServerClass();
                 serverClass.start();
+                connectionType = "server";
                 message_send_layout.setVisibility(View.VISIBLE);
             }
             else if (info.groupFormed){
                 connectionStatus.setText("Client");
                 clientClass = new ClientClass(groupOwnerAdress);
                 clientClass.start();
+                connectionType = "client";
             }
         }
     };
@@ -214,6 +225,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     @Override
     protected void onResume() {
         super.onResume();
+        mReceiver = new MultiplayerBroadcastReceiver(mManager,mChannel,this);
         registerReceiver(mReceiver,mIntentFilter);
     }
 
@@ -221,24 +233,14 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
+        disconnectFromPeer();
     }
 
     private void exqListener() {
         btnDiscover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mManager.removeGroup(mChannel, new ActionListener() {
 
-                    @Override
-                    public void onFailure(int reasonCode) {
-                        System.out.println(reasonCode);                    }
-
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"Deconnected",Toast.LENGTH_SHORT).show();
-                    }
-
-                });
                 mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener(){
 
                     @Override
@@ -278,6 +280,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                questionManager.open();
                 JSONArray questionIds = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
                 JSONArray calculs = get5mentalCalculs();
                 JSONObject msg = new JSONObject();
@@ -287,8 +290,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                questionManager.close();
                 Questions = msg;
                 // String msg = writeMsg.getText().toString();
+                if(sendReceive != null)
                 sendReceive.write(msg.toString().getBytes());
             }
         });
@@ -380,8 +385,16 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
     @Override
     public void onBackPressed() {
-        wifiManager.setWifiEnabled(true);
-        Intent home = new Intent(getApplicationContext(),MainActivity.class);
+        mManager.removeGroup(mChannel, new ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        disconnectFromPeer();
+                    }
+                    @Override
+                    public void onFailure(int reason) {
+                    }
+                });
+        Intent home = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(home);
         finish();
     }
@@ -389,8 +402,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     public JSONArray get5mentalCalculs(){
         Random rand = new Random();
         JSONArray res = new JSONArray();
-        int variable1 = 0;
-        int variable2 = 0;
+        int variable1;
+        int variable2;
         for(int i =0; i < 5;i++) {
             variable1 = rand.nextInt(9) + 1;
             variable2 = rand.nextInt(9) + 1;
@@ -405,6 +418,36 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             }
         }
         return res;
+    }
+
+    public void disconnectFromPeer(){
+        if(connectionType.equals("server")){
+            try {
+                if(!serverClass.serverSocket.isClosed())
+                    serverClass.serverSocket.close();
+                if(!serverClass.socket.isClosed())
+                    serverClass.socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (connectionType.equals("client")){
+            if(!clientClass.socket.isClosed()) {
+                try {
+                    clientClass.socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(!connectionType.equals("none") && !sendReceive.socket.isClosed()) {
+            try {
+                sendReceive.socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        connectionType ="none";
     }
 }
 
