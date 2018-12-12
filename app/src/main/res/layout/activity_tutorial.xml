@@ -17,78 +17,67 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="0dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/connectionStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Connection Status"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_bright"
-            android:textSize="18sp"
-            android:textStyle="italic" />
-
-
-        <Button
-            android:id="@+id/discover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/menu_button_shape"
-            android:text="@string/discover"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.422" />
 
         <TextView
             android:id="@+id/listDevices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Liste des devices detectés "
+            android:layout_marginTop="100dp"
+            android:text="Entrainez vous avant de vous avant de jouer !"
+            android:textSize="18sp"
             android:textAlignment="center"
-            android:textColor="#FFF"
-            android:textSize="18sp" />
+            android:textColor="#FFF" />
 
-        <ListView
-            android:id="@+id/peerListView"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginTop="25dp"
-            android:background="@color/colorPrimary"
-            android:cacheColorHint="@android:color/background_light"
-            android:divider="@android:color/background_light"
-            android:dividerHeight="2dp"
-            android:isScrollContainer="false"
-            android:scrollbars="vertical"
-            android:textColor="@android:color/white">
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
 
-        </ListView>
+            <ImageView
+                android:id="@+id/img_tuto1"
+                android:layout_width="135dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_credit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/tuto1" />
 
-        <TextView
-            android:id="@+id/readMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="Message"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_bright"
-            android:textSize="16sp"
-            android:textStyle="italic" />
+            <ImageView
+                android:id="@+id/img_tuto2"
+                android:layout_width="135dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_credit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/tuto1" />
+
+            <ImageView
+                android:id="@+id/img_tuto3"
+                android:layout_width="135dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_credit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/tuto1" />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/message_send_layout"
@@ -96,26 +85,15 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="478dp"
-            tools:ignore="MissingConstraints">
-
-
-            <TextView
-                android:id="@+id/levelRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Choissisez une difficultée "
-                android:textAlignment="center"
-                android:textColor="#FFF"
-                android:textSize="18sp" />
+            tools:layout_editor_absoluteY="478dp">
 
 
             <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:checkedButton="@+id/easy"
                 android:orientation="horizontal">
 
@@ -123,18 +101,18 @@
                     android:id="@+id/easy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Facile"
                     android:buttonTint="#ff00caff"
+                    android:onClick="onRadioButtonClicked"
+                    android:text="Jeux balle"
                     android:textColor="@android:color/white" />
 
                 <RadioButton
                     android:id="@+id/moyen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Moyen"
                     android:buttonTint="#ff00caff"
+                    android:onClick="onRadioButtonClicked"
+                    android:text="Jeux Compass"
                     android:textColor="@android:color/white" />
 
                 <RadioButton
@@ -143,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:buttonTint="#ff00caff"
                     android:onClick="onRadioButtonClicked"
-                    android:text="Difficile"
+                    android:text="Jeux Quizz"
                     android:textColor="@android:color/white" />
             </RadioGroup>
 
@@ -154,7 +132,7 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/menu_button_shape"
                 android:elevation="0dp"
-                android:text="@string/startGame"
+                android:text="Lancer le tutorial"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -167,8 +145,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 
 </android.support.constraint.ConstraintLayout>
