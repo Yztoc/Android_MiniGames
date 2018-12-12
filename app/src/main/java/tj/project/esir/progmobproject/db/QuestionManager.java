@@ -57,9 +57,9 @@ public class QuestionManager {
         ContentValues values = new ContentValues();
         values.put(ID_QUESTION, question.getId());
         values.put(TITLE_QUESTION, question.getTitle());
-        values.put(TEXT_RESPONSE1, question.getResponse1().getSecond());
-        values.put(TEXT_RESPONSE2, question.getResponse2().getSecond());
-        values.put(TEXT_RESPONSE3, question.getResponse3().getSecond());
+        values.put(TEXT_RESPONSE1, question.getResponse1().getFirst());
+        values.put(TEXT_RESPONSE2, question.getResponse2().getFirst());
+        values.put(TEXT_RESPONSE3, question.getResponse3().getFirst());
         values.put(VALUE_RESPONSE1, question.getResponse1().getSecond());
         values.put(VALUE_RESPONSE2, question.getResponse2().getSecond());
         values.put(VALUE_RESPONSE3, question.getResponse3().getSecond());
@@ -114,7 +114,7 @@ public class QuestionManager {
                     getInt(c.getColumnIndex(ID_QUESTION)));
             question.setTitle(c.
                     getString(c.getColumnIndex(TITLE_QUESTION)));
-            question.setResponse1(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+            question.setResponse1(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
             question.setResponse2(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
             question.setResponse3(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
 
@@ -123,7 +123,7 @@ public class QuestionManager {
         return question;
     }
 
-    public List<Question> get5randomId(){
+    public List<Question> get5randomQuestions(){
         List<Question> res = new ArrayList<>();
         Cursor c = db.rawQuery(
                 "SELECT * FROM "+TABLE_NAME+" ORDER BY RANDOM() "+
@@ -135,9 +135,9 @@ public class QuestionManager {
                         getInt(c.getColumnIndex(ID_QUESTION)));
                 question.setTitle(c.
                         getString(c.getColumnIndex(TITLE_QUESTION)));
-                question.setResponse1(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
-                question.setResponse2(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
-                question.setResponse3(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
+                question.setResponse1(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+                question.setResponse2(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
+                question.setResponse3(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
                 res.add(question);
             } while (c.moveToNext());
             c.close();
@@ -146,7 +146,6 @@ public class QuestionManager {
     }
 
     public Question getQuestion(int id) {
-        // Retourne l'animal dont l'id est passé en paramètre
 
         Question question=new Question();
 
@@ -159,9 +158,9 @@ public class QuestionManager {
                     getInt(c.getColumnIndex(ID_QUESTION)));
             question.setTitle(c.
                     getString(c.getColumnIndex(TITLE_QUESTION)));
-            question.setResponse1(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
-            question.setResponse2(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
-            question.setResponse3(new CustomPair<>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
+            question.setResponse1(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE1)),c.getInt(c.getColumnIndex(VALUE_RESPONSE1))));
+            question.setResponse2(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE2)),c.getInt(c.getColumnIndex(VALUE_RESPONSE2))));
+            question.setResponse3(new CustomPair<String, Integer>(c.getString(c.getColumnIndex(TEXT_RESPONSE3)),c.getInt(c.getColumnIndex(VALUE_RESPONSE3))));
 
             c.close();
         }

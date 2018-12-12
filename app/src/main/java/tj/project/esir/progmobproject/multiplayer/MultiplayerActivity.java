@@ -28,6 +28,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -164,33 +168,35 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             switch (msg.what){
                 case MESSAGE_READ:
                     byte[] readBuff = (byte[]) msg.obj;
+                    System.out.println("size read buff "+readBuff.length);
                     ByteArrayInputStream in = null;
-                    try {
-                        in = new ByteArrayInputStream(readBuff);
-                        ObjectInputStream is = new ObjectInputStream(in);
-                        multiplayer = (MultiplayParameters) is.readObject();
-                        System.out.println("Bite ok : " + multiplayer.toString());
-
-                    } catch (IOException e) {
-                        System.out.println("Bite Execption : " + e.toString());
-
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-/*
                     String tempMsg = new String(readBuff,0,msg.arg1);
                     try {
-                        JSONObject receivedMsg = new JSONObject(tempMsg);
+                        JSONArray receivedMsg = new JSONArray(tempMsg);
+                        multiplayer.setLevel(receivedMsg.getInt(0));
+                        JSONArray questionsIDs = receivedMsg.getJSONArray(1);
+                        questionManager.open();
+                        for(int i = 0; i<questionsIDs.length();i++){
+                            Question q = questionManager.getQuestion(questionsIDs.getInt(i));
+                            System.out.println("QQQQ"+q);
+                            multiplayer.addQuestion(questionManager.getQuestion(questionsIDs.getInt(i)));
+                        }
+                        JSONArray calculs = receivedMsg.getJSONArray(2);
+                        for (int i = 0; i<calculs.length();i++){
+                            JSONObject temp = calculs.getJSONObject(i);
+                            CustomPair<Integer,Integer> tempPair = new CustomPair<>(temp.getInt("variable1"),temp.getInt("variable2"));
+                            multiplayer.addCalcul(tempPair);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    */
+
                     read_msg_box.setText(multiplayer.toString());
-                   /* Intent balls = new Intent(getApplicationContext(), Balls.class);
+                    questionManager.close();
+                   Intent balls = new Intent(getApplicationContext(), Balls.class);
                     balls.putExtra("multiplayer",  multiplayer);
                     startActivity(balls);
-                    overridePendingTransition(R.anim.slide,R.anim.slide_out);*/
+                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
 
                     break;
             }
@@ -305,21 +311,31 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             @Override
             public void onClick(View v) {
                 questionManager.open();
-                List<Question> lQuestion = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
+                List<Question> lQuestion = questionManager.get5randomQuestions(); // recupération de 10 id de questions avant de les envoyer à l'autre device
                 List<CustomPair<Integer,Integer>> lCalculs = get5mentalCalculs();
                 MultiplayParameters multiplayParameters = new MultiplayParameters(3,lQuestion,lCalculs);
                 questionManager.close();
-                // String msg = writeMsg.getText().toString();
                 if(sendReceive != null) {
-                    try {
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        ObjectOutputStream os = new ObjectOutputStream(out);
-                        os.writeObject(multiplayParameters);
-                        byte[] data = out.toByteArray();
-                        sendReceive.write(data);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    JSONArray msg = new JSONArray();
+                    msg.put(3);
+                    JSONArray questionsIDs = new JSONArray();
+                    for(Question q : lQuestion){
+                        questionsIDs.put(q.getId());
                     }
+                    msg.put(questionsIDs);
+                    JSONArray calculs = new JSONArray();
+                    for(CustomPair c : lCalculs){
+                        JSONObject temp = new JSONObject();
+                        try {
+                            temp.put("variable1",c.getFirst());
+                            temp.put("variable2",c.getSecond());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        calculs.put(temp);
+                    }
+                    msg.put(calculs);
+                    sendReceive.write(msg.toString().getBytes());
                 }
 
                 Intent balls = new Intent(getApplicationContext(), Balls.class);
@@ -370,7 +386,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             byte[] buffer = new byte[1024];
             int bytes;
 
-            while (socket != null) {
+            while (socket != null && !socket.isClosed()) {
                 try {
                     bytes = inputStream.read(buffer);
                     if (bytes > 0) {
