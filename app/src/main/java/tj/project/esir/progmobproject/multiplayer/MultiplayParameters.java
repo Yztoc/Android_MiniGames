@@ -45,5 +45,12 @@ public class MultiplayParameters implements Serializable {
     public MultiplayParameters(){};
 
 
-
+    @Override
+    public String toString() {
+        return "MultiplayParameters{" +
+                "level=" + level +
+                ", listQuestion=" + listQuestion +
+                ", listCalculs=" + listCalculs +
+                '}';
+    }
 }
