@@ -13,4 +13,8 @@
     <string name="next_question">Question suivante</string>
     <string name="valid_button_text">Valider</string>
     <string name="back_menu">Retour au menu</string>
+    <string name="discover">Rechercher</string>
+    <string name="startGame">Lancer la partie</string>
+
+
 </resources>

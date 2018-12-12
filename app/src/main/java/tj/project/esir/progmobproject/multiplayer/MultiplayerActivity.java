@@ -62,7 +62,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     ListView listView;
     TextView read_msg_box;
     TextView connectionStatus;
-    EditText writeMsg;
 
     WifiP2pManager mManager;
     Channel mChannel;
@@ -95,7 +94,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         listView = findViewById(R.id.peerListView);
         read_msg_box = findViewById(R.id.readMsg);
         connectionStatus = findViewById(R.id.connectionStatus);
-        writeMsg = findViewById(R.id.writeMsg);
         message_send_layout = findViewById(R.id.message_send_layout);
         message_send_layout.setVisibility(View.INVISIBLE);
 
