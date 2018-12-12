@@ -164,12 +164,16 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             switch (msg.what){
                 case MESSAGE_READ:
                     byte[] readBuff = (byte[]) msg.obj;
-                    ObjectInputStream in = null;
+                    ByteArrayInputStream in = null;
                     try {
-                        in = new ObjectInputStream(new ByteArrayInputStream(readBuff));
-                        multiplayer = (MultiplayParameters) in.readObject();
-                        in.close();
+                        in = new ByteArrayInputStream(readBuff);
+                        ObjectInputStream is = new ObjectInputStream(in);
+                        multiplayer = (MultiplayParameters) is.readObject();
+                        System.out.println("Bite ok : " + multiplayer.toString());
+
                     } catch (IOException e) {
+                        System.out.println("Bite Execption : " + e.toString());
+
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
@@ -183,10 +187,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                     }
                     */
                     read_msg_box.setText(multiplayer.toString());
-                    Intent balls = new Intent(getApplicationContext(), Balls.class);
+                   /* Intent balls = new Intent(getApplicationContext(), Balls.class);
                     balls.putExtra("multiplayer",  multiplayer);
                     startActivity(balls);
-                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                    overridePendingTransition(R.anim.slide,R.anim.slide_out);*/
 
                     break;
             }
@@ -303,23 +307,21 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 questionManager.open();
                 List<Question> lQuestion = questionManager.get5randomId(); // recupération de 10 id de questions avant de les envoyer à l'autre device
                 List<CustomPair<Integer,Integer>> lCalculs = get5mentalCalculs();
-                MultiplayParameters multiplayParameters = new MultiplayParameters(1,lQuestion,lCalculs);
+                MultiplayParameters multiplayParameters = new MultiplayParameters(3,lQuestion,lCalculs);
                 questionManager.close();
                 // String msg = writeMsg.getText().toString();
                 if(sendReceive != null) {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    ObjectOutputStream oos = null;
                     try {
-                        oos = new ObjectOutputStream(bos);
-                        oos.writeObject(multiplayParameters);
-                        oos.flush();
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        ObjectOutputStream os = new ObjectOutputStream(out);
+                        os.writeObject(multiplayParameters);
+                        byte[] data = out.toByteArray();
+                        sendReceive.write(data);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    byte[] data = bos.toByteArray();
-                    sendReceive.write(data);
                 }
+
                 Intent balls = new Intent(getApplicationContext(), Balls.class);
                 balls.putExtra("multiplayer",  multiplayParameters);
                 startActivity(balls);
