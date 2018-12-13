@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -86,7 +87,7 @@ public class Balls extends AppCompatActivity {
     boolean deplacementSens1 = false;
     boolean deplacementSens2 = false;
     boolean isTuto=false;
-
+    Activity main;
 
     volatile boolean playing;
 
@@ -438,12 +439,20 @@ public class Balls extends AppCompatActivity {
         ballY = height-heightBall;
     }
 
+
+
     public void win(float x,float y){
         if(isMoving){
             if((goalY+10 > y && y < goalY + heightGoal) && (goalX < x && x < goalX + widthGoal/2) ) {
                 reset(false);
                 isMoving = false;
                 score++;
+                main= this;
+                this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(main, "Vous venez de marquer un point", Toast.LENGTH_LONG).show();
+                    }
+                });
                 tabBlock.clear();
                 generateMap();
             }
