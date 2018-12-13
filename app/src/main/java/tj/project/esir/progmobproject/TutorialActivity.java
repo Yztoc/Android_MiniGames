@@ -16,6 +16,7 @@ public class TutorialActivity extends AppCompatActivity {
 
     private int game = 1;
     private Button btnGame;
+    private Button btnBack;
     Intent gameIntent = null;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class TutorialActivity extends AppCompatActivity {
 
 
         btnGame = findViewById(R.id.launch_game);
+        btnBack = findViewById(R.id.btn_backmenu);
 
         btnGame.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -78,6 +80,17 @@ public class TutorialActivity extends AppCompatActivity {
             }
         });
 
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent menu = new Intent(getApplicationContext(), MainActivity.class);
+                // start the new activity
+                startActivity(menu);
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
+                finish();
+            }
+        });
 
 
     }

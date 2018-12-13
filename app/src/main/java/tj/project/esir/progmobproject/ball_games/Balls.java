@@ -46,48 +46,48 @@ import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
 
 public class Balls extends AppCompatActivity {
 
-    GameView gameView;
-    Bitmap ball;
-    Bitmap goal;
-    Bitmap block;
-    Bitmap bgrd;
-    Point size = new Point();
-    MultiplayParameters multi = null;
-    ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
-    CountDownTimer cTimer = null;
+    private GameView gameView;
+    private Bitmap ball;
+    private Bitmap goal;
+    private  Bitmap block;
+    private Bitmap bgrd;
+    private Point size = new Point();
+    private MultiplayParameters multi = null;
+    private ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
+    private CountDownTimer cTimer = null;
 
 
-    boolean isMoving = false;
-    int nbCol = 0;
-    int loose = 0;
-    int widthBall = 100;
-    int heightBall = 100;
-    int widthGoal= 150;
-    int heightGoal = 150;
-    float ballX;
-    float ballY;
-    float goalX;
-    float goalY;
-    float width;
-    float height;
-    double distance = 0;
-    double angle = 0;
-    int direction;
-    double m;
-    double p;
-    long fps;
-    int col;
-    int score = 0;
-    float velocity = 1;
-    int level = 0;
-    int vie = 3;
-    float time = 0;
-    int deplacementBlock1 = 0;
-    int deplacementBlock2 = 0;
-    boolean deplacementSens1 = false;
-    boolean deplacementSens2 = false;
-    boolean isTuto=false;
-    Activity main;
+    private boolean isMoving = false;
+    private int nbCol = 0;
+    private int loose = 0;
+    private int widthBall = 100;
+    private int heightBall = 100;
+    private int widthGoal= 150;
+    private int heightGoal = 150;
+    private float ballX;
+    private float ballY;
+    private float goalX;
+    private float goalY;
+    private float width;
+    private float height;
+    private double distance = 0;
+    private double angle = 0;
+    private int direction;
+    private double m;
+    private double p;
+    private long fps;
+    private int col;
+    private int score = 0;
+    private float velocity = 1;
+    private int level = 0;
+    private int vie = 3;
+    private float time = 0;
+    private int deplacementBlock1 = 0;
+    private int deplacementBlock2 = 0;
+    private boolean deplacementSens1 = false;
+    private boolean deplacementSens2 = false;
+    private boolean isTuto=false;
+    private Activity main;
 
     volatile boolean playing;
 
@@ -195,7 +195,6 @@ public class Balls extends AppCompatActivity {
         @Override
         public void run() {
             while (playing) {
-
                 // Capture the current time in milliseconds in startFrameTime
                 long startFrameTime = System.currentTimeMillis();
                 update();
@@ -204,10 +203,7 @@ public class Balls extends AppCompatActivity {
                 if (timeThisFrame > 0) {
                     fps = 1000 / timeThisFrame;
                 }
-
             }
-
-
         }
 
         public void update() {
@@ -439,8 +435,6 @@ public class Balls extends AppCompatActivity {
         ballY = height-heightBall;
     }
 
-
-
     public void win(float x,float y){
         if(isMoving){
             if((goalY+10 > y && y < goalY + heightGoal) && (goalX < x && x < goalX + widthGoal/2) ) {
@@ -457,7 +451,6 @@ public class Balls extends AppCompatActivity {
                 generateMap();
             }
         }
-
     }
     /* detecte si la balle touche un mur
     - col = 1 ---> colision droite
