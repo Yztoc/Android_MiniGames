@@ -178,7 +178,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                         questionManager.open();
                         for(int i = 0; i<questionsIDs.length();i++){
                             Question q = questionManager.getQuestion(questionsIDs.getInt(i));
-                            System.out.println("QQQQ"+q);
                             multiplayer.addQuestion(questionManager.getQuestion(questionsIDs.getInt(i)));
                         }
                         JSONArray calculs = receivedMsg.getJSONArray(2);
@@ -187,13 +186,14 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                             CustomPair<Integer,Integer> tempPair = new CustomPair<>(temp.getInt("variable1"),temp.getInt("variable2"));
                             multiplayer.addCalcul(tempPair);
                         }
+                        multiplayer.setConnectionType(connectionType);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     read_msg_box.setText(multiplayer.toString());
                     questionManager.close();
-                   Intent balls = new Intent(getApplicationContext(), Balls.class);
+                    Intent balls = new Intent(getApplicationContext(), Balls.class);
                     balls.putExtra("multiplayer",  multiplayer);
                     startActivity(balls);
                     overridePendingTransition(R.anim.slide,R.anim.slide_out);
@@ -217,10 +217,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 break;
             case R.id.moyen:
                 if (checked) level = 2;
-                    break;
+                break;
             case R.id.hard:
                 if (checked)level = 3;
-                    break;
+                break;
         }
     }
 
@@ -293,7 +293,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
                     @Override
                     public void onSuccess() {
-                       connectionStatus.setText("Discovery Started");
+                        connectionStatus.setText("Discovery Started");
                     }
 
                     @Override
@@ -331,7 +331,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 questionManager.open();
                 List<Question> lQuestion = questionManager.get5randomQuestions(); // recupération de 10 id de questions avant de les envoyer à l'autre device
                 List<CustomPair<Integer,Integer>> lCalculs = get5mentalCalculs();
-                MultiplayParameters multiplayParameters = new MultiplayParameters(level,lQuestion,lCalculs);
+                MultiplayParameters multiplayParameters = new MultiplayParameters(level,lQuestion,lCalculs,connectionType);
                 questionManager.close();
                 if(sendReceive != null) {
                     JSONArray msg = new JSONArray();
@@ -452,14 +452,14 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     @Override
     public void onBackPressed() {
         mManager.removeGroup(mChannel, new ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        disconnectFromPeer();
-                    }
-                    @Override
-                    public void onFailure(int reason) {
-                    }
-                });
+            @Override
+            public void onSuccess() {
+                disconnectFromPeer();
+            }
+            @Override
+            public void onFailure(int reason) {
+            }
+        });
         Intent home = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(home);
         finish();
@@ -508,5 +508,3 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         connectionType ="none";
     }
 }
-
-

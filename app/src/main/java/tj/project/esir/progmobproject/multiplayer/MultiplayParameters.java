@@ -12,11 +12,15 @@ public class MultiplayParameters implements Serializable {
     private int level;
     private List<Question> listQuestion;
     private List<CustomPair<Integer,Integer>> listCalculs;
+    private String connectionType;
 
-    public MultiplayParameters(int level, List<Question> listQuestion, List<CustomPair<Integer,Integer>> listCalculs){
+
+
+    public MultiplayParameters(int level, List<Question> listQuestion, List<CustomPair<Integer,Integer>> listCalculs, String connectionType){
         this.level = level;
         this.listCalculs = listCalculs;
         this.listQuestion = listQuestion;
+        this.connectionType = connectionType;
     }
 
     public int getLevel() {
@@ -43,6 +47,16 @@ public class MultiplayParameters implements Serializable {
         this.listCalculs = listCalculs;
     }
 
+
+    public String getConnectionType() {
+        return connectionType;
+    }
+
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
+    }
+
+
     public void addQuestion(Question question){
         this.listQuestion.add(question);
     }
@@ -55,6 +69,7 @@ public class MultiplayParameters implements Serializable {
         this.level = 1;
         this.listCalculs = new ArrayList<CustomPair<Integer, Integer>>();
         this.listQuestion = new ArrayList<>();
+        this.connectionType = "none";
     };
 
 
