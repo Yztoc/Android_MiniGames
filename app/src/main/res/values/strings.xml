@@ -14,7 +14,8 @@
     <string name="valid_button_text">Valider</string>
     <string name="back_menu">Retour au menu</string>
     <string name="discover">Rechercher</string>
-    <string name="startGame">Lancer la partie</string>
+    <string name="startGame">Lancer une partie</string>
+    <string name="tuto">Tutorial</string>
 
 
 </resources>
