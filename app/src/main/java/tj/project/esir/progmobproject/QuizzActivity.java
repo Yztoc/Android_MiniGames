@@ -49,6 +49,7 @@ public class QuizzActivity extends AppCompatActivity {
     private List<CustomPair<Integer,Integer>> listCalcul = null;
     private List<Question> listQuestion = null;
     private int i = 0;
+    boolean isTuto=false;
 
 
     @Override
@@ -109,6 +110,7 @@ public class QuizzActivity extends AppCompatActivity {
         Bundle q = iin.getExtras();
 
         if(q!=null){
+            if(q.get("tuto") != null) isTuto = true;
             if(q.get("multiplayer") != null){
                 multi =  (MultiplayParameters) q.get("multiplayer");
                 listCalcul =  multi.getListCalculs();
@@ -222,15 +224,22 @@ public class QuizzActivity extends AppCompatActivity {
                         alert.setTitle("Terminé ! ");
                         alert.setMessage("Vous avez fini avec les stats suivant : "
                                 + "\nScore Final : " + score);
-
-                        alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
+                        String btnNext   = (isTuto == false)  ? "Finir" : "Retour au tutoriel";
+                        alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Intent finish = new Intent(getApplicationContext(), Finish.class);
-                                finish.putExtra("scoreBall",scoreBall);
-                                finish.putExtra("scoreCompass", scoreCompass);
-                                finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
-                                startActivity(finish);
-                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                if(isTuto == false){
+                                    Intent finish = new Intent(getApplicationContext(), Finish.class);
+                                    finish.putExtra("scoreBall",scoreBall);
+                                    finish.putExtra("scoreCompass", scoreCompass);
+                                    finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
+                                    startActivity(finish);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }else{
+                                    Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
+                                    startActivity(tuto);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }
+
                             }
                         });
 

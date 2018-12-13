@@ -63,7 +63,7 @@ public class CompassActivity extends AppCompatActivity {
 
     private int score = 0;
     private Score scoreBall;
-
+    boolean isTuto=false;
     private int timeParam = 20000; //seconde niveau de difficulté à modifé lors de l envoie du client
 
 
@@ -151,6 +151,7 @@ public class CompassActivity extends AppCompatActivity {
         Bundle c = iin.getExtras();
 
         if(c!=null){
+            if(c.get("tuto") != null) isTuto = true;
             if(c.get("multiplayer") != null) {
                 multi = (MultiplayParameters) c.get("multiplayer");
                 switch (multi.getLevel()){
@@ -271,15 +272,23 @@ public class CompassActivity extends AppCompatActivity {
                         alert.setMessage("Vous avez fini avec les stats suivant : "
                                 + "\nTemps : " + time
                                 + "\nScore Final : " + score);
-
-                        alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
+                        String btnNext   = (isTuto == false)  ? "Jeux suivant" : "Retour au tutoriel";
+                        alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
-                                quizz.putExtra("scoreBall",  scoreBall);
-                                quizz.putExtra("scoreCompass", new Score(2,"Compass Game",score));
-                                if(multi != null) quizz.putExtra("multiplayer", multi);
-                                startActivity(quizz);
-                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
+                                if(isTuto == false){
+                                    Intent quizz = new Intent(getApplicationContext(), QuizzActivity.class);
+                                    quizz.putExtra("scoreBall",  scoreBall);
+                                    quizz.putExtra("scoreCompass", new Score(2,"Compass Game",score));
+                                    if(multi != null) quizz.putExtra("multiplayer", multi);
+                                    startActivity(quizz);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }else{
+                                    Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
+                                    startActivity(tuto);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }
+
                             }
                         });
                         alert.show();
