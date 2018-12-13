@@ -63,7 +63,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/tuto1" />
+                app:srcCompat="@drawable/tuto3" />
 
             <ImageView
                 android:id="@+id/img_tuto3"
@@ -74,7 +74,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/tuto1" />
+                app:srcCompat="@drawable/tuto2" />
 
 
         </LinearLayout>
@@ -91,16 +91,18 @@
 
 
             <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tutoRadioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:checkedButton="@+id/easy"
+                android:checkedButton="@+id/game1"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/game1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:buttonTint="#ff00caff"
                     android:onClick="onRadioButtonClicked"
                     android:text="Jeux balle"
@@ -110,6 +112,7 @@
                     android:id="@+id/game2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:buttonTint="#ff00caff"
                     android:onClick="onRadioButtonClicked"
                     android:text="Jeux Compass"
@@ -118,6 +121,7 @@
                 <RadioButton
                     android:id="@+id/game3"
                     android:layout_width="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_height="wrap_content"
                     android:buttonTint="#ff00caff"
                     android:onClick="onRadioButtonClicked"
