@@ -225,6 +225,7 @@ public class QuizzActivity extends AppCompatActivity {
                         alert.setMessage("Vous avez fini avec les stats suivant : "
                                 + "\nScore Final : " + score);
                         String btnNext   = (isTuto == false)  ? "Finir" : "Retour au tutoriel";
+                        alert.setCancelable(false);
                         alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if(isTuto == false){

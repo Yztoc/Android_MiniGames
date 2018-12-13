@@ -273,6 +273,7 @@ public class CompassActivity extends AppCompatActivity {
                                 + "\nTemps : " + time
                                 + "\nScore Final : " + score);
                         String btnNext   = (isTuto == false)  ? "Jeux suivant" : "Retour au tutoriel";
+                        alert.setCancelable(false);
                         alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 

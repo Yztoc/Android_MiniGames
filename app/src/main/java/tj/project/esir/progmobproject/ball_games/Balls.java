@@ -372,6 +372,7 @@ public class Balls extends AppCompatActivity {
                                 + "\n\nScore Final : " + scoreFinal);
 
                         String btnNext   = (isTuto == false)  ? "Jeux suivant" : "Retour au tutoriel";
+                        alert.setCancelable(false);
                         alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 if(isTuto == false){
@@ -480,7 +481,7 @@ public class Balls extends AppCompatActivity {
                 }else if(y <= 0) {
                     nbCol++;
                     res = 3;
-                }else if(y-heightBall*2 >= height){
+                }else if(y-heightBall*3 >= height){
                     loose++;
                     reset(true);
                     isMoving = false;
