@@ -1,6 +1,5 @@
 package tj.project.esir.progmobproject.ball_games;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,34 +11,25 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Chronometer;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
 import tj.project.esir.progmobproject.CompassActivity;
 import tj.project.esir.progmobproject.MainActivity;
-import tj.project.esir.progmobproject.QuizzActivity;
 import tj.project.esir.progmobproject.R;
 import tj.project.esir.progmobproject.TutorialActivity;
 import tj.project.esir.progmobproject.models.Score;
@@ -139,6 +129,7 @@ public class Balls extends AppCompatActivity {
         goalY = 200;
 
         generateMap();
+        main= this;
 
         // Initialize gameView and set it as the view
 
@@ -441,15 +432,20 @@ public class Balls extends AppCompatActivity {
     public void win(float x,float y){
         if(isMoving){
             if((goalY-heightGoal/2 < y && y < goalY + heightGoal && y > 40) && (goalX-  widthGoal/2  < x && x < goalX + widthGoal/2) ) {
-                System.out.println("BALL X : " + ballX + "Ball Y : " + ballY + " | GOAL X : " + goalX + " GOAL Y : " + goalY);
-
                 reset(false);
                 isMoving = false;
                 score++;
                 main= this;
                 this.runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(main, "Vous venez de marquer un point", Toast.LENGTH_LONG).show();
+                        LayoutInflater inflater=getLayoutInflater();
+                        View customToastroot =inflater.inflate(R.layout.custom_toast_win, null);
+                        Toast customtoast=new Toast(context);
+                        customtoast.setView(customToastroot);
+                        customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
+                        customtoast.setDuration(Toast.LENGTH_SHORT);
+                        customtoast.show();
+
                     }
                 });
                 tabBlock.clear();
@@ -495,7 +491,7 @@ public class Balls extends AppCompatActivity {
                 }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                     nbCol++;
                     res = 2;
-                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall/20) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall+10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
                     nbCol++;
                     res = 3;
                 }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
@@ -698,7 +694,16 @@ public class Balls extends AppCompatActivity {
 
 
                         }else{
-                            System.out.println("Geste dans le mauvais sens");
+
+                            LayoutInflater inflater=getLayoutInflater();
+                            View customToastroot =inflater.inflate(R.layout.custom_toast_gesture, null);
+                            Toast customtoast=new Toast(context);
+                            customtoast.setView(customToastroot);
+                            customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
+                            customtoast.setDuration(Toast.LENGTH_SHORT);
+                            customtoast.show();
+
+
                         }
 
                         break;
