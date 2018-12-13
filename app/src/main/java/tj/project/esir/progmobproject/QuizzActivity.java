@@ -21,6 +21,7 @@ import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 import tj.project.esir.progmobproject.models.Score;
 import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
+import tj.project.esir.progmobproject.multiplayer.MultiplayerActivity;
 
 public class QuizzActivity extends AppCompatActivity {
 
@@ -233,6 +234,7 @@ public class QuizzActivity extends AppCompatActivity {
                                     finish.putExtra("scoreBall",scoreBall);
                                     finish.putExtra("scoreCompass", scoreCompass);
                                     finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
+                                    finish.putExtra("multiplayer", multi);
                                     startActivity(finish);
                                     overridePendingTransition(R.anim.slide,R.anim.slide_out);
                                 }else{
@@ -240,6 +242,7 @@ public class QuizzActivity extends AppCompatActivity {
                                     startActivity(tuto);
                                     overridePendingTransition(R.anim.slide,R.anim.slide_out);
                                 }
+
 
                             }
                         });

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tj.project.esir.progmobproject.ball_games.Balls;
 import tj.project.esir.progmobproject.db.ScoreManager;
 import tj.project.esir.progmobproject.models.Score;
 
@@ -64,6 +63,7 @@ public class Finish extends AppCompatActivity {
                 // start the new activity
                 startActivity(menu);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                scoreManger.close();
                 finish();
             }
         });
