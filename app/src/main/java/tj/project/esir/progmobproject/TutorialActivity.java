@@ -10,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import tj.project.esir.progmobproject.ball_games.MenuParam;
+import tj.project.esir.progmobproject.models.Score;
 
 public class TutorialActivity extends AppCompatActivity {
 
@@ -70,7 +71,7 @@ public class TutorialActivity extends AppCompatActivity {
                 if(game ==1) gameIntent = new Intent(getApplicationContext(), MenuParam.class);
                 if(game ==2) gameIntent = new Intent(getApplicationContext(), CompassActivity.class);
                 if(game ==3) gameIntent = new Intent(getApplicationContext(), QuizzActivity.class);
-
+                gameIntent.putExtra("tuto",  true);
                 startActivity(gameIntent);
                 overridePendingTransition(R.anim.slide, R.anim.slide_out);
                 finish();

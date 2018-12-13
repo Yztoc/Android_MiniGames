@@ -39,6 +39,7 @@ import tj.project.esir.progmobproject.CompassActivity;
 import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.QuizzActivity;
 import tj.project.esir.progmobproject.R;
+import tj.project.esir.progmobproject.TutorialActivity;
 import tj.project.esir.progmobproject.models.Score;
 import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
 
@@ -84,6 +85,7 @@ public class Balls extends AppCompatActivity {
     int deplacementBlock2 = 0;
     boolean deplacementSens1 = false;
     boolean deplacementSens2 = false;
+    boolean isTuto=false;
 
 
     volatile boolean playing;
@@ -99,6 +101,7 @@ public class Balls extends AppCompatActivity {
 
         if(b!=null)
         {
+            if(b.get("tuto") != null) isTuto = true;
             if(b.get("multiplayer") != null){
                 multi = (MultiplayParameters) b.get("multiplayer");
                 level = multi.getLevel();
@@ -370,18 +373,22 @@ public class Balls extends AppCompatActivity {
                                 + "\nTemps écoulé : " + timeS
                                 + "\n\nScore Final : " + scoreFinal);
 
-                        alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
+                        String btnNext   = (isTuto == false)  ? "Jeux suivant" : "Retour au tutoriel";
+                        alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-
-                                Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                                compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
-                                if(multi != null) compass.putExtra("multiplayer", multi);
-                                startActivity(compass);
-                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
-
+                                if(isTuto == false){
+                                    Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
+                                    compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
+                                    if(multi != null) compass.putExtra("multiplayer", multi);
+                                    startActivity(compass);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }else{
+                                    Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
+                                    startActivity(tuto);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }
                             }
                         });
-
 
                         alert.show();
                     }
