@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -439,7 +440,9 @@ public class Balls extends AppCompatActivity {
 
     public void win(float x,float y){
         if(isMoving){
-            if((goalY+10 > y && y < goalY + heightGoal) && (goalX < x && x < goalX + widthGoal/2) ) {
+            if((goalY-heightGoal/2 < y && y < goalY + heightGoal && y > 40) && (goalX-  widthGoal/2  < x && x < goalX + widthGoal/2) ) {
+                System.out.println("BALL X : " + ballX + "Ball Y : " + ballY + " | GOAL X : " + goalX + " GOAL Y : " + goalY);
+
                 reset(false);
                 isMoving = false;
                 score++;
@@ -492,7 +495,7 @@ public class Balls extends AppCompatActivity {
                 }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                     nbCol++;
                     res = 2;
-                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall/8) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall/20) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
                     nbCol++;
                     res = 3;
                 }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
