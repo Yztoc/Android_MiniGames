@@ -48,9 +48,11 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
                 mManager.requestConnectionInfo(mChannel,mActivity.connectionInfoListener);
             }
             else {
-                mActivity.connectionStatus.setText("Device Disconnected");
-                mActivity.message_send_layout.setVisibility(View.INVISIBLE);
-                mActivity.disconnectFromPeer();
+                if(!mActivity.multiplayerFinish) {
+                    mActivity.connectionStatus.setText("Device Disconnected");
+                    mActivity.message_send_layout.setVisibility(View.INVISIBLE);
+                }
+                mActivity.disconnectFromPeer("");
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

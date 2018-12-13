@@ -53,8 +53,10 @@ import tj.project.esir.progmobproject.MainActivity;
 import tj.project.esir.progmobproject.R;
 import tj.project.esir.progmobproject.ball_games.Balls;
 import tj.project.esir.progmobproject.db.QuestionManager;
+import tj.project.esir.progmobproject.db.ScoreManager;
 import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
+import tj.project.esir.progmobproject.models.Score;
 
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
 
@@ -87,30 +89,36 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     private int level = 1;
     private boolean retryChannel = false;
 
+    private Score scoreBall;
+    private  Score scoreCompass;
+    private Score scoreQuizz;
+    private Score scoreTotal;
+
+    private Button back;
+
+    private ScoreManager scoreManger;
+    private MultiplayParameters multi;
+
+    private TextView resultatStatus;
+    private String resultatMultiplayer;
+    boolean multiplayerFinish;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multiplayer);
 
-        questionManager = new QuestionManager(getApplicationContext());
-        connectionType ="none";
+        Intent iin= getIntent();
+        Bundle q = iin.getExtras();
 
-        btnDiscover = findViewById(R.id.discover);
-        btnSend = findViewById(R.id.sendButton);
-        listView = findViewById(R.id.peerListView);
-        read_msg_box = findViewById(R.id.readMsg);
-        connectionStatus = findViewById(R.id.connectionStatus);
-        message_send_layout = findViewById(R.id.message_send_layout);
-        message_send_layout.setVisibility(View.INVISIBLE);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        exqListener();
+
         wifiManager.setWifiEnabled(true);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this,getMainLooper(),null);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
 
-        mReceiver = new MultiplayerBroadcastReceiver(mManager,mChannel,this);
+        mReceiver = new MultiplayerBroadcastReceiver(mManager, mChannel, this);
         mIntentFilter = new IntentFilter();
 
         // Indicates a change in the Wi-Fi P2P status.
@@ -122,8 +130,73 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         // Indicates this device's details have changed.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-        disconnectFromPeer();
-    }
+        if(q!=null){
+            setContentView(R.layout.activity_finish_multiplayer);
+            resultatMultiplayer ="";
+            scoreBall = (Score) q.get("scoreBall");
+            scoreCompass = (Score) q.get("scoreCompass");
+            scoreQuizz = (Score) q.get("scoreQuizz");
+            scoreManger = new ScoreManager(this);
+            scoreManger.open();
+            multi =  (MultiplayParameters) q.get("multiplayer");
+            connectionType = multi.getConnectionType();
+            System.out.println("connectionType "+connectionType);
+
+            scoreTotal = new Score(4,"Final",scoreBall.getScore() + scoreCompass.getScore() + scoreQuizz.getScore());
+
+            TextView textViewScoreBall = (TextView)findViewById(R.id.scoreBall);
+            TextView textViewScoreCompass = (TextView)findViewById(R.id.scoreCompass);
+            TextView textViewScoreQuizz = (TextView)findViewById(R.id.scoreQuizz);
+            TextView textViewScoreFinal = (TextView)findViewById(R.id.scoreFinal);
+            textViewScoreBall.setText("Score jeux balle : " + scoreBall.getScore());
+            textViewScoreCompass.setText("Score jeux coffre fort : " + scoreCompass.getScore());
+            textViewScoreQuizz.setText("Score quizz : " + scoreQuizz.getScore());
+            textViewScoreFinal.setText("Score Final : " + scoreTotal.getScore());
+
+            resultatStatus = findViewById(R.id.resultatStatus);
+            resultatStatus.setText(R.string.waitingResultat);
+            multiplayerFinish = true;
+
+            back = findViewById(R.id.btn_backmenuMulti);
+
+            back.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent multiplayerActivity = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                    // start the new activity
+                    mManager.removeGroup(mChannel, new ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            disconnectFromPeer("");
+                        }
+                        @Override
+                        public void onFailure(int reason) {
+                        }
+                    });
+                    startActivity(multiplayerActivity);
+                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                    scoreManger.close();
+                    finish();
+                }
+            });
+
+        }
+        else {
+            setContentView(R.layout.activity_multiplayer);
+
+            multiplayerFinish = false;
+            questionManager = new QuestionManager(getApplicationContext());
+            connectionType = "none";
+
+            btnDiscover = findViewById(R.id.discover);
+            btnSend = findViewById(R.id.sendButton);
+            listView = findViewById(R.id.peerListView);
+            read_msg_box = findViewById(R.id.readMsg);
+            connectionStatus = findViewById(R.id.connectionStatus);
+            message_send_layout = findViewById(R.id.message_send_layout);
+            message_send_layout.setVisibility(View.INVISIBLE);
+            exqListener();
+        }
+            }
 
 
     @Override
@@ -167,37 +240,76 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             MultiplayParameters multiplayer = new MultiplayParameters();
             switch (msg.what){
                 case MESSAGE_READ:
-                    byte[] readBuff = (byte[]) msg.obj;
-                    System.out.println("size read buff "+readBuff.length);
-                    ByteArrayInputStream in = null;
-                    String tempMsg = new String(readBuff,0,msg.arg1);
-                    try {
-                        JSONArray receivedMsg = new JSONArray(tempMsg);
-                        multiplayer.setLevel(receivedMsg.getInt(0));
-                        JSONArray questionsIDs = receivedMsg.getJSONArray(1);
-                        questionManager.open();
-                        for(int i = 0; i<questionsIDs.length();i++){
-                            Question q = questionManager.getQuestion(questionsIDs.getInt(i));
-                            multiplayer.addQuestion(questionManager.getQuestion(questionsIDs.getInt(i)));
+
+                        byte[] readBuff = (byte[]) msg.obj;
+                        System.out.println("size read buff " + readBuff.length);
+                        ByteArrayInputStream in = null;
+                        String tempMsg = new String(readBuff, 0, msg.arg1);
+                    if(!multiplayerFinish) {
+                        try {
+                            JSONArray receivedMsg = new JSONArray(tempMsg);
+                            multiplayer.setLevel(receivedMsg.getInt(0));
+                            JSONArray questionsIDs = receivedMsg.getJSONArray(1);
+                            questionManager.open();
+                            for (int i = 0; i < questionsIDs.length(); i++) {
+                                Question q = questionManager.getQuestion(questionsIDs.getInt(i));
+                                multiplayer.addQuestion(questionManager.getQuestion(questionsIDs.getInt(i)));
+                            }
+                            JSONArray calculs = receivedMsg.getJSONArray(2);
+                            for (int i = 0; i < calculs.length(); i++) {
+                                JSONObject temp = calculs.getJSONObject(i);
+                                CustomPair<Integer, Integer> tempPair = new CustomPair<>(temp.getInt("variable1"), temp.getInt("variable2"));
+                                multiplayer.addCalcul(tempPair);
+                            }
+                            multiplayer.setConnectionType(connectionType);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        JSONArray calculs = receivedMsg.getJSONArray(2);
-                        for (int i = 0; i<calculs.length();i++){
-                            JSONObject temp = calculs.getJSONObject(i);
-                            CustomPair<Integer,Integer> tempPair = new CustomPair<>(temp.getInt("variable1"),temp.getInt("variable2"));
-                            multiplayer.addCalcul(tempPair);
-                        }
-                        multiplayer.setConnectionType(connectionType);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+
+                        read_msg_box.setText(multiplayer.toString());
+                        questionManager.close();
+                        Intent balls = new Intent(getApplicationContext(), Balls.class);
+                        balls.putExtra("multiplayer", multiplayer);
+                        startActivity(balls);
+                        overridePendingTransition(R.anim.slide, R.anim.slide_out);
                     }
+                    else{
+                        if(tempMsg.equals("defaite") || tempMsg.equals("victoire") || tempMsg.equals("egalite")){
+                            if(tempMsg.equals("defaite")){
+                                resultatStatus.setText(R.string.inferiorResultat);
+                                resultatMultiplayer = "defaite";
+                            }
+                            else if(tempMsg.equals("victoire")){
+                                resultatStatus.setText(R.string.superiorResultat);
+                                resultatMultiplayer = "victoire";
+                            }
+                            else {
+                                resultatStatus.setText(R.string.equalResultat);
+                                resultatMultiplayer = "egalite";
+                            }
+                            disconnectFromPeer("");
+                        }
+                        else {
+                            int resultatAdversaire = Integer.valueOf(tempMsg);
+                            System.out.println("Resultat adversaire "+resultatAdversaire+" mon resultat "+scoreTotal.getScore());
+                            String resultatAdversaireAEnvoyer = "defaite";
+                            if (resultatAdversaire > scoreTotal.getScore()) {
+                                resultatStatus.setText(R.string.inferiorResultat);
+                                resultatMultiplayer = "defaite";
+                                resultatAdversaireAEnvoyer = "victoire";
+                            } else if (resultatAdversaire == scoreTotal.getScore()) {
+                                resultatStatus.setText(R.string.equalResultat);
+                                resultatMultiplayer = "egalite";
+                                resultatAdversaireAEnvoyer = resultatMultiplayer;
+                            } else {
+                                resultatStatus.setText(R.string.superiorResultat);
+                                resultatMultiplayer = "victoire";
+                                resultatAdversaireAEnvoyer = "defaite";
+                            }
+                            sendReceive.write(resultatAdversaireAEnvoyer.getBytes());
 
-                    read_msg_box.setText(multiplayer.toString());
-                    questionManager.close();
-                    Intent balls = new Intent(getApplicationContext(), Balls.class);
-                    balls.putExtra("multiplayer",  multiplayer);
-                    startActivity(balls);
-                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
-
+                        }
+                    }
                     break;
             }
             return true;
@@ -227,25 +339,27 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     WifiP2pManager.PeerListListener peerListListener = new  WifiP2pManager.PeerListListener(){
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
-            if(!peerList.getDeviceList().equals(peers)){
-                peers.clear();
-                peers.addAll(peerList.getDeviceList());
+            if(!multiplayerFinish) {
+                if (!peerList.getDeviceList().equals(peers)) {
+                    peers.clear();
+                    peers.addAll(peerList.getDeviceList());
 
-                deviceNameArray = new String[peerList.getDeviceList().size()];
-                deviceArray = new WifiP2pDevice[peerList.getDeviceList().size()];
-                int index =0;
+                    deviceNameArray = new String[peerList.getDeviceList().size()];
+                    deviceArray = new WifiP2pDevice[peerList.getDeviceList().size()];
+                    int index = 0;
 
-                for( WifiP2pDevice device : peerList.getDeviceList()){
-                    deviceNameArray[index] = device.deviceName;
-                    deviceArray[index] = device;
-                    index ++;
+                    for (WifiP2pDevice device : peerList.getDeviceList()) {
+                        deviceNameArray[index] = device.deviceName;
+                        deviceArray[index] = device;
+                        index++;
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
+                    listView.setAdapter(adapter);
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,deviceNameArray);
-                listView.setAdapter(adapter);
-            }
-            if(peers.size() == 0){
-                Toast.makeText(getApplicationContext(),"No Device Found",Toast.LENGTH_SHORT).show();
-                return;
+                if (peers.size() == 0) {
+                    Toast.makeText(getApplicationContext(), "No Device Found", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         }
     };
@@ -255,14 +369,18 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
             final InetAddress groupOwnerAdress = info.groupOwnerAddress;
             if(info.groupFormed && info.isGroupOwner){
-                connectionStatus.setText("Host");
                 serverClass = new ServerClass();
                 serverClass.start();
                 connectionType = "server";
-                message_send_layout.setVisibility(View.VISIBLE);
+                if(!multiplayerFinish) {
+                    connectionStatus.setText("Host");
+                    message_send_layout.setVisibility(View.VISIBLE);
+                }
             }
             else if (info.groupFormed){
-                connectionStatus.setText("Client");
+                if(!multiplayerFinish) {
+                    connectionStatus.setText("Client");
+                }
                 clientClass = new ClientClass(groupOwnerAdress);
                 clientClass.start();
                 connectionType = "client";
@@ -281,7 +399,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
-        disconnectFromPeer();
+        if(multiplayerFinish)
+        disconnectFromPeer("quit");
+        else
+            disconnectFromPeer("");
     }
 
     private void exqListener() {
@@ -439,13 +560,38 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             socket = new Socket();
         }
         public void run(){
-            try {
-                socket.connect(new InetSocketAddress(hostAdd,8888),500);
+
+            if(multiplayerFinish){
+                boolean notCo = true;
+                while(notCo){
+                    try {
+                        socket = new Socket();
+                        socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
+                        notCo = false;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else{
+                try {
+                    socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
                 sendReceive = new SendReceive(socket);
                 sendReceive.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                if(multiplayerFinish){
+                    while(resultatMultiplayer.equals("")) {
+                        sendReceive.write(String.valueOf(scoreTotal.getScore()).getBytes());
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
         }
     }
 
@@ -454,7 +600,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         mManager.removeGroup(mChannel, new ActionListener() {
             @Override
             public void onSuccess() {
-                disconnectFromPeer();
+                disconnectFromPeer("");
             }
             @Override
             public void onFailure(int reason) {
@@ -478,7 +624,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         return res;
     }
 
-    public void disconnectFromPeer(){
+    public void disconnectFromPeer(String state){
         if(connectionType.equals("server")){
             try {
                 if(!serverClass.serverSocket.isClosed())
@@ -506,5 +652,9 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             }
         }
         connectionType ="none";
+        if (state.equals("changeP2PState") && multiplayerFinish) {
+            resultatStatus.setText("aaa");
+            resultatMultiplayer = "victoire";
+        }
     }
 }
