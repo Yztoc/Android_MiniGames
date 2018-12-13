@@ -29,7 +29,11 @@ public class MenuParam extends AppCompatActivity {
             public void onClick(View v) {
                 Intent ball = new Intent(getApplicationContext(), Balls.class);
                 ball.putExtra(KEY_VALUE_LEVEL, 1);
-                // start the new activity
+
+                Intent iin= getIntent();
+                Bundle b = iin.getExtras();
+                if(b!=null && b.get("tuto") != null) ball.putExtra("tuto",  true);
+
                 startActivity(ball);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 finish();
@@ -40,6 +44,10 @@ public class MenuParam extends AppCompatActivity {
             public void onClick(View v) {
                 Intent ball = new Intent(getApplicationContext(), Balls.class);
                 ball.putExtra(KEY_VALUE_LEVEL, 2);
+                Intent iin= getIntent();
+                Bundle b = iin.getExtras();
+                if(b!=null && b.get("tuto") != null) ball.putExtra("tuto",  true);
+
                 startActivity(ball);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 finish();
@@ -50,6 +58,9 @@ public class MenuParam extends AppCompatActivity {
             public void onClick(View v) {
                 Intent ball = new Intent(getApplicationContext(), Balls.class);
                 ball.putExtra(KEY_VALUE_LEVEL, 3);
+                Intent iin= getIntent();
+                Bundle b = iin.getExtras();
+                if(b!=null && b.get("tuto") != null) ball.putExtra("tuto",  true);
                 startActivity(ball);
                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                 finish();

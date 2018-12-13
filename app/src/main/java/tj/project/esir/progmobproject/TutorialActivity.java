@@ -10,11 +10,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import tj.project.esir.progmobproject.ball_games.MenuParam;
+import tj.project.esir.progmobproject.models.Score;
 
 public class TutorialActivity extends AppCompatActivity {
 
     private int game = 1;
     private Button btnGame;
+    private Button btnBack;
     Intent gameIntent = null;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class TutorialActivity extends AppCompatActivity {
 
 
         btnGame = findViewById(R.id.launch_game);
+        btnBack = findViewById(R.id.btn_backmenu);
 
         btnGame.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -70,13 +73,24 @@ public class TutorialActivity extends AppCompatActivity {
                 if(game ==1) gameIntent = new Intent(getApplicationContext(), MenuParam.class);
                 if(game ==2) gameIntent = new Intent(getApplicationContext(), CompassActivity.class);
                 if(game ==3) gameIntent = new Intent(getApplicationContext(), QuizzActivity.class);
-
+                gameIntent.putExtra("tuto",  true);
                 startActivity(gameIntent);
                 overridePendingTransition(R.anim.slide, R.anim.slide_out);
                 finish();
             }
         });
 
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent menu = new Intent(getApplicationContext(), MainActivity.class);
+                // start the new activity
+                startActivity(menu);
+                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+
+                finish();
+            }
+        });
 
 
     }

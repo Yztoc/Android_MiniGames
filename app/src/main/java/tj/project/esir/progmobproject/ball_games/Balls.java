@@ -1,6 +1,5 @@
 package tj.project.esir.progmobproject.ball_games;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,78 +12,73 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Chronometer;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
 import tj.project.esir.progmobproject.CompassActivity;
 import tj.project.esir.progmobproject.MainActivity;
-import tj.project.esir.progmobproject.QuizzActivity;
 import tj.project.esir.progmobproject.R;
+import tj.project.esir.progmobproject.TutorialActivity;
 import tj.project.esir.progmobproject.models.Score;
 import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
 
 public class Balls extends AppCompatActivity {
 
-    GameView gameView;
-    Bitmap ball;
-    Bitmap goal;
-    Bitmap block;
-    Bitmap bgrd;
-    Point size = new Point();
-    MultiplayParameters multi = null;
-    ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
-    CountDownTimer cTimer = null;
+    private GameView gameView;
+    private Bitmap ball;
+    private Bitmap goal;
+    private  Bitmap block;
+    private Bitmap bgrd;
+    private Point size = new Point();
+    private MultiplayParameters multi = null;
+    private ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
+    private CountDownTimer cTimer = null;
 
 
-    boolean isMoving = false;
-    int nbCol = 0;
-    int loose = 0;
-    int widthBall = 100;
-    int heightBall = 100;
-    int widthGoal= 150;
-    int heightGoal = 150;
-    float ballX;
-    float ballY;
-    float goalX;
-    float goalY;
-    float width;
-    float height;
-    double distance = 0;
-    double angle = 0;
-    int direction;
-    double m;
-    double p;
-    long fps;
-    int col;
-    int score = 0;
-    float velocity = 1;
-    int level = 0;
-    int vie = 3;
-    float time = 0;
-    int deplacementBlock1 = 0;
-    int deplacementBlock2 = 0;
-    boolean deplacementSens1 = false;
-    boolean deplacementSens2 = false;
-
+    private boolean isMoving = false;
+    private int nbCol = 0;
+    private int loose = 0;
+    private int widthBall = 100;
+    private int heightBall = 100;
+    private int widthGoal= 150;
+    private int heightGoal = 150;
+    private float ballX;
+    private float ballY;
+    private float goalX;
+    private float goalY;
+    private float width;
+    private float height;
+    private double distance = 0;
+    private double angle = 0;
+    private int direction;
+    private double m;
+    private double p;
+    private long fps;
+    private int col;
+    private int score = 0;
+    private float velocity = 1;
+    private int level = 0;
+    private int vie = 3;
+    private float time = 0;
+    private int deplacementBlock1 = 0;
+    private int deplacementBlock2 = 0;
+    private boolean deplacementSens1 = false;
+    private boolean deplacementSens2 = false;
+    private boolean isTuto=false;
+    private Activity main;
 
     volatile boolean playing;
 
@@ -99,6 +93,7 @@ public class Balls extends AppCompatActivity {
 
         if(b!=null)
         {
+            if(b.get("tuto") != null) isTuto = true;
             if(b.get("multiplayer") != null){
                 multi = (MultiplayParameters) b.get("multiplayer");
                 level = multi.getLevel();
@@ -134,6 +129,7 @@ public class Balls extends AppCompatActivity {
         goalY = 200;
 
         generateMap();
+        main= this;
 
         // Initialize gameView and set it as the view
 
@@ -191,7 +187,6 @@ public class Balls extends AppCompatActivity {
         @Override
         public void run() {
             while (playing) {
-
                 // Capture the current time in milliseconds in startFrameTime
                 long startFrameTime = System.currentTimeMillis();
                 update();
@@ -200,10 +195,7 @@ public class Balls extends AppCompatActivity {
                 if (timeThisFrame > 0) {
                     fps = 1000 / timeThisFrame;
                 }
-
             }
-
-
         }
 
         public void update() {
@@ -312,6 +304,7 @@ public class Balls extends AppCompatActivity {
             }
 
         }
+
         public void resume() {
             playing = true;
             gameThread = new Thread(this);
@@ -370,18 +363,23 @@ public class Balls extends AppCompatActivity {
                                 + "\nTemps écoulé : " + timeS
                                 + "\n\nScore Final : " + scoreFinal);
 
-                        alert.setPositiveButton("Jeux suivant", new DialogInterface.OnClickListener() {
+                        String btnNext   = (isTuto == false)  ? "Jeux suivant" : "Retour au tutoriel";
+                        alert.setCancelable(false);
+                        alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-
-                                Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
-                                compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
-                                if(multi != null) compass.putExtra("multiplayer", multi);
-                                startActivity(compass);
-                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
-
+                                if(isTuto == false){
+                                    Intent compass = new Intent(getApplicationContext(), CompassActivity.class);
+                                    compass.putExtra("scoreBall",  new Score(1,"Ball games",scoreFinal));
+                                    if(multi != null) compass.putExtra("multiplayer", multi);
+                                    startActivity(compass);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }else{
+                                    Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
+                                    startActivity(tuto);
+                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                }
                             }
                         });
-
 
                         alert.show();
                     }
@@ -433,15 +431,27 @@ public class Balls extends AppCompatActivity {
 
     public void win(float x,float y){
         if(isMoving){
-            if((goalY+10 > y && y < goalY + heightGoal) && (goalX < x && x < goalX + widthGoal/2) ) {
+            if((goalY-heightGoal/2 < y && y < goalY + heightGoal && y > 40) && (goalX-  widthGoal/2  < x && x < goalX + widthGoal/2) ) {
                 reset(false);
                 isMoving = false;
                 score++;
+                main= this;
+                this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        LayoutInflater inflater=getLayoutInflater();
+                        View customToastroot =inflater.inflate(R.layout.custom_toast_win, null);
+                        Toast customtoast=new Toast(context);
+                        customtoast.setView(customToastroot);
+                        customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
+                        customtoast.setDuration(Toast.LENGTH_SHORT);
+                        customtoast.show();
+
+                    }
+                });
                 tabBlock.clear();
                 generateMap();
             }
         }
-
     }
     /* detecte si la balle touche un mur
     - col = 1 ---> colision droite
@@ -470,9 +480,9 @@ public class Balls extends AppCompatActivity {
                 }else if(y <= 0) {
                     nbCol++;
                     res = 3;
-                }else if(y-heightBall*2 >= height){
+                }else if(y-heightBall*3 >= height){
                     loose++;
-                    vie--;
+                    reset(true);
                     isMoving = false;
                     res = 5;
                 } else if((x >= tabTampBlock.get(i).getX() - widthBall && x<= tabTampBlock.get(i).getX()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
@@ -481,7 +491,7 @@ public class Balls extends AppCompatActivity {
                 }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                     nbCol++;
                     res = 2;
-                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall/10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall+10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
                     nbCol++;
                     res = 3;
                 }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
@@ -684,7 +694,16 @@ public class Balls extends AppCompatActivity {
 
 
                         }else{
-                            System.out.println("Geste dans le mauvais sens");
+
+                            LayoutInflater inflater=getLayoutInflater();
+                            View customToastroot =inflater.inflate(R.layout.custom_toast_gesture, null);
+                            Toast customtoast=new Toast(context);
+                            customtoast.setView(customToastroot);
+                            customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
+                            customtoast.setDuration(Toast.LENGTH_SHORT);
+                            customtoast.show();
+
+
                         }
 
                         break;
