@@ -133,7 +133,7 @@
                 android:id="@+id/launch_game"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="75dp"
                 android:background="@drawable/menu_button_shape"
                 android:elevation="0dp"
                 android:text="Lancer le tutorial"
