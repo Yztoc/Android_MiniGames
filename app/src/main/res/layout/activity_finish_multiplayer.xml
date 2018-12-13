@@ -94,12 +94,12 @@
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_backmenu4"
+        app:layout_constraintBottom_toTopOf="@+id/btn_backmenuMulti"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_backmenu4"
+        android:id="@+id/btn_backmenuMulti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

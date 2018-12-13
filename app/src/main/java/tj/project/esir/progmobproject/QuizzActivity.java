@@ -21,6 +21,7 @@ import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 import tj.project.esir.progmobproject.models.Score;
 import tj.project.esir.progmobproject.multiplayer.MultiplayParameters;
+import tj.project.esir.progmobproject.multiplayer.MultiplayerActivity;
 
 public class QuizzActivity extends AppCompatActivity {
 
@@ -226,9 +227,15 @@ public class QuizzActivity extends AppCompatActivity {
                         alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 Intent finish = new Intent(getApplicationContext(), Finish.class);
+                                if(multi != null) {
+                                    finish = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                                }
                                 finish.putExtra("scoreBall",scoreBall);
                                 finish.putExtra("scoreCompass", scoreCompass);
                                 finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
+                                finish.putExtra("multiplayer", multi);
+
+
                                 startActivity(finish);
                                 overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }

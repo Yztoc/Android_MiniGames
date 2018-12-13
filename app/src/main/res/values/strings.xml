@@ -17,6 +17,12 @@
     <string name="discover">Rechercher</string>
     <string name="startGame">Lancer une partie</string>
     <string name="tuto">Tutorial</string>
+    <string name="waitingResultat">En attente du résultat de l\'adversaire</string>
+    <string name="superiorResultat">Victoire !</string>
+    <string name="inferiorResultat">Défaite !</string>
+    <string name="equalResultat">Égalité !</string>
+
+
 
 
 </resources>
