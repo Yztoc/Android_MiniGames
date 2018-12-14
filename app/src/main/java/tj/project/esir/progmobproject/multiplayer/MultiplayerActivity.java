@@ -196,7 +196,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             message_send_layout.setVisibility(View.INVISIBLE);
             exqListener();
         }
-            }
+    }
 
 
     @Override
@@ -241,10 +241,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             switch (msg.what){
                 case MESSAGE_READ:
 
-                        byte[] readBuff = (byte[]) msg.obj;
-                        System.out.println("size read buff " + readBuff.length);
-                        ByteArrayInputStream in = null;
-                        String tempMsg = new String(readBuff, 0, msg.arg1);
+                    byte[] readBuff = (byte[]) msg.obj;
+                    System.out.println("size read buff " + readBuff.length);
+                    ByteArrayInputStream in = null;
+                    String tempMsg = new String(readBuff, 0, msg.arg1);
                     if(!multiplayerFinish) {
                         try {
                             JSONArray receivedMsg = new JSONArray(tempMsg);
@@ -400,7 +400,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         super.onPause();
         unregisterReceiver(mReceiver);
         if(multiplayerFinish)
-        disconnectFromPeer("quit");
+            disconnectFromPeer("quit");
         else
             disconnectFromPeer("");
     }
@@ -580,18 +580,18 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                     e.printStackTrace();
                 }
             }
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-                if(multiplayerFinish){
-                    while(resultatMultiplayer.equals("")) {
-                        sendReceive.write(String.valueOf(scoreTotal.getScore()).getBytes());
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+            sendReceive = new SendReceive(socket);
+            sendReceive.start();
+            if(multiplayerFinish){
+                while(resultatMultiplayer.equals("")) {
+                    sendReceive.write(String.valueOf(scoreTotal.getScore()).getBytes());
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
+            }
         }
     }
 
