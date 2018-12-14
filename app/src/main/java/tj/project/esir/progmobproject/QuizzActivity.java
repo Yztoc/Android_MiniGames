@@ -225,25 +225,21 @@ public class QuizzActivity extends AppCompatActivity {
                         alert.setTitle("Terminé ! ");
                         alert.setMessage("Vous avez fini avec les stats suivant : "
                                 + "\nScore Final : " + score);
-                        String btnNext   = (isTuto == false)  ? "Finir" : "Retour au tutoriel";
-                        alert.setCancelable(false);
-                        alert.setPositiveButton(btnNext, new DialogInterface.OnClickListener() {
+
+                        alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                if(isTuto == false){
-                                    Intent finish = new Intent(getApplicationContext(), Finish.class);
-                                    finish.putExtra("scoreBall",scoreBall);
-                                    finish.putExtra("scoreCompass", scoreCompass);
-                                    finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
-                                    finish.putExtra("multiplayer", multi);
-                                    startActivity(finish);
-                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
-                                }else{
-                                    Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
-                                    startActivity(tuto);
-                                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                Intent finish = new Intent(getApplicationContext(), Finish.class);
+                                if(multi != null) {
+                                    finish = new Intent(getApplicationContext(), MultiplayerActivity.class);
                                 }
+                                finish.putExtra("scoreBall",scoreBall);
+                                finish.putExtra("scoreCompass", scoreCompass);
+                                finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
+                                finish.putExtra("multiplayer", multi);
 
 
+                                startActivity(finish);
+                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
                             }
                         });
 
@@ -253,7 +249,6 @@ public class QuizzActivity extends AppCompatActivity {
 
             }
         };
-
         second_Task.run();
     }
 
