@@ -109,13 +109,14 @@ public class ScoreManager {
 
 
     public ArrayList<Score> getAllScore(){
-
+        boolean oneScore = false;
         ArrayList<Score> tabScore = new ArrayList<Score>();
 
         Cursor c = db.rawQuery(
                 "SELECT * FROM "+TABLE_NAME, null);
         if (c.moveToFirst()) {
             do {
+                oneScore = true;
                 tabScore.add(
                         new Score(c.getInt(c.getColumnIndex(ID_SCORE)),c.
                         getString(c.getColumnIndex(NAME_GAME)),c.
@@ -123,7 +124,12 @@ public class ScoreManager {
             } while (c.moveToNext());
             c.close();
         }
-
+        if(!oneScore){
+            tabScore.add(new Score(1,"Ball games",0));
+            tabScore.add(new Score(2,"Compass Game",0));
+            tabScore.add(new Score(3,"Quizz Game",0));
+            tabScore.add(new Score(4,"Final",0));
+        }
         return tabScore;
     }
 
