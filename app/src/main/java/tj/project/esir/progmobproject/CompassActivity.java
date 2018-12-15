@@ -265,6 +265,7 @@ public class CompassActivity extends AppCompatActivity {
     void cancelTimer() {
         if(cTimer!=null)
             cTimer.cancel();
+        mSensorManager.unregisterListener(this.mSensorEventListener);
     }
 
     void dialogFinish(){
