@@ -64,8 +64,14 @@ public class Balls extends AppCompatActivity {
     private double distance = 0;
     private double angle = 0;
     private int direction;
+    private int xStart = 0;
+    private int yStart = 0;
+    private int xEnd = 0;
+    private int yEnd = 0;
+
     private double m;
     private double p;
+    private boolean drawViseur;
     private long fps;
     private int col;
     private int score = 0;
@@ -242,7 +248,19 @@ public class Balls extends AppCompatActivity {
                 canvas.drawText("SCORE  :" + score, width/2-100, 40, paint);
                 canvas.drawText("TIME  :" + time, width-240, 40, paint);
 
+                if(drawViseur) {
 
+                    System.out.println("DISTANCE : "    + distance);
+                    canvas.save();
+                    canvas.rotate((float)angle,xStart,yStart);
+
+
+                    paint.setColor(Color.rgb(82,210,198));
+                    paint.setStrokeWidth(3);
+                    canvas.drawRect(xStart,yStart,(int)distance+xStart,(int) yStart + 15,paint);
+                    canvas.restore();
+
+                }
 
                 if(deplacementSens1 == false){
                     deplacementBlock1 = 2;
@@ -491,7 +509,7 @@ public class Balls extends AppCompatActivity {
                 }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                     nbCol++;
                     res = 2;
-                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall+10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + 10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
                     nbCol++;
                     res = 3;
                 }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
@@ -562,7 +580,6 @@ public class Balls extends AppCompatActivity {
             direction = 2;
         }
 
-
         /**   DEPLACEMENT   **/
         if(direction == 1){ // monté vers la droite
 
@@ -630,11 +647,6 @@ public class Balls extends AppCompatActivity {
     // class defini dans le package permet de calculer la distance entre le point de depart et le point d arrivé
     private View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
-        int xStart = 0;
-        int yStart = 0;
-        int xEnd = 0;
-        int yEnd = 0;
-
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -645,12 +657,35 @@ public class Balls extends AppCompatActivity {
                         yStart = (int) event.getY();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        Log.i("TAG", "moving: (" + xStart + ", " + yStart + ")");
-                        break;
+                        xEnd= (int) event.getX();
+                        yEnd = (int) event.getY();
+                        if(yStart < yEnd) {
+                            double h = yEnd - yStart;
+                            double base = 0;
+
+                            if (xStart < xEnd) {
+                                base = xEnd - xStart;
+                                distance = Math.sqrt(Math.pow(base, 2) + Math.pow(h, 2));
+                                angle = Math.toDegrees(Math.atan(h / base));
+
+                            } else {
+                                base = xStart - xEnd;
+
+                                distance = Math.sqrt(Math.pow(base, 2) + Math.pow(h, 2));
+                                angle = 180 - Math.toDegrees(Math.atan(h / base));
+                            }
+
+                            double hauteurFinal = (width - ballX) * Math.tan((float) angle);
+                            m = (hauteurFinal - ballY) / (width - ballX);
+                            p = hauteurFinal - (width * m);
+                            drawViseur = true;
+
+                            break;
+                        }
                     case MotionEvent.ACTION_UP:
                         xEnd= (int) event.getX();
                         yEnd = (int) event.getY();
-
+                        drawViseur = false;
                         // detect si le trace est du haut vers le bas
                         if(yStart < yEnd){
                             isMoving = true;
