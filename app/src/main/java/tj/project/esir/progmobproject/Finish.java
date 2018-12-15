@@ -1,6 +1,7 @@
 package tj.project.esir.progmobproject;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -46,6 +47,9 @@ public class Finish extends AppCompatActivity {
         scoreTotal = new Score(4,"Final",scoreBall.getScore() + scoreCompass.getScore() + scoreQuizz.getScore());
         saveScore();
 
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.finish);;
+        mp.start();
+
         TextView textViewScoreBall = (TextView)findViewById(R.id.scoreBall);
         TextView textViewScoreCompass = (TextView)findViewById(R.id.scoreCompass);
         TextView textViewScoreQuizz = (TextView)findViewById(R.id.scoreQuizz);
@@ -55,7 +59,7 @@ public class Finish extends AppCompatActivity {
         textViewScoreQuizz.setText("Score quizz : " + scoreQuizz.getScore());
         textViewScoreFinal.setText("Score Final : " + scoreTotal.getScore());
 
-        back = findViewById(R.id.btn_backmenu);
+        back = findViewById(R.id.btn_backmenuMulti);
 
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

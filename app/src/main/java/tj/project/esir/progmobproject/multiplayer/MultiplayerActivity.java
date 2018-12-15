@@ -1,11 +1,13 @@
 package tj.project.esir.progmobproject.multiplayer;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -58,7 +60,11 @@ import tj.project.esir.progmobproject.models.CustomPair;
 import tj.project.esir.progmobproject.models.Question;
 import tj.project.esir.progmobproject.models.Score;
 
+import static tj.project.esir.progmobproject.R.*;
+
 public class MultiplayerActivity extends AppCompatActivity implements ChannelListener {
+
+    Activity main;
 
     QuestionManager questionManager;
     String connectionType;
@@ -107,6 +113,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        main = this;
         Intent iin= getIntent();
         Bundle q = iin.getExtras();
 
@@ -131,7 +138,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         if(q!=null){
-            setContentView(R.layout.activity_finish_multiplayer);
+            setContentView(layout.activity_finish_multiplayer);
             resultatMultiplayer ="";
             scoreBall = (Score) q.get("scoreBall");
             scoreCompass = (Score) q.get("scoreCompass");
@@ -144,20 +151,20 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
             scoreTotal = new Score(4,"Final",scoreBall.getScore() + scoreCompass.getScore() + scoreQuizz.getScore());
 
-            TextView textViewScoreBall = (TextView)findViewById(R.id.scoreBall);
-            TextView textViewScoreCompass = (TextView)findViewById(R.id.scoreCompass);
-            TextView textViewScoreQuizz = (TextView)findViewById(R.id.scoreQuizz);
-            TextView textViewScoreFinal = (TextView)findViewById(R.id.scoreFinal);
+            TextView textViewScoreBall = (TextView)findViewById(id.scoreBall);
+            TextView textViewScoreCompass = (TextView)findViewById(id.scoreCompass);
+            TextView textViewScoreQuizz = (TextView)findViewById(id.scoreQuizz);
+            TextView textViewScoreFinal = (TextView)findViewById(id.scoreFinal);
             textViewScoreBall.setText("Score jeux balle : " + scoreBall.getScore());
             textViewScoreCompass.setText("Score jeux coffre fort : " + scoreCompass.getScore());
             textViewScoreQuizz.setText("Score quizz : " + scoreQuizz.getScore());
             textViewScoreFinal.setText("Score Final : " + scoreTotal.getScore());
 
-            resultatStatus = findViewById(R.id.resultatStatus);
-            resultatStatus.setText(R.string.waitingResultat);
+            resultatStatus = findViewById(id.resultatStatus);
+            resultatStatus.setText(string.waitingResultat);
             multiplayerFinish = true;
 
-            back = findViewById(R.id.btn_backmenuMulti);
+            back = findViewById(id.btn_backmenuMulti);
 
             back.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -173,7 +180,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                         }
                     });
                     startActivity(multiplayerActivity);
-                    overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                    overridePendingTransition(anim.slide, anim.slide_out);
                     scoreManger.close();
                     finish();
                 }
@@ -181,18 +188,18 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
         }
         else {
-            setContentView(R.layout.activity_multiplayer);
+            setContentView(layout.activity_multiplayer);
 
             multiplayerFinish = false;
             questionManager = new QuestionManager(getApplicationContext());
             connectionType = "none";
 
-            btnDiscover = findViewById(R.id.discover);
-            btnSend = findViewById(R.id.sendButton);
-            listView = findViewById(R.id.peerListView);
-            read_msg_box = findViewById(R.id.readMsg);
-            connectionStatus = findViewById(R.id.connectionStatus);
-            message_send_layout = findViewById(R.id.message_send_layout);
+            btnDiscover = findViewById(id.discover);
+            btnSend = findViewById(id.sendButton);
+            listView = findViewById(id.peerListView);
+            read_msg_box = findViewById(id.readMsg);
+            connectionStatus = findViewById(id.connectionStatus);
+            message_send_layout = findViewById(id.message_send_layout);
             message_send_layout.setVisibility(View.INVISIBLE);
             exqListener();
         }
@@ -271,43 +278,55 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                         Intent balls = new Intent(getApplicationContext(), Balls.class);
                         balls.putExtra("multiplayer", multiplayer);
                         startActivity(balls);
-                        overridePendingTransition(R.anim.slide, R.anim.slide_out);
+                        overridePendingTransition(anim.slide, anim.slide_out);
                     }
                     else{
                         if(tempMsg.equals("defaite") || tempMsg.equals("victoire") || tempMsg.equals("egalite")){
+                            MediaPlayer mp = null;
                             if(tempMsg.equals("defaite")){
-                                resultatStatus.setText(R.string.inferiorResultat);
+                                resultatStatus.setText(string.inferiorResultat);
                                 resultatMultiplayer = "defaite";
+                                 mp = MediaPlayer.create(main, raw.loose);
                             }
                             else if(tempMsg.equals("victoire")){
-                                resultatStatus.setText(R.string.superiorResultat);
+                                resultatStatus.setText(string.superiorResultat);
                                 resultatMultiplayer = "victoire";
+                                mp = MediaPlayer.create(main, raw.win);
+
                             }
                             else {
-                                resultatStatus.setText(R.string.equalResultat);
+                                resultatStatus.setText(string.equalResultat);
                                 resultatMultiplayer = "egalite";
+                               // mp = MediaPlayer.create(main, raw.win);
                             }
+                            mp.start();
                             disconnectFromPeer("");
                         }
                         else {
+                            MediaPlayer mp = null;
                             int resultatAdversaire = Integer.valueOf(tempMsg);
                             System.out.println("Resultat adversaire "+resultatAdversaire+" mon resultat "+scoreTotal.getScore());
                             String resultatAdversaireAEnvoyer = "defaite";
                             if (resultatAdversaire > scoreTotal.getScore()) {
-                                resultatStatus.setText(R.string.inferiorResultat);
+                                resultatStatus.setText(string.inferiorResultat);
                                 resultatMultiplayer = "defaite";
                                 resultatAdversaireAEnvoyer = "victoire";
+                                mp = MediaPlayer.create(main, raw.loose);
                             } else if (resultatAdversaire == scoreTotal.getScore()) {
-                                resultatStatus.setText(R.string.equalResultat);
+                                resultatStatus.setText(string.equalResultat);
                                 resultatMultiplayer = "egalite";
                                 resultatAdversaireAEnvoyer = resultatMultiplayer;
+                               // mp = MediaPlayer.create(main, raw.win);
+
                             } else {
-                                resultatStatus.setText(R.string.superiorResultat);
+                                resultatStatus.setText(string.superiorResultat);
                                 resultatMultiplayer = "victoire";
                                 resultatAdversaireAEnvoyer = "defaite";
+                                mp = MediaPlayer.create(main, raw.win);
+
                             }
                             sendReceive.write(resultatAdversaireAEnvoyer.getBytes());
-
+                            mp.start();
                         }
                     }
                     break;
@@ -324,13 +343,13 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
         // Check which radio button was clicked
         switch(view.getId()) {
-            case R.id.easy:
+            case id.easy:
                 if (checked) level = 1;
                 break;
-            case R.id.moyen:
+            case id.moyen:
                 if (checked) level = 2;
                 break;
-            case R.id.hard:
+            case id.hard:
                 if (checked)level = 3;
                 break;
         }
@@ -480,7 +499,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 Intent balls = new Intent(getApplicationContext(), Balls.class);
                 balls.putExtra("multiplayer",  multiplayParameters);
                 startActivity(balls);
-                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                overridePendingTransition(anim.slide, anim.slide_out);
 
             }
         });
