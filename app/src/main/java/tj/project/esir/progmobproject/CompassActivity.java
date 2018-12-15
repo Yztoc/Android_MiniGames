@@ -52,6 +52,7 @@ public class CompassActivity extends AppCompatActivity {
 
     CountDownTimer cTimer = null;
     float time = 0;
+    boolean gameFinished = false;
 
 
     private MediaPlayer mediaPlayerUnlock;
@@ -80,54 +81,55 @@ public class CompassActivity extends AppCompatActivity {
 
         @Override
         public void onSensorChanged( SensorEvent event ) {
-            switch ( event.sensor.getType() ) {
-                case Sensor.TYPE_GRAVITY:
-                    gData = lowPass(event.values.clone(), gData);
-                    break;
-                case Sensor.TYPE_ACCELEROMETER:
-                    gData = lowPass(event.values.clone(), aData);
-                    aData = gData;
-                    break;
-                case Sensor.TYPE_MAGNETIC_FIELD:
-                    mData = lowPass(event.values.clone(), mData);
-                    break;
-                default: return;
-            }
+            if (!gameFinished) {
+                switch (event.sensor.getType()) {
+                    case Sensor.TYPE_GRAVITY:
+                        gData = lowPass(event.values.clone(), gData);
+                        break;
+                    case Sensor.TYPE_ACCELEROMETER:
+                        gData = lowPass(event.values.clone(), aData);
+                        aData = gData;
+                        break;
+                    case Sensor.TYPE_MAGNETIC_FIELD:
+                        mData = lowPass(event.values.clone(), mData);
+                        break;
+                    default:
+                        return;
+                }
+                if (SensorManager.getRotationMatrix(rMat, iMat, gData, mData)) {
+                    mAzimuth = (int) (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360;
 
+                    // create a rotation animation (reverse turn degree degrees)
+                    RotateAnimation ra = new RotateAnimation(
+                            currentDegree,
+                            -mAzimuth,
+                            Animation.RELATIVE_TO_SELF, 0.5f,
+                            Animation.RELATIVE_TO_SELF,
+                            0.5f);
 
-            if ( SensorManager.getRotationMatrix( rMat, iMat, gData, mData ) ) {
-                mAzimuth= (int) ( Math.toDegrees( SensorManager.getOrientation( rMat, orientation )[0] ) + 360 ) % 360;
+                    // how long the animation will take place
+                    ra.setDuration(210);
 
-                // create a rotation animation (reverse turn degree degrees)
-                RotateAnimation ra = new RotateAnimation(
-                        currentDegree,
-                        -mAzimuth,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f);
+                    // set the animation after the end of the reservation status
+                    ra.setFillAfter(true);
 
-                // how long the animation will take place
-                ra.setDuration(210);
+                    // Start the animation
+                    image.startAnimation(ra);
+                    if (mAzimuth == randomDegree) {
+                        score = (int) time;
+                        cancelTimer();
+                        dialogFinish();
+                        mediaPlayerUnlock.start();
 
-                // set the animation after the end of the reservation status
-                ra.setFillAfter(true);
-
-                // Start the animation
-                 image.startAnimation(ra);
-                 if(mAzimuth == randomDegree){
-                     score = (int) time;
-                     dialogFinish();
-                     mediaPlayerUnlock.start();
-
-                 }
-                 else if(Math.abs(clickDegree-mAzimuth)>5){
-                     if(volumeOn)
-                        calculVolume(mAzimuth, randomDegree);
-                     mediaPlayerClick.start();
-                     clickDegree = mAzimuth;
-                 }
-                currentDegree = -mAzimuth;
-                text.setText("Degres : " + mAzimuth+"");
+                    } else if (Math.abs(clickDegree - mAzimuth) > 5) {
+                        if (volumeOn)
+                            calculVolume(mAzimuth, randomDegree);
+                        mediaPlayerClick.start();
+                        clickDegree = mAzimuth;
+                    }
+                    currentDegree = -mAzimuth;
+                    text.setText("Degres : " + mAzimuth + "");
+                }
             }
         }
     };
@@ -207,6 +209,7 @@ public class CompassActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
         volumeOn = false;
+        cancelTimer();
         mediaPlayerUnlock.setVolume(0,0);
         mediaPlayerClick.setVolume(0,0);
     }
@@ -215,6 +218,7 @@ public class CompassActivity extends AppCompatActivity {
     protected void onStop(){
         super.onStop();
         volumeOn = false;
+        cancelTimer();
         mediaPlayerUnlock.setVolume(0,0);
         mediaPlayerClick.setVolume(0,0);
     }
@@ -231,6 +235,7 @@ public class CompassActivity extends AppCompatActivity {
     public void onBackPressed() {
         mediaPlayerUnlock.setVolume(0,0);
         mediaPlayerClick.setVolume(0,0);
+        cancelTimer();
         Intent home = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(home);
         finish();
@@ -263,6 +268,7 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     void dialogFinish(){
+        gameFinished = true;
         Runnable second_Task = new Runnable() {
             public void run() {
                 CompassActivity.this.runOnUiThread(new Runnable() {
