@@ -357,7 +357,7 @@ public class Balls extends AppCompatActivity {
                         final AlertDialog.Builder alert = new AlertDialog.Builder(Balls.this,R.style.ThemeDialogCustom);
                         alert.setTitle("Terminé ! ");
                         final int scoreFinal = vie * score * level;
-                        alert.setMessage(" Vous avez fini avec les stats suivant : "
+                        alert.setMessage("Vous avez fini avec les stats suivant : "
                                 + "\nNombre de vie restante : " + vie
                                 + "\nScore obtenu : " + score
                                 + "\nTemps écoulé : " + timeS
