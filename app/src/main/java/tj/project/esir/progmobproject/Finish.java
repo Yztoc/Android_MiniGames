@@ -59,7 +59,7 @@ public class Finish extends AppCompatActivity {
         textViewScoreQuizz.setText("Score quizz : " + scoreQuizz.getScore());
         textViewScoreFinal.setText("Score Final : " + scoreTotal.getScore());
 
-        back = findViewById(R.id.btn_backmenuMulti);
+        back = findViewById(R.id.btn_backmenu);
 
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
