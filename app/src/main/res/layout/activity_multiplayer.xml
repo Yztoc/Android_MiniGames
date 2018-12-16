@@ -79,18 +79,6 @@
 
         </ListView>
 
-        <TextView
-            android:id="@+id/readMsg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="Message"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_bright"
-            android:textSize="16sp"
-            android:textStyle="italic" />
-
         <LinearLayout
             android:id="@+id/message_send_layout"
             android:layout_width="match_parent"

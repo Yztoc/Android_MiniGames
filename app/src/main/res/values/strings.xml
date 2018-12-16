@@ -21,6 +21,9 @@
     <string name="superiorResultat">Victoire !</string>
     <string name="inferiorResultat">Défaite !</string>
     <string name="equalResultat">Égalité !</string>
+    <string name="discoverOn">Recherche de Joueurs</string>
+    <string name="discoverOff">Lancer Recherche</string>
+    <string name="discoverPb">La recherche n\'a pas aboutie</string>
 
 
 
