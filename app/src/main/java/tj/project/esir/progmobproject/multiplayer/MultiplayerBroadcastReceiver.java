@@ -12,6 +12,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import tj.project.esir.progmobproject.R;
+
 public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager.Channel mChannel;
@@ -31,9 +33,9 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE,-1);
 
             if(state == WifiP2pManager.WIFI_P2P_STATE_ENABLED)
-                Toast.makeText(context,"Wifi is ON",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"Wifi ON",Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(context,"Wifi is OFF",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"Wifi OFF",Toast.LENGTH_SHORT).show();
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
             if(mManager != null){
                mManager.requestPeers(mChannel,mActivity.peerListListener);
@@ -49,7 +51,7 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
             }
             else {
                 if(!mActivity.multiplayerFinish) {
-                    mActivity.connectionStatus.setText("Device Disconnected");
+                    mActivity.connectionStatus.setText(R.string.discoverOff);
                     mActivity.message_send_layout.setVisibility(View.INVISIBLE);
                 }
                 mActivity.disconnectFromPeer("");

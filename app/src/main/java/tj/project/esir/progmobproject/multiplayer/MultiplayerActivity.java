@@ -73,7 +73,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     Button btnDiscover;
     Button btnSend;
     ListView listView;
-    TextView read_msg_box;
     TextView connectionStatus;
 
     WifiP2pManager mManager;
@@ -197,7 +196,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             btnDiscover = findViewById(id.discover);
             btnSend = findViewById(id.sendButton);
             listView = findViewById(id.peerListView);
-            read_msg_box = findViewById(id.readMsg);
             connectionStatus = findViewById(id.connectionStatus);
             message_send_layout = findViewById(id.message_send_layout);
             message_send_layout.setVisibility(View.INVISIBLE);
@@ -249,7 +247,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 case MESSAGE_READ:
 
                     byte[] readBuff = (byte[]) msg.obj;
-                    System.out.println("size read buff " + readBuff.length);
                     ByteArrayInputStream in = null;
                     String tempMsg = new String(readBuff, 0, msg.arg1);
                     if(!multiplayerFinish) {
@@ -272,8 +269,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        read_msg_box.setText(multiplayer.toString());
                         questionManager.close();
                         Intent balls = new Intent(getApplicationContext(), Balls.class);
                         balls.putExtra("multiplayer", multiplayer);
@@ -305,7 +300,6 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                         else {
                             MediaPlayer mp = null;
                             int resultatAdversaire = Integer.valueOf(tempMsg);
-                            System.out.println("Resultat adversaire "+resultatAdversaire+" mon resultat "+scoreTotal.getScore());
                             String resultatAdversaireAEnvoyer = "defaite";
                             if (resultatAdversaire > scoreTotal.getScore()) {
                                 resultatStatus.setText(string.inferiorResultat);
@@ -376,7 +370,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                     listView.setAdapter(adapter);
                 }
                 if (peers.size() == 0) {
-                    Toast.makeText(getApplicationContext(), "No Device Found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Aucun joueur trouvé", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -392,7 +386,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 serverClass.start();
                 connectionType = "server";
                 if(!multiplayerFinish) {
-                    connectionStatus.setText("Host");
+                    connectionStatus.setText("Server");
                     message_send_layout.setVisibility(View.VISIBLE);
                 }
             }
@@ -433,12 +427,12 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
                     @Override
                     public void onSuccess() {
-                        connectionStatus.setText("Discovery Started");
+                        connectionStatus.setText(string.discoverOn);
                     }
 
                     @Override
                     public void onFailure(int reason) {
-                        connectionStatus.setText("Discovery Started Failed");
+                        connectionStatus.setText(R.string.discoverPb);
                     }
                 });
             }
@@ -454,12 +448,12 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"Connected to "+device.deviceName,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Connecté à"+device.deviceName,Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(int reason) {
-                        Toast.makeText(getApplicationContext(),"Not connected",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Non connecté",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
