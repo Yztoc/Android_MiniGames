@@ -46,6 +46,8 @@ public class Balls extends AppCompatActivity {
     private MultiplayParameters multi = null;
     private ArrayList<ArrayList<Block>> tabBlock = new ArrayList<ArrayList<Block>>();
     private CountDownTimer cTimer = null;
+    private Toast customtoast;
+    private  Toast customtoastWin;
 
 
     private boolean isMoving = false;
@@ -84,6 +86,7 @@ public class Balls extends AppCompatActivity {
     private boolean deplacementSens1 = false;
     private boolean deplacementSens2 = false;
     private boolean isTuto=false;
+    private boolean isInGame = false;
     private Activity main;
 
     volatile boolean playing;
@@ -207,7 +210,7 @@ public class Balls extends AppCompatActivity {
         public void update() {
             if(isMoving){
                 for(int i=0;i<10;i++){
-                    col = collisition(ballX,ballY);
+                    col = collisition();
                     checkLife();
                     win(ballX,ballY);
                     deplacement();
@@ -250,7 +253,6 @@ public class Balls extends AppCompatActivity {
 
                 if(drawViseur) {
 
-                    System.out.println("DISTANCE : "    + distance);
                     canvas.save();
                     canvas.rotate((float)angle,xStart,yStart);
 
@@ -445,6 +447,7 @@ public class Balls extends AppCompatActivity {
         velocity = 1;
         ballX = width/2-widthBall/2;
         ballY = height-heightBall;
+        isInGame = false;
     }
 
     public void win(float x,float y){
@@ -456,13 +459,17 @@ public class Balls extends AppCompatActivity {
                 main= this;
                 this.runOnUiThread(new Runnable() {
                     public void run() {
+
+                        if ( customtoast != null) {
+                            customtoast.cancel();
+                        }
                         LayoutInflater inflater=getLayoutInflater();
                         View customToastroot =inflater.inflate(R.layout.custom_toast_win, null);
-                        Toast customtoast=new Toast(context);
-                        customtoast.setView(customToastroot);
-                        customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
-                        customtoast.setDuration(Toast.LENGTH_SHORT);
-                        customtoast.show();
+                        customtoastWin=new Toast(context);
+                        customtoastWin.setView(customToastroot);
+                        customtoastWin.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
+                        customtoastWin.setDuration(Toast.LENGTH_SHORT);
+                        customtoastWin.show();
 
                     }
                 });
@@ -479,7 +486,7 @@ public class Balls extends AppCompatActivity {
 
     - col = 0 ---> aucune droite
     */
-    public int collisition(float x, float y) {
+    public int collisition() {
         int res = 0;
         for(ArrayList elem : tabBlock){
             ArrayList<Block> tabTampBlock = elem;
@@ -489,30 +496,32 @@ public class Balls extends AppCompatActivity {
                     return res;
                 }
 
-                if(x + widthBall>=width){
+                if(ballX + widthBall>=width){
                     nbCol++;
                     res = 1;
-                }else if(x<= 0){
+                }else if(ballX<= 0){
                     nbCol++;
                     res = 2;
-                }else if(y <= 0) {
+                }else if(ballY <= 0) {
                     nbCol++;
                     res = 3;
-                }else if(y-heightBall*3 >= height){
+                }else if(ballY-heightBall*6 >= height){
                     loose++;
                     reset(true);
                     isMoving = false;
                     res = 5;
-                } else if((x >= tabTampBlock.get(i).getX() - widthBall && x<= tabTampBlock.get(i).getX()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
+                } else if((ballX >= tabTampBlock.get(i).getX() - widthBall && ballX<= tabTampBlock.get(i).getX()) && (ballY > (tabTampBlock.get(i).getY() - heightBall) && ballY < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
                     nbCol++;
                     res = 1;
-                }else if((x <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && x>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (y > (tabTampBlock.get(i).getY() - heightBall) && y < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
+                }else if((ballX <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && ballX>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (ballY > (tabTampBlock.get(i).getY() - heightBall) && ballY < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
                     nbCol++;
                     res = 2;
-                }else if((y  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (y <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + 10) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                }else if((ballY  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (ballY <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + 10) && (ballX>=(tabTampBlock.get(i).getX() - widthBall) && ballX<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
+                    System.out.println("BAS : X " + ballX + " Y : " + ballY);
+                    ballY = ballY +3;
                     nbCol++;
                     res = 3;
-                }else if((y <= tabTampBlock.get(i).getY()) && (y >= tabTampBlock.get(i).getY() - heightBall) && (x>=(tabTampBlock.get(i).getX() - widthBall) && x<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
+                }else if((ballY <= tabTampBlock.get(i).getY()) && (ballY >= tabTampBlock.get(i).getY() - heightBall) && (ballX>=(tabTampBlock.get(i).getX() - widthBall) && ballX<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
                     nbCol++;
                     res = 4;
                 }
@@ -564,10 +573,12 @@ public class Balls extends AppCompatActivity {
         if(col == 3 && direction ==1){// si colision coté haut en monté vers la droite  alors deplacement à droite en descente
             velocity = 5*velocity / 6;
             direction = 4;
+            System.out.println("COLIISION HAUT : X " + ballX + " Y :" + ballY);
         }
         else if(col == 3 && direction == 2){// si colision coté haut en monté vers la gauche alors déplacement à gauche en descente
             velocity = 5*velocity / 6;
             direction = 3;
+            System.out.println("COLIISION HAUT : X " + ballX + " Y :" + ballY);
         }
 
         /**  COLLISION COTE BAS   **/
@@ -651,6 +662,9 @@ public class Balls extends AppCompatActivity {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
+            if(!isInGame){
+
+
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         xStart = (int) event.getX();
@@ -691,7 +705,6 @@ public class Balls extends AppCompatActivity {
                             isMoving = true;
                             double h = yEnd - yStart;
                             double base = 0;
-
                             // calcul la base du triangle du trace
                             if(xStart < xEnd){ // slide d en haut a gauche vers en bas à droite
                                 base = xEnd - xStart;
@@ -700,52 +713,42 @@ public class Balls extends AppCompatActivity {
                                 base = xStart - xEnd;// slide d en haut a droite vers en bas à gauche
                                 direction = 1;
                             }
-
                             // hypothenus du tringle du trace (ditance entre le debut et la fin du slide
                             distance = Math.sqrt(Math.pow(base,2) + Math.pow(h,2));
                             // max value 1000
+                            System.out.println("DISTANCE : " + distance);
+                            if(distance<100) distance = 150;
                             if(distance >1000) distance = 1000;
                             angle = Math.toDegrees(Math.atan(h/base));
 
-
                             // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
                             double hauteurFinal =  (width - ballX) * Math.tan((float)angle);
-
                             // y = mx + p
                             //calcul coeficient de la droite
                             m  = (hauteurFinal - ballY) / (width - ballX);
-
                             //calcul p
                             p = hauteurFinal - (width*m);
 
-                            System.out.println("Hauteur : " + h);
-                            System.out.println("Base : " + base);
-                            System.out.println("Distance : " + distance);
-                            System.out.println("Angle : " + angle);
-                            System.out.println("hauteurFinal : " + hauteurFinal);
-                            System.out.println("M : " + m);
-                            System.out.println("P : " + p);
-
-
-
                         }else{
-
+                            if ( customtoastWin != null) {
+                                customtoastWin.cancel();
+                            }
                             LayoutInflater inflater=getLayoutInflater();
                             View customToastroot =inflater.inflate(R.layout.custom_toast_gesture, null);
-                            Toast customtoast=new Toast(context);
+                            customtoast=new Toast(context);
                             customtoast.setView(customToastroot);
                             customtoast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
                             customtoast.setDuration(Toast.LENGTH_SHORT);
                             customtoast.show();
 
-
                         }
+
+                        isInGame = true;
 
                         break;
                 }
 
-
-
+            }
             return true;
         }
 
