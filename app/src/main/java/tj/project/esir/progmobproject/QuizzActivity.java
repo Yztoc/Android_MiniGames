@@ -51,6 +51,7 @@ public class QuizzActivity extends AppCompatActivity {
     private List<Question> listQuestion = null;
     private int i = 0;
     boolean isTuto=false;
+    boolean isMulti = false;
 
 
     @Override
@@ -91,8 +92,7 @@ public class QuizzActivity extends AppCompatActivity {
         btn_nextQuestion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 calculAnswerInput.setText("");
-                if(multi == null)pickQuestion();
-                else pickQuestionMultiplayer();
+                pickQuestion();
             }
         });
         btn_valid_calcul.setOnClickListener(new View.OnClickListener() {
@@ -113,10 +113,11 @@ public class QuizzActivity extends AppCompatActivity {
         if(q!=null){
             if(q.get("tuto") != null) isTuto = true;
             if(q.get("multiplayer") != null){
+                isMulti = true;
                 multi =  (MultiplayParameters) q.get("multiplayer");
                 listCalcul =  multi.getListCalculs();
                 listQuestion = multi.getListQuestion();
-                pickQuestionMultiplayer();
+                pickQuestion();
             }else{
                 m.open();
                 listQuestion = m.get5randomQuestions();
@@ -129,49 +130,19 @@ public class QuizzActivity extends AppCompatActivity {
 
     }
 
-    public void pickQuestionMultiplayer(){
-        nbQuestion--;
-        if(nbQuestion ==0){
-            dialogFinish();
-        }else{
-            reponseValidee = -1;
-            setReponseTextQuizz("");
-            if(nbQuestion % 2 ==0){
-                calculAnswerLayout.setVisibility(View.INVISIBLE);
-                multipleAnswersLayout.setVisibility(View.VISIBLE);
-                Question question = listQuestion.get(i);
-                title_question.setText(question.getTitle());
-                btn_rep1.setText(question.getResponse1().getFirst());
-                btn_rep2.setText(question.getResponse2().getFirst());
-                btn_rep3.setText(question.getResponse3().getFirst());
-                rep1 = question.getResponse1().getSecond() == 0 ?  false : true;
-                rep2 = question.getResponse2().getSecond() == 0 ?  false : true;
-                rep3 = question.getResponse3().getSecond() == 0 ?  false : true;
-            }else{
-                calculAnswerLayout.setVisibility(View.VISIBLE);
-                multipleAnswersLayout.setVisibility(View.INVISIBLE);
-                int variable1 = listCalcul.get(i).getFirst();
-                int variable2 = listCalcul.get(i).getSecond();
-                resultatCalcul = variable1*variable2;
-                title_question.setText(variable1+" x "+variable2);
-                i++;
-            }
-        }
-    }
-
     public void pickQuestion() {
 
-        nbQuestion--;
         if(nbQuestion ==0){
             dialogFinish();
         }else{
+            nbQuestion--;
             reponseValidee = -1;
             setReponseTextQuizz("");
             if(nbQuestion % 2 ==0){
                 calculAnswerLayout.setVisibility(View.INVISIBLE);
                 multipleAnswersLayout.setVisibility(View.VISIBLE);
-
                 Question question = listQuestion.get(i);
+                i++;
                 title_question.setText(question.getTitle());
                 btn_rep1.setText(question.getResponse1().getFirst());
                 btn_rep2.setText(question.getResponse2().getFirst());
@@ -181,14 +152,21 @@ public class QuizzActivity extends AppCompatActivity {
                 rep3 = question.getResponse3().getSecond() == 0 ?  false : true;
             }
             else{
-                Random rand = new Random();
                 calculAnswerLayout.setVisibility(View.VISIBLE);
                 multipleAnswersLayout.setVisibility(View.INVISIBLE);
-                int variable1 = rand.nextInt(9)+1;
-                int variable2 = rand.nextInt(9)+1;
+                int variable1 = 0;
+                int variable2 = 0;
+                if(isMulti){
+                    variable1 = listCalcul.get(i).getFirst();
+                    variable2 = listCalcul.get(i).getSecond();
+                }
+                else{
+                    Random rand = new Random();
+                    variable1 = rand.nextInt(9)+1;
+                    variable2 = rand.nextInt(9)+1;
+                }
                 resultatCalcul = variable1*variable2;
                 title_question.setText(variable1+" x "+variable2);
-                i++;
             }
         }
 
