@@ -14,103 +14,99 @@
         android:scaleType="fitXY"
         android:src="@drawable/back" />
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/img_logo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="237dp"
+        app:layout_constraintBottom_toTopOf="@id/scoreCompass"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
 
-        <ImageView
-            android:id="@+id/img_logo"
-            android:layout_width="match_parent"
-            android:layout_height="237dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_credit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/logo" />
+    <TextView
+        android:id="@+id/scoreCompass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreBall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_logo" />
 
-        <LinearLayout
-            android:id="@+id/linear1"
-            tools:layout_editor_absoluteX="7dp"
-            tools:layout_editor_absoluteY="237dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/scoreBall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreQuizz"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreCompass" />
 
-            <TextView
-                android:id="@+id/scoreCompass"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="352dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="24sp" />
+    <TextView
+        android:id="@+id/scoreQuizz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreFinal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreBall" />
 
-            <TextView
-                android:id="@+id/scoreBall"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="299dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="24sp" />
+    <TextView
+        android:id="@+id/scoreFinal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/multiSpace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreQuizz" />
 
-            <TextView
-                android:id="@+id/scoreQuizz"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="411dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/scoreFinal"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="461dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="24sp" />
-
-        </LinearLayout>
-    </LinearLayout>
+    <Space
+        android:id="@+id/multiSpace"
+        android:layout_width="wrap_content"
+        android:layout_height="10"
+        app:layout_constraintBottom_toTopOf="@id/resultatStatus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreFinal" />
 
     <TextView
         android:id="@+id/resultatStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:text="TextView"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_backmenuMulti"
+        app:layout_constraintBottom_toTopOf="@id/btn_backmenuMulti"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/multiSpace" />
 
     <Button
         android:id="@+id/btn_backmenuMulti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/menu_button_shape"
         android:text="@string/back_multiplayer"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.881" />
+        app:layout_constraintTop_toBottomOf="@id/resultatStatus" />
 
 </android.support.constraint.ConstraintLayout>

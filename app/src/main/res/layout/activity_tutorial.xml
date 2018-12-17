@@ -34,7 +34,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout5"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
@@ -45,7 +45,7 @@
 
         <ImageView
             android:id="@+id/img_tuto1"
-            android:layout_width="135dp"
+            android:layout_width="128dp"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/btn_credit"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
 
         <ImageView
             android:id="@+id/img_tuto2"
-            android:layout_width="135dp"
+            android:layout_width="128dp"
             android:layout_height="250dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_credit"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
 
         <ImageView
             android:id="@+id/img_tuto3"
-            android:layout_width="135dp"
+            android:layout_width="128dp"
             android:layout_height="250dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_credit"
             app:layout_constraintEnd_toEndOf="parent"
@@ -104,6 +104,7 @@
             android:id="@+id/game2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:buttonTint="#ff00caff"
             android:onClick="onRadioButtonClicked"

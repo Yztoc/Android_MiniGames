@@ -15,158 +15,159 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
-
-    <LinearLayout
+    <ImageView
+        android:id="@+id/img_logo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="190"
+        app:layout_constraintBottom_toTopOf="@+id/Score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
 
-        <ImageView
-            android:id="@+id/img_logo"
-            android:layout_width="match_parent"
-            android:layout_height="243dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_credit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/logo" />
+    <TextView
+        android:id="@+id/Score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Meilleur Score "
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreBall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_logo" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
+    <TextView
+        android:id="@+id/scoreBall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Score jeux balls : "
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreCompass"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Score" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="40dp"
-            tools:layout_editor_absoluteX="7dp"
-            tools:layout_editor_absoluteY="237dp">
+    <TextView
+        android:id="@+id/scoreCompass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Score jeux compass : "
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreQuizz"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreBall" />
 
-            <TextView
-                android:id="@+id/Score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Meilleur Score "
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="22sp"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="352dp" />
+    <TextView
+        android:id="@+id/scoreQuizz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Score jeux quizz :  "
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/scoreFinal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreCompass" />
 
-            <TextView
-                android:id="@+id/scoreBall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Score jeux balls : "
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="14sp"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="299dp" />
+    <TextView
+        android:id="@+id/scoreFinal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Score Final :"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/space"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreQuizz" />
 
-            <TextView
-                android:id="@+id/scoreCompass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Score jeux compass : "
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="14sp"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="352dp" />
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="20"
+        app:layout_constraintBottom_toTopOf="@id/credit"
+        app:layout_constraintTop_toBottomOf="@id/scoreFinal" />
 
-            <TextView
-                android:id="@+id/scoreQuizz"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Score jeux quizz :  "
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="14sp"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="411dp" />
+    <TextView
+        android:id="@+id/credit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Credit"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@id/projet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/space" />
 
-            <TextView
-                android:id="@+id/scoreFinal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Score Final :"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light"
-                android:textSize="14sp"
-                tools:layout_editor_absoluteX="156dp"
-                tools:layout_editor_absoluteY="461dp" />
+    <TextView
+        android:id="@+id/projet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Projet ESIR 2018-2019"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/dev"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/credit" />
 
+    <TextView
+        android:id="@+id/dev"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Développeurs"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/name1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/projet" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="40dp"
-                android:orientation="vertical">
+    <TextView
+        android:id="@+id/name1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guépéroux Juilen "
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/name2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dev" />
 
-                <TextView
-                    android:id="@+id/credit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Credit"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="22sp"
-                    tools:layout_editor_absoluteX="156dp"
-                    tools:layout_editor_absoluteY="352dp" />
+    <TextView
+        android:id="@+id/name2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stéphant Thomas"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/space2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name1" />
 
-                <TextView
-                    android:id="@+id/projet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Projet ESIR 2018-2019"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="14sp"
-                    tools:layout_editor_absoluteX="156dp"
-                    tools:layout_editor_absoluteY="352dp" />
-
-                <TextView
-                    android:id="@+id/dev"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Développeurs"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="14sp"
-                    tools:layout_editor_absoluteX="156dp"
-                    tools:layout_editor_absoluteY="299dp" />
-
-                <TextView
-                    android:id="@+id/name1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Guépéroux Juilen "
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="14sp"
-                    tools:layout_editor_absoluteX="156dp"
-                    tools:layout_editor_absoluteY="411dp" />
-
-                <TextView
-                    android:id="@+id/name2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Stéphant Thomas"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="14sp"
-                    tools:layout_editor_absoluteX="156dp"
-                    tools:layout_editor_absoluteY="461dp" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-
+    <Space
+        android:id="@+id/space2"
+        android:layout_width="wrap_content"
+        android:layout_height="20"
+        app:layout_constraintBottom_toTopOf="@id/btn_backmenu_credit"
+        app:layout_constraintTop_toBottomOf="@id/name2" />
 
     <Button
         android:id="@+id/btn_backmenu_credit"
@@ -178,9 +179,8 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.881" />
+        app:layout_constraintTop_toBottomOf="@id/space2" />
+
 
 </android.support.constraint.ConstraintLayout>
