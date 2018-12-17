@@ -573,12 +573,12 @@ public class Balls extends AppCompatActivity {
         if(col == 3 && direction ==1){// si colision coté haut en monté vers la droite  alors deplacement à droite en descente
             velocity = 5*velocity / 6;
             direction = 4;
-            System.out.println("COLIISION HAUT : X " + ballX + " Y :" + ballY);
+            System.out.println("COL HAUT DESC DROITE : X " + ballX + " Y :" + ballY);
         }
         else if(col == 3 && direction == 2){// si colision coté haut en monté vers la gauche alors déplacement à gauche en descente
             velocity = 5*velocity / 6;
             direction = 3;
-            System.out.println("COLIISION HAUT : X " + ballX + " Y :" + ballY);
+            System.out.println("COL HAUT DESC GAUCHE : X " + ballX + " Y :" + ballY);
         }
 
         /**  COLLISION COTE BAS   **/
@@ -635,6 +635,7 @@ public class Balls extends AppCompatActivity {
         int nbBlock = ((int) ((4) * rand1.nextDouble())) + 4;
         for(int i=1;i<=level+1;i++){
             ArrayList<Block> tabTamp = new ArrayList<Block>();
+            if(i==4) nbBlock = 4;
             for(int j=1;j<nbBlock;j++){
                 x+=Block.width;
                 tabTamp.add(new Block(x,y*i));
