@@ -20,6 +20,7 @@ public class CreditActivity extends AppCompatActivity {
 
     private Button btnBack;
     private ScoreManager scoreManger;
+    private  SharedPreferences sharedPreferences;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,16 +42,25 @@ public class CreditActivity extends AppCompatActivity {
         textViewScoreFinal.setText("Score "+ tabScore.get(3).getName_game() +  " : " + tabScore.get(3).getScore());
 
 
+        sharedPreferences = getBaseContext().getSharedPreferences("PREF_NAME", MODE_PRIVATE);
 
         Switch switchSong = findViewById(R.id.switchActiveSong);
+
+        if(sharedPreferences.getInt("activeSong", 1) == 1) {
+            switchSong.setChecked(true);
+        }else{
+            switchSong.setChecked(false);
+        }
+
         switchSong.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREFS", MODE_PRIVATE);
                 if(isChecked){
+                    sharedPreferences.edit().clear().commit();
                     sharedPreferences.edit()
                             .putInt("activeSong", 1)
                             .apply();
                 }else{
+                    sharedPreferences.edit().clear().commit();
                     sharedPreferences.edit()
                             .putInt("activeSong", 0)
                             .apply();

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,8 +13,10 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -48,7 +51,7 @@ public class Balls extends AppCompatActivity {
     private CountDownTimer cTimer = null;
     private Toast customtoast;
     private  Toast customtoastWin;
-
+    private SharedPreferences sharedPreferences;
 
     private boolean isMoving = false;
     private int nbCol = 0;
@@ -121,6 +124,14 @@ public class Balls extends AppCompatActivity {
                     break;
             }
         }
+
+        sharedPreferences = getBaseContext().getSharedPreferences("PREF_NAME", MODE_PRIVATE);
+        if(sharedPreferences.getInt("activeSong", 0) == 1){
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.launch);;
+            mp.start();
+        }
+
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ball);
@@ -419,6 +430,10 @@ public class Balls extends AppCompatActivity {
                     cancelTimer();
                     if(!((Activity) context).isFinishing()) {
                         dialogFinish();
+                        m = 0;
+                        p = 0;
+                        ballX = width/2+widthBall/2;
+                        ballY = height - heightBall;
                     }
                 }
             }
@@ -455,6 +470,8 @@ public class Balls extends AppCompatActivity {
         if(isMoving){
             if((goalY-heightGoal/2 < y && y < goalY + heightGoal && y > 40) && (goalX-  widthGoal/2  < x && x < goalX + widthGoal/2) ) {
                 reset(false);
+                soundWin();
+
                 isMoving = false;
                 score++;
                 main= this;
@@ -472,6 +489,7 @@ public class Balls extends AppCompatActivity {
                         customtoastWin.setDuration(Toast.LENGTH_SHORT);
                         customtoastWin.show();
 
+
                     }
                 });
                 tabBlock.clear();
@@ -487,6 +505,16 @@ public class Balls extends AppCompatActivity {
 
     - col = 0 ---> aucune droite
     */
+
+    public void soundWin(){
+        sharedPreferences = getBaseContext().getSharedPreferences("PREF_NAME", MODE_PRIVATE);
+        if(sharedPreferences.getInt("activeSong", 0) == 1){
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.rebond);;
+            mp.start();
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(300);
+        }
+    }
     public int collisition() {
         int res = 0;
         for(ArrayList elem : tabBlock){
@@ -498,6 +526,7 @@ public class Balls extends AppCompatActivity {
                 if(ballX + widthBall>=width){
                     nbCol++;
                     res = 1;
+
                 }else if(ballX<= 0){
                     nbCol++;
                     res = 2;

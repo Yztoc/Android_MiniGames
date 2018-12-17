@@ -48,7 +48,7 @@ public class Finish extends AppCompatActivity {
         scoreTotal = new Score(4,"Final",scoreBall.getScore() + scoreCompass.getScore() + scoreQuizz.getScore());
         saveScore();
 
-        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREFS", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREF_NAME", MODE_PRIVATE);
         if(sharedPreferences.getInt("activeSong", 0) == 1){
             MediaPlayer mp = MediaPlayer.create(this, R.raw.finish);;
             mp.start();
