@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:textColor="@android:color/white"
@@ -9,170 +10,137 @@
 
     <ImageView
         android:id="@+id/im1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:scaleType="fitXY"
-        android:src="@drawable/back"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:src="@drawable/back" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        >
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+        <TextView
+            android:id="@+id/quizz_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/title_activity_quizz"
+            android:textAlignment="center"
             android:textColor="@android:color/white"
-            app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_conversion_absoluteHeight="99dp"
-            tools:layout_conversion_absoluteWidth="384dp">
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="@string/title_activity_quizz" />
 
-            <TextView
-                android:id="@+id/quizz_title"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="@string/title_activity_quizz"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                tools:text="@string/title_activity_quizz" />
-
-            <TextView
-                android:id="@+id/quizz_question"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/textview_border"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                android:textSize="50sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/quizz_question"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            tools:layout_conversion_absoluteHeight="186dp"
-            tools:layout_conversion_absoluteWidth="384dp">
+            android:background="@drawable/textview_border"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="50sp"
+            android:textStyle="bold" />
 
-            <LinearLayout
-                android:id="@+id/multipleAnswersLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+    </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_rep2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/quizz_button_shape"
-                    android:text="Button"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btn_rep3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:background="@drawable/quizz_button_shape"
-                    android:text="Button"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btn_rep1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/quizz_button_shape"
-                    android:text="Button"
-                    android:textColor="@android:color/white" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/calculAnswerLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/calculAnswerInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:digits="0123456789."
-                    android:ems="10"
-                    android:inputType="numberDecimal" />
-
-                <Button
-                    android:id="@+id/validCalculButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/quizz_button_shape"
-                    android:paddingStart="0dp"
-                    android:text="@string/valid_button_text"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
         <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="wrap_content"
+            android:id="@+id/multipleAnswersLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-            tools:layout_conversion_absoluteHeight="48dp"
-            tools:layout_conversion_absoluteWidth="384dp">
-
-            <TextView
-                android:id="@+id/reponseText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_next_question"
-                android:layout_width="wrap_content"
+                android:id="@+id/btn_rep2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/quizz_button_shape"
-                android:textColor="@android:color/white"
-                android:visibility="visible"
-                tools:text="@string/next_question" />
+                android:text="Button"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_rep3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/quizz_button_shape"
+                android:text="Button"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btn_rep1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/quizz_button_shape"
+                android:text="Button"
+                android:textColor="@android:color/white" />
+
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/calculAnswerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/calculAnswerInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789."
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/validCalculButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/quizz_button_shape"
+                android:paddingStart="0dp"
+                android:text="@string/valid_button_text"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+
+        <Button
+            android:id="@+id/btn_next_question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/quizz_button_shape"
+            android:textColor="@android:color/white"
+            android:visibility="visible"
+            tools:text="@string/next_question" />
+    </LinearLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

@@ -33,7 +33,6 @@ public class QuizzActivity extends AppCompatActivity {
     private Boolean rep1;
     private Boolean rep2;
     private Boolean rep3;
-    private TextView reponseText;
     private LinearLayout multipleAnswersLayout;
     private LinearLayout calculAnswerLayout;
     private EditText calculAnswerInput;
@@ -61,7 +60,6 @@ public class QuizzActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quizz);
 
 
-        reponseText = findViewById(R.id.reponseText);
         btn_rep1 = findViewById(R.id.btn_rep1);
         btn_rep2 = findViewById(R.id.btn_rep2);
         btn_rep3 = findViewById(R.id.btn_rep3);
@@ -187,7 +185,6 @@ public class QuizzActivity extends AppCompatActivity {
     }
     public void setReponseTextQuizz(String s) {
         if (s.isEmpty()) {
-            reponseText.setText("");
             btn_nextQuestion.setVisibility(View.INVISIBLE);
         }
     }

@@ -25,34 +25,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-    <LinearLayout
-        android:id="@+id/id_linear_song"
+
+    <TextView
+        android:id="@+id/activeSong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:text="Activer les effets sonores :"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@id/Score"
+        app:layout_constraintEnd_toStartOf="@id/switchActiveSong"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_logo"
+        app:layout_constraintVertical_bias="0.52" />
+
+    <Switch
+        android:id="@+id/switchActiveSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch"
+        android:theme="@style/SwitchCompatTheme"
         app:layout_constraintBottom_toTopOf="@id/Score"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_logo">
-
-        <TextView
-            android:id="@+id/activeSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Activer les effets sonores :"
-            android:textAlignment="center"
-            android:textColor="@android:color/background_light"
-            android:textSize="22sp" />
-
-        <Switch
-            android:theme="@style/SwitchCompatTheme"
-            android:id="@+id/switchActiveSong"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Switch" />
-    </LinearLayout>
-
-
+        app:layout_constraintStart_toEndOf="@id/activeSong"
+        app:layout_constraintTop_toBottomOf="@id/img_logo" />
 
     <TextView
         android:id="@+id/Score"
@@ -65,7 +62,7 @@
         app:layout_constraintBottom_toTopOf="@id/scoreBall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id_linear_song" />
+        app:layout_constraintTop_toBottomOf="@id/activeSong" />
 
     <TextView
         android:id="@+id/scoreBall"
@@ -197,6 +194,8 @@
         android:layout_width="wrap_content"
         android:layout_height="10dp"
         app:layout_constraintBottom_toTopOf="@id/btn_backmenu_credit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/name2" />
 
     <Button
