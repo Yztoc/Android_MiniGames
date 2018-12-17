@@ -253,8 +253,7 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         @Override
         public boolean handleMessage(Message msg) {
             MultiplayParameters multiplayer = new MultiplayParameters();
-            SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREFS", MODE_PRIVATE);
-
+            SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREF_NAME", MODE_PRIVATE);
             switch (msg.what){
                 case MESSAGE_READ:
 
