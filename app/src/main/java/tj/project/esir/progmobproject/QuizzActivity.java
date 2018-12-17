@@ -229,18 +229,25 @@ public class QuizzActivity extends AppCompatActivity {
 
                         alert.setPositiveButton("Finir", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Intent finish = new Intent(getApplicationContext(), Finish.class);
-                                if(multi != null) {
-                                    finish = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                                if(isTuto){
+                                        Intent tuto = new Intent(getApplicationContext(), TutorialActivity.class);
+                                        startActivity(tuto);
+                                        overridePendingTransition(R.anim.slide,R.anim.slide_out);
                                 }
-                                finish.putExtra("scoreBall",scoreBall);
-                                finish.putExtra("scoreCompass", scoreCompass);
-                                finish.putExtra("scoreQuizz",  new Score(3,"Quizz Game",score));
-                                finish.putExtra("multiplayer", multi);
+                                else {
+                                    Intent finish = new Intent(getApplicationContext(), Finish.class);
+                                    if (multi != null) {
+                                        finish = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                                    }
+                                    finish.putExtra("scoreBall", scoreBall);
+                                    finish.putExtra("scoreCompass", scoreCompass);
+                                    finish.putExtra("scoreQuizz", new Score(3, "Quizz Game", score));
+                                    finish.putExtra("multiplayer", multi);
 
 
-                                startActivity(finish);
-                                overridePendingTransition(R.anim.slide,R.anim.slide_out);
+                                    startActivity(finish);
+                                    overridePendingTransition(R.anim.slide, R.anim.slide_out);
+                                }
                             }
                         });
 
