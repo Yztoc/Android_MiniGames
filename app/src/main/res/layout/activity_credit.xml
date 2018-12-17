@@ -18,7 +18,7 @@
     <ImageView
         android:id="@+id/img_logo"
         android:layout_width="match_parent"
-        android:layout_height="190"
+        android:layout_height="190dp"
         app:layout_constraintBottom_toTopOf="@+id/Score"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +93,7 @@
     <Space
         android:id="@+id/space"
         android:layout_width="wrap_content"
-        android:layout_height="20"
+        android:layout_height="10dp"
         app:layout_constraintBottom_toTopOf="@id/credit"
         app:layout_constraintTop_toBottomOf="@id/scoreFinal" />
 
@@ -165,7 +165,7 @@
     <Space
         android:id="@+id/space2"
         android:layout_width="wrap_content"
-        android:layout_height="20"
+        android:layout_height="10dp"
         app:layout_constraintBottom_toTopOf="@id/btn_backmenu_credit"
         app:layout_constraintTop_toBottomOf="@id/name2" />
 

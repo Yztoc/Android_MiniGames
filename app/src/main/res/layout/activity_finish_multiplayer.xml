@@ -78,7 +78,7 @@
     <Space
         android:id="@+id/multiSpace"
         android:layout_width="wrap_content"
-        android:layout_height="10"
+        android:layout_height="10dp"
         app:layout_constraintBottom_toTopOf="@id/resultatStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

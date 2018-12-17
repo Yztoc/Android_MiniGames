@@ -52,7 +52,9 @@ public class MultiplayerBroadcastReceiver extends BroadcastReceiver {
             else {
                 if(!mActivity.multiplayerFinish) {
                     mActivity.connectionStatus.setText(R.string.discoverOff);
-                    mActivity.message_send_layout.setVisibility(View.INVISIBLE);
+                    mActivity.sendButton.setVisibility(View.INVISIBLE);
+                    mActivity.levelRadioGroup.setVisibility(View.INVISIBLE);
+                    mActivity.radioGroup.setVisibility(View.INVISIBLE);
                 }
                 mActivity.disconnectFromPeer("");
             }
