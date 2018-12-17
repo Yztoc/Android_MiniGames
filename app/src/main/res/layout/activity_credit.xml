@@ -24,33 +24,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
-  
+
     <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        android:id="@+id/id_linear_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/Score"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_logo">
 
-                <TextView
-                    android:id="@+id/activeSong"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Activer les effets sonores :"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="22sp"
-                    tools:layout_editor_absoluteX="156dp"
-                    tools:layout_editor_absoluteY="352dp" />
+        <TextView
+            android:id="@+id/activeSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Activer les effets sonores :"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light"
+            android:textSize="22sp" />
 
-                <Switch
-                    android:theme="@style/SwitchCompatTheme"
-                    android:id="@+id/switchActiveSong"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Switch" />
-     </LinearLayout>
-  
-  
-  
+        <Switch
+            android:theme="@style/SwitchCompatTheme"
+            android:id="@+id/switchActiveSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Switch" />
+    </LinearLayout>
+
+
+
     <TextView
         android:id="@+id/Score"
         android:layout_width="match_parent"
@@ -62,7 +65,7 @@
         app:layout_constraintBottom_toTopOf="@id/scoreBall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_logo" />
+        app:layout_constraintTop_toBottomOf="@id/id_linear_song" />
 
     <TextView
         android:id="@+id/scoreBall"
