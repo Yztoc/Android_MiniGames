@@ -132,7 +132,7 @@ public class Balls extends AppCompatActivity {
         width = size.x;
         height = size.y;
         ballX = size.x/2-widthBall/2;
-        ballY = size.y-heightBall;
+        ballY = size.y;
 
         goalX = width/2-widthGoal/2;
         goalY = 200;
@@ -209,12 +209,11 @@ public class Balls extends AppCompatActivity {
 
         public void update() {
             if(isMoving){
-                for(int i=0;i<10;i++){
+                for(int i=0;i<5;i++){
                     col = collisition();
                     checkLife();
                     win(ballX,ballY);
                     deplacement();
-
                 }
             }else{
                 reset(false);
@@ -351,6 +350,7 @@ public class Balls extends AppCompatActivity {
             isMoving = false;
             playing  = false;
             if(!((Activity) context).isFinishing()){
+                reset(false);
                 dialogFinish();
             }
 
@@ -419,6 +419,7 @@ public class Balls extends AppCompatActivity {
                     cancelTimer();
                     if(!((Activity) context).isFinishing()) {
                         dialogFinish();
+                        reset(false);
                     }
                 }
             }
@@ -510,15 +511,8 @@ public class Balls extends AppCompatActivity {
                     reset(true);
                     isMoving = false;
                     res = 5;
-                } else if((ballX >= tabTampBlock.get(i).getX() - widthBall && ballX<= tabTampBlock.get(i).getX()) && (ballY > (tabTampBlock.get(i).getY() - heightBall) && ballY < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
-                    nbCol++;
-                    res = 1;
-                }else if((ballX <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && ballX>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (ballY > (tabTampBlock.get(i).getY() - heightBall) && ballY < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
-                    nbCol++;
-                    res = 2;
                 }else if((ballY  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (ballY <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + 10) && (ballX>=(tabTampBlock.get(i).getX() - widthBall) && ballX<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
-                    System.out.println("BAS : X " + ballX + " Y : " + ballY);
-                    ballY = ballY +3;
+                    ballY = ballY + 100;
                     nbCol++;
                     res = 3;
                 }else if((ballY <= tabTampBlock.get(i).getY()) && (ballY >= tabTampBlock.get(i).getY() - heightBall) && (ballX>=(tabTampBlock.get(i).getX() - widthBall) && ballX<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
@@ -528,6 +522,19 @@ public class Balls extends AppCompatActivity {
                 else{
                     res = 0;
                 }
+                if(i==0){
+                     if((ballX >= tabTampBlock.get(i).getX() - widthBall && ballX<= tabTampBlock.get(i).getX()) && (ballY > (tabTampBlock.get(i).getY() - heightBall) && ballY < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté gauche d'un block
+                        nbCol++;
+                        res = 1;
+                    }
+                }
+                if(i==tabTampBlock.size()-1){
+                     if((ballX <= tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall/10 && ballX>= tabTampBlock.get(i).getX()+tabTampBlock.get(i).getWidth()) && (ballY > (tabTampBlock.get(i).getY() - heightBall) && ballY < (tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + heightBall))){ // si la balle tape le coté droit d'un block
+                        nbCol++;
+                        res = 2;
+                    }
+                }
+
             }
         }
 
@@ -720,7 +727,7 @@ public class Balls extends AppCompatActivity {
                             // max value 1000
                             System.out.println("DISTANCE : " + distance);
                             if(distance<100) distance = 150;
-                            if(distance >1000) distance = 1000;
+                            if(distance >400) distance = 400;
                             angle = Math.toDegrees(Math.atan(h/base));
 
                             // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
