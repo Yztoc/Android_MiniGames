@@ -436,18 +436,20 @@ public class Balls extends AppCompatActivity {
 
 
     public void reset(boolean loose){
+        System.out.println("RESET");
+        p = 0;
+        m = 0;
+        ballX = width/2-widthBall/2;
+        ballY = height-heightBall;
+
         if(loose){
             if(vie>0){
                 vie--;
             }
         }
-        p = 0;
-        m = 0;
         nbCol = 0;
         col = 0;
         velocity = 1;
-        ballX = width/2-widthBall/2;
-        ballY = height-heightBall;
         isInGame = false;
     }
 
@@ -492,11 +494,9 @@ public class Balls extends AppCompatActivity {
         for(ArrayList elem : tabBlock){
             ArrayList<Block> tabTampBlock = elem;
             for (int i=0;i<tabTampBlock.size();i++) {
-
                 if(res !=0){
                     return res;
                 }
-
                 if(ballX + widthBall>=width){
                     nbCol++;
                     res = 1;
@@ -512,7 +512,7 @@ public class Balls extends AppCompatActivity {
                     isMoving = false;
                     res = 5;
                 }else if((ballY  >= tabTampBlock.get(i).getY()+tabTampBlock.get(i).getHeight()) && (ballY <= tabTampBlock.get(i).getY() + tabTampBlock.get(i).getHeight() + 10) && (ballX>=(tabTampBlock.get(i).getX() - widthBall) && ballX<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))) { // touche le haut block
-                    ballY = ballY + 100;
+                    ballY = ballY + 50;
                     nbCol++;
                     res = 3;
                 }else if((ballY <= tabTampBlock.get(i).getY()) && (ballY >= tabTampBlock.get(i).getY() - heightBall) && (ballX>=(tabTampBlock.get(i).getX() - widthBall) && ballX<=(tabTampBlock.get(i).getX() + tabTampBlock.get(i).getWidth() + widthBall))){
@@ -727,7 +727,7 @@ public class Balls extends AppCompatActivity {
                             // max value 1000
                             System.out.println("DISTANCE : " + distance);
                             if(distance<100) distance = 150;
-                            if(distance >400) distance = 400;
+                            if(distance >500) distance = 600;
                             angle = Math.toDegrees(Math.atan(h/base));
 
                             // calcul la hauteur à laquelle la ball va toucher pour la premiere fois le mur
