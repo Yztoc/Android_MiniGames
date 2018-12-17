@@ -118,6 +118,9 @@ public class QuizzActivity extends AppCompatActivity {
                 listQuestion = multi.getListQuestion();
                 pickQuestionMultiplayer();
             }else{
+                m.open();
+                listQuestion = m.get5randomQuestions();
+                m.close();
                 pickQuestion();
             }
             scoreBall = (Score) q.get("scoreBall");
@@ -164,17 +167,11 @@ public class QuizzActivity extends AppCompatActivity {
         }else{
             reponseValidee = -1;
             setReponseTextQuizz("");
-            Random rand = new Random();
-            int typeQuestion = rand.nextInt(2);
-            if (typeQuestion == 0){
+            if(nbQuestion % 2 ==0){
                 calculAnswerLayout.setVisibility(View.INVISIBLE);
                 multipleAnswersLayout.setVisibility(View.VISIBLE);
 
-                // recupération d'une question
-                m.open();
-                Question question = m.getRandomQuestion();
-                m.close();
-
+                Question question = listQuestion.get(i);
                 title_question.setText(question.getTitle());
                 btn_rep1.setText(question.getResponse1().getFirst());
                 btn_rep2.setText(question.getResponse2().getFirst());
@@ -184,12 +181,14 @@ public class QuizzActivity extends AppCompatActivity {
                 rep3 = question.getResponse3().getSecond() == 0 ?  false : true;
             }
             else{
+                Random rand = new Random();
                 calculAnswerLayout.setVisibility(View.VISIBLE);
                 multipleAnswersLayout.setVisibility(View.INVISIBLE);
                 int variable1 = rand.nextInt(9)+1;
                 int variable2 = rand.nextInt(9)+1;
                 resultatCalcul = variable1*variable2;
                 title_question.setText(variable1+" x "+variable2);
+                i++;
             }
         }
 
