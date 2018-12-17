@@ -1,6 +1,7 @@
 package tj.project.esir.progmobproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -47,8 +48,12 @@ public class Finish extends AppCompatActivity {
         scoreTotal = new Score(4,"Final",scoreBall.getScore() + scoreCompass.getScore() + scoreQuizz.getScore());
         saveScore();
 
-        MediaPlayer mp = MediaPlayer.create(this, R.raw.finish);;
-        mp.start();
+        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREFS", MODE_PRIVATE);
+        if(sharedPreferences.getInt("activeSong", 0) == 1){
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.finish);;
+            mp.start();
+        }
+
 
         TextView textViewScoreBall = (TextView)findViewById(R.id.scoreBall);
         TextView textViewScoreCompass = (TextView)findViewById(R.id.scoreCompass);

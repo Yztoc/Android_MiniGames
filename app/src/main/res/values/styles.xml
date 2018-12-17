@@ -28,4 +28,14 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
     </style>
+
+    <style name="SwithStyle" >
+        <item name="thumbTint">@animator/switch_color</item>
+        <item name="trackTint">@animator/switch_color</item>
+    </style>
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">#00ffff</item>
+        <item name="android:colorPrimary">#00ffff</item>
+    </style>
+
 </resources>

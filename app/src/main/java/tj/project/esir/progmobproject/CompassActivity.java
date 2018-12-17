@@ -13,6 +13,9 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -153,7 +156,16 @@ public class CompassActivity extends AppCompatActivity {
         Bundle c = iin.getExtras();
 
         if(c!=null){
-            if(c.get("tuto") != null) isTuto = true;
+            if(c.get("tuto") != null){
+                LayoutInflater inflater=getLayoutInflater();
+                View customToastroot =inflater.inflate(R.layout.custom_toast_tuto_compass, null);
+                Toast customtoastWin=new Toast(this);
+                customtoastWin.setView(customToastroot);
+                customtoastWin.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,0, 0);
+                customtoastWin.setDuration(Toast.LENGTH_LONG);
+                customtoastWin.show();
+                isTuto = true;
+            }
             if(c.get("multiplayer") != null) {
                 multi = (MultiplayParameters) c.get("multiplayer");
                 switch (multi.getLevel()){
