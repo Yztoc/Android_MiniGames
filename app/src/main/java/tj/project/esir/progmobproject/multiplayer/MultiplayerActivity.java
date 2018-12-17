@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +71,9 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     QuestionManager questionManager;
     String connectionType;
 
-    LinearLayout message_send_layout;
+    RadioGroup radioGroup;
+    Button sendButton;
+    TextView levelRadioGroup;
     Button btnDiscover;
     Button btnSend;
     ListView listView;
@@ -198,8 +201,12 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
             btnSend = findViewById(id.sendButton);
             listView = findViewById(id.peerListView);
             connectionStatus = findViewById(id.connectionStatus);
-            message_send_layout = findViewById(id.message_send_layout);
-            message_send_layout.setVisibility(View.INVISIBLE);
+            radioGroup = findViewById(R.id.radioGroup);
+            sendButton = findViewById(id.sendButton);
+            levelRadioGroup = findViewById(R.id.levelRadioGroup);
+            sendButton.setVisibility(View.INVISIBLE);
+            levelRadioGroup.setVisibility(View.INVISIBLE);
+            radioGroup.setVisibility(View.INVISIBLE);
             exqListener();
         }
     }
@@ -217,7 +224,9 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                     "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.",
                     Toast.LENGTH_LONG).show();
         }
-        message_send_layout.setVisibility(View.INVISIBLE);
+        sendButton.setVisibility(View.INVISIBLE);
+        levelRadioGroup.setVisibility(View.INVISIBLE);
+        radioGroup.setVisibility(View.INVISIBLE);
     }
 
 
@@ -396,7 +405,9 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                 connectionType = "server";
                 if(!multiplayerFinish) {
                     connectionStatus.setText("Server");
-                    message_send_layout.setVisibility(View.VISIBLE);
+                    sendButton.setVisibility(View.VISIBLE);
+                    levelRadioGroup.setVisibility(View.VISIBLE);
+                    radioGroup.setVisibility(View.VISIBLE);
                 }
             }
             else if (info.groupFormed){

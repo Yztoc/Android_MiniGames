@@ -15,7 +15,6 @@
         android:src="@drawable/back"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
-    <include layout="@layout/content_quizz" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
@@ -38,7 +37,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.51"
             tools:layout_conversion_absoluteHeight="99dp"
             tools:layout_conversion_absoluteWidth="384dp">
 
@@ -57,9 +55,9 @@
                 android:id="@+id/quizz_question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
                 android:background="@drawable/textview_border"
                 android:textAlignment="center"
+                android:textColor="@android:color/white"
                 android:textSize="50sp"
                 android:textStyle="bold" />
 

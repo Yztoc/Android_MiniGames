@@ -20,144 +20,129 @@
         tools:layout_editor_absoluteY="0dp"
         tools:ignore="MissingConstraints" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/connectionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:text="Connection Status"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/discover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/connectionStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Connection Status"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_blue_bright"
-            android:textSize="18sp"
-            android:textStyle="italic" />
+    <Button
+        android:id="@+id/discover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_button_shape"
+        android:text="@string/discover"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/listDevices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/connectionStatus" />
 
+    <TextView
+        android:id="@+id/listDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Liste des devices detectés "
+        android:textAlignment="center"
+        android:textColor="#FFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/peerListView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/discover" />
 
-        <Button
-            android:id="@+id/discover"
+    <ListView
+        android:id="@+id/peerListView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@color/colorPrimary"
+        android:cacheColorHint="@android:color/background_light"
+        android:divider="@android:color/background_light"
+        android:dividerHeight="2dp"
+        android:isScrollContainer="false"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/levelRadioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/listDevices">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/levelRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choissisez une difficultée "
+        android:textAlignment="center"
+        android:textColor="#FFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/radioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/peerListView" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/easy"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/sendButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/peerListView">
+
+        <RadioButton
+            android:id="@+id/easy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/menu_button_shape"
-            android:text="@string/discover"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.422" />
+            android:buttonTint="#ff00caff"
+            android:onClick="onRadioButtonClicked"
+            android:text="Facile"
+            android:textColor="@android:color/white" />
 
-        <TextView
-            android:id="@+id/listDevices"
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/moyen"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Liste des devices detectés "
-            android:textAlignment="center"
-            android:textColor="#FFF"
-            android:textSize="18sp" />
+            android:buttonTint="#ff00caff"
+            android:onClick="onRadioButtonClicked"
+            android:text="Moyen"
+            android:textColor="@android:color/white" />
 
-        <ListView
-            android:id="@+id/peerListView"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginTop="25dp"
-            android:background="@color/colorPrimary"
-            android:cacheColorHint="@android:color/background_light"
-            android:divider="@android:color/background_light"
-            android:dividerHeight="2dp"
-            android:isScrollContainer="false"
-            android:scrollbars="vertical"
-            android:textColor="@android:color/white">
-
-        </ListView>
-
-        <LinearLayout
-            android:id="@+id/message_send_layout"
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/hard"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="478dp"
-            tools:ignore="MissingConstraints">
+            android:buttonTint="#ff00caff"
+            android:onClick="onRadioButtonClicked"
+            android:text="Difficile"
+            android:textColor="@android:color/white" />
+    </RadioGroup>
 
-
-            <TextView
-                android:id="@+id/levelRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Choissisez une difficultée "
-                android:textAlignment="center"
-                android:textColor="#FFF"
-                android:textSize="18sp" />
-
-
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                android:checkedButton="@+id/easy"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/easy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Facile"
-                    android:buttonTint="#ff00caff"
-                    android:textColor="@android:color/white" />
-
-                <RadioButton
-                    android:id="@+id/moyen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Moyen"
-                    android:buttonTint="#ff00caff"
-                    android:textColor="@android:color/white" />
-
-                <RadioButton
-                    android:id="@+id/hard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#ff00caff"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="Difficile"
-                    android:textColor="@android:color/white" />
-            </RadioGroup>
-
-            <Button
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/menu_button_shape"
-                android:elevation="0dp"
-                android:text="@string/startGame"
-                android:textAlignment="center"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.422" />
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_button_shape"
+        android:elevation="0dp"
+        android:text="@string/startGame"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 
 
 </android.support.constraint.ConstraintLayout>
