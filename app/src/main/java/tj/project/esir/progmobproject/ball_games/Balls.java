@@ -419,7 +419,6 @@ public class Balls extends AppCompatActivity {
                     cancelTimer();
                     if(!((Activity) context).isFinishing()) {
                         dialogFinish();
-                        reset(false);
                     }
                 }
             }
@@ -441,7 +440,6 @@ public class Balls extends AppCompatActivity {
         m = 0;
         ballX = width/2-widthBall/2;
         ballY = height-heightBall;
-
         if(loose){
             if(vie>0){
                 vie--;
@@ -672,7 +670,6 @@ public class Balls extends AppCompatActivity {
         public boolean onTouch(View v, MotionEvent event) {
 
             if(!isInGame){
-
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
