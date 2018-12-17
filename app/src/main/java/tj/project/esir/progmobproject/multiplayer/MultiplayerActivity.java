@@ -423,15 +423,10 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
-        mManager.removeGroup(mChannel, new ActionListener() {
-            @Override
-            public void onSuccess() {
-                disconnectFromPeer("");
-            }
-            @Override
-            public void onFailure(int reason) {
-            }
-        });
+        if(multiplayerFinish)
+            disconnectFromPeer("quit");
+        else
+            disconnectFromPeer("");
     }
 
     private void exqListener() {
