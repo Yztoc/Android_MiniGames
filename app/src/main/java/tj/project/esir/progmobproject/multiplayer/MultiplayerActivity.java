@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -243,6 +244,8 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
         @Override
         public boolean handleMessage(Message msg) {
             MultiplayParameters multiplayer = new MultiplayParameters();
+            SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences("PREFS", MODE_PRIVATE);
+
             switch (msg.what){
                 case MESSAGE_READ:
 
@@ -294,7 +297,11 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
                                 resultatMultiplayer = "egalite";
                                // mp = MediaPlayer.create(main, raw.win);
                             }
-                            mp.start();
+
+                            if(sharedPreferences.getInt("activeSong", 0) == 1){
+                                mp.start();
+                            }
+
                             disconnectFromPeer("");
                         }
                         else {
@@ -320,7 +327,9 @@ public class MultiplayerActivity extends AppCompatActivity implements ChannelLis
 
                             }
                             sendReceive.write(resultatAdversaireAEnvoyer.getBytes());
-                            mp.start();
+                            if(sharedPreferences.getInt("activeSong", 0) == 1){
+                                mp.start();
+                            }
                         }
                     }
                     break;
