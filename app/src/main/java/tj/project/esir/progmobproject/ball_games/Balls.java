@@ -608,26 +608,19 @@ public class Balls extends AppCompatActivity {
                 ballY = ballY - (((float) distance* velocity / 4) / fps);
             }
         }else if(direction == 3){ // descente vers la gauche
-            float ballTamp = ballY;
             ballX = (ballX - (((float) distance * velocity/ 4) / fps)) ;
             if(nbCol == 0){
                 ballY = (float) (((ballX) * m) + p);
             }else{
                 ballY = ballY + (((float) distance* velocity / 4) / fps);
             }
-            if(ballY < 0){
-                ballY  = ballTamp;
-            }
+
         }else if(direction == 4){ // descente vers la droite
-            float ballTamp = ballY;
             ballX = (ballX + (((float) distance* velocity / 4) / fps));
             if(nbCol == 0){
                 ballY = (float) (((ballX) * -m) - p);
             }else{
                 ballY = ballY + (((float) distance* velocity / 4) / fps);
-            }
-            if(ballY < 0){
-                ballY  = ballTamp;
             }
         }
 
