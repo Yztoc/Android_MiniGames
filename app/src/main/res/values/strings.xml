@@ -24,8 +24,15 @@
     <string name="discoverOn">Recherche de Joueurs</string>
     <string name="discoverOff">Lancer Recherche</string>
     <string name="discoverPb">La recherche n\'a pas aboutie</string>
-
-
-
-
+    <string name="songEffect">Activer les effets sonores :</string>
+    <string name="bestScore">Meilleur Score</string>
+    <string name="socreBallGame">Score jeux balls : </string>
+    <string name="scoreCompassGame">Score jeux compass : </string>
+    <string name="scoreQuizz">Score jeux quizz :  </string>
+    <string name="scoreFinal">Score Final : </string>
+    <string name="creditName">Credit</string>
+    <string name="esir">Projet ESIR 2018-2019</string>
+    <string name="dev">Développeurs</string>
+    <string name="julien">Guépéroux Juilen </string>
+    <string name="thomas">Stéphant Thomas</string>
 </resources>
